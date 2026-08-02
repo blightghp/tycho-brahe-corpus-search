@@ -1,0 +1,7 @@
+corpus.db
+*.png
+*.xlsx
+*.csv
+__pycache__/
+.idea/
+.vscode/
