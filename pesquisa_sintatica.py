@@ -36,21 +36,29 @@ def get_con():
     return con
 
 
+def escape_like(s: str) -> str:
+    """Escapa caracteres curinga do SQL LIKE (% e _) para evitar wildcard injection."""
+    if not s:
+        return s
+    return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 # ── Frequência de labels ──────────────────────────────────────────────────────
 def freq_labels(limite: int = 30) -> pd.DataFrame:
     con = get_con()
-    sql = """
-        SELECT label, label_base, funcao,
-               COUNT(*) as frequencia
-        FROM   tb_nos
-        WHERE  eh_folha = 0
-        GROUP  BY label
-        ORDER  BY frequencia DESC
-        LIMIT  ?
-    """
-    df = pd.read_sql(sql, con, params=(limite,))
-    con.close()
-    return df
+    try:
+        sql = """
+            SELECT label, label_base, funcao,
+                   COUNT(*) as frequencia
+            FROM   tb_nos
+            WHERE  eh_folha = 0
+            GROUP  BY label
+            ORDER  BY frequencia DESC
+            LIMIT  ?
+        """
+        return pd.read_sql(sql, con, params=(limite,))
+    finally:
+        con.close()
 
 
 # ── Busca básica por atributo ────────────────────────────────────────────────
@@ -59,35 +67,36 @@ def busca_por_atributo(
     token: str = None, lemma: str = None, limite: int = 20
 ) -> pd.DataFrame:
     con = get_con()
-    condicoes = []
-    params = []
+    try:
+        condicoes = []
+        params = []
 
-    if label:
-        condicoes.append("n.label = ?"); params.append(label)
-    if base:
-        condicoes.append("n.label_base = ?"); params.append(base)
-    if funcao:
-        condicoes.append("n.funcao = ?"); params.append(funcao)
-    if token:
-        condicoes.append("n.token = ?"); params.append(token)
-    if lemma:
-        condicoes.append("n.lemma = ?"); params.append(lemma)
+        if label:
+            condicoes.append("n.label = ?"); params.append(label)
+        if base:
+            condicoes.append("n.label_base = ?"); params.append(base)
+        if funcao:
+            condicoes.append("n.funcao = ?"); params.append(funcao)
+        if token:
+            condicoes.append("n.token = ?"); params.append(token)
+        if lemma:
+            condicoes.append("n.lemma = ?"); params.append(lemma)
 
-    where = ("WHERE " + " AND ".join(condicoes)) if condicoes else ""
-    sql = f"""
-        SELECT n.id, n.label, n.label_base, n.funcao,
-               n.token, n.lemma, n.eh_folha,
-               n.lft, n.rgt, n.depth,
-               s.arquivo, s.id as sentenca_id
-        FROM   tb_nos n
-        JOIN   tb_sentencas s ON n.sentenca_id = s.id
-        {where}
-        LIMIT ?
-    """
-    params.append(limite)
-    df = pd.read_sql(sql, con, params=params)
-    con.close()
-    return df
+        where = ("WHERE " + " AND ".join(condicoes)) if condicoes else ""
+        sql = f"""
+            SELECT n.id, n.label, n.label_base, n.funcao,
+                   n.token, n.lemma, n.eh_folha,
+                   n.lft, n.rgt, n.depth,
+                   s.arquivo, s.id as sentenca_id
+            FROM   tb_nos n
+            JOIN   tb_sentencas s ON n.sentenca_id = s.id
+            {where}
+            LIMIT ?
+        """
+        params.append(limite)
+        return pd.read_sql(sql, con, params=params)
+    finally:
+        con.close()
 
 
 # ── Dominância direta A < B ──────────────────────────────────────────────────
@@ -96,23 +105,26 @@ def dominancia_direta(label_pai: str, label_filho: str, limite: int = 20) -> pd.
     Equivalente à notação Tgrep: 'A < B'.
     """
     con = get_con()
-    sql = """
-        SELECT pai.id as id_pai, pai.label as label_pai,
-               filho.id as id_filho, filho.label as label_filho,
-               filho.token, filho.lemma,
-               s.arquivo, s.id as sentenca_id
-        FROM   tb_nos pai
-        JOIN   tb_relacoes r  ON r.pai_id   = pai.id
-        JOIN   tb_nos filho   ON r.filho_id  = filho.id
-        JOIN   tb_sentencas s ON pai.sentenca_id = s.id
-        WHERE  pai.label   LIKE ?
-          AND  filho.label LIKE ?
-        LIMIT  ?
-    """
-    df = pd.read_sql(sql, con,
-                     params=(f"{label_pai}%", f"{label_filho}%", limite))
-    con.close()
-    return df
+    try:
+        sql = """
+            SELECT pai.id as id_pai, pai.label as label_pai,
+                   filho.id as id_filho, filho.label as label_filho,
+                   filho.token, filho.lemma,
+                   s.arquivo, s.id as sentenca_id
+            FROM   tb_nos pai
+            JOIN   tb_relacoes r  ON r.pai_id   = pai.id
+            JOIN   tb_nos filho   ON r.filho_id  = filho.id
+            JOIN   tb_sentencas s ON pai.sentenca_id = s.id
+            WHERE  pai.label   LIKE ? ESCAPE '\\'
+              AND  filho.label LIKE ? ESCAPE '\\'
+            LIMIT  ?
+        """
+        return pd.read_sql(
+            sql, con,
+            params=(f"{escape_like(label_pai)}%", f"{escape_like(label_filho)}%", limite)
+        )
+    finally:
+        con.close()
 
 
 # ── Dominância indireta A << B ───────────────────────────────────────────────
@@ -125,34 +137,35 @@ def dominancia_indireta(label_ancestral: str, label_descendente: str,
     A << B: anc.lft < desc.lft AND anc.rgt > desc.rgt
     """
     con = get_con()
-    extra_cond = ""
-    extra_params = []
-    if token_descendente:
-        extra_cond += " AND desc.token = ?"
-        extra_params.append(token_descendente)
-    if lemma_descendente:
-        extra_cond += " AND desc.lemma = ?"
-        extra_params.append(lemma_descendente)
+    try:
+        extra_cond = ""
+        extra_params = []
+        if token_descendente:
+            extra_cond += " AND desc.token = ?"
+            extra_params.append(token_descendente)
+        if lemma_descendente:
+            extra_cond += " AND desc.lemma = ?"
+            extra_params.append(lemma_descendente)
 
-    sql = f"""
-        SELECT anc.id as id_ancestral, anc.label as label_ancestral,
-               desc.id as id_descendente, desc.label as label_descendente,
-               desc.token, desc.lemma, desc.depth - anc.depth as distancia,
-               s.arquivo, s.id as sentenca_id
-        FROM   tb_nos anc
-        JOIN   tb_nos desc ON desc.sentenca_id = anc.sentenca_id
-                          AND desc.lft > anc.lft
-                          AND desc.rgt < anc.rgt
-        JOIN   tb_sentencas s ON anc.sentenca_id = s.id
-        WHERE  anc.label LIKE ?
-          AND  desc.label LIKE ?
-          {extra_cond}
-        LIMIT  ?
-    """
-    params = [f"{label_ancestral}%", f"{label_descendente}%"] + extra_params + [limite]
-    df = pd.read_sql(sql, con, params=params)
-    con.close()
-    return df
+        sql = f"""
+            SELECT anc.id as id_ancestral, anc.label as label_ancestral,
+                   desc.id as id_descendente, desc.label as label_descendente,
+                   desc.token, desc.lemma, desc.depth - anc.depth as distancia,
+                   s.arquivo, s.id as sentenca_id
+            FROM   tb_nos anc
+            JOIN   tb_nos desc ON desc.sentenca_id = anc.sentenca_id
+                              AND desc.lft > anc.lft
+                              AND desc.rgt < anc.rgt
+            JOIN   tb_sentencas s ON anc.sentenca_id = s.id
+            WHERE  anc.label LIKE ? ESCAPE '\\'
+              AND  desc.label LIKE ? ESCAPE '\\'
+              {extra_cond}
+            LIMIT  ?
+        """
+        params = [f"{escape_like(label_ancestral)}%", f"{escape_like(label_descendente)}%"] + extra_params + [limite]
+        return pd.read_sql(sql, con, params=params)
+    finally:
+        con.close()
 
 
 # ── Co-irmandade A $ B ────────────────────────────────────────────────────────
@@ -161,24 +174,28 @@ def irmandade(label_a: str, label_b: str, limite: int = 20) -> pd.DataFrame:
     Equivalente à notação Tgrep: 'A $ B'.
     """
     con = get_con()
-    sql = """
-        SELECT a.label as label_a, a.token as token_a, a.lemma as lemma_a,
-               b.label as label_b, b.token as token_b, b.lemma as lemma_b,
-               s.arquivo, s.id as sentenca_id
-        FROM   tb_nos a
-        JOIN   tb_relacoes ra ON ra.filho_id = a.id
-        JOIN   tb_relacoes rb ON rb.filho_id = b.id
-                             AND rb.pai_id   = ra.pai_id
-                             AND b.id       != a.id
-        JOIN   tb_nos b ON b.id = rb.filho_id
-        JOIN   tb_sentencas s ON a.sentenca_id = s.id
-        WHERE  a.label LIKE ?
-          AND  b.label LIKE ?
-        LIMIT  ?
-    """
-    df = pd.read_sql(sql, con, params=(f"{label_a}%", f"{label_b}%", limite))
-    con.close()
-    return df
+    try:
+        sql = """
+            SELECT a.label as label_a, a.token as token_a, a.lemma as lemma_a,
+                   b.label as label_b, b.token as token_b, b.lemma as lemma_b,
+                   s.arquivo, s.id as sentenca_id
+            FROM   tb_nos a
+            JOIN   tb_relacoes ra ON ra.filho_id = a.id
+            JOIN   tb_relacoes rb ON rb.filho_id = b.id
+                                 AND rb.pai_id   = ra.pai_id
+                                 AND b.id       != a.id
+            JOIN   tb_nos b ON b.id = rb.filho_id
+            JOIN   tb_sentencas s ON a.sentenca_id = s.id
+            WHERE  a.label LIKE ? ESCAPE '\\'
+              AND  b.label LIKE ? ESCAPE '\\'
+            LIMIT  ?
+        """
+        return pd.read_sql(
+            sql, con,
+            params=(f"{escape_like(label_a)}%", f"{escape_like(label_b)}%", limite)
+        )
+    finally:
+        con.close()
 
 
 # ── KWIC Sintático ────────────────────────────────────────────────────────────
@@ -186,49 +203,49 @@ def kwic_sintatico(label: str, horizonte: int = 4, limite: int = 20) -> pd.DataF
     """Para cada ocorrência do nó com o label dado, extrai as folhas
     lexicais adjacentes (KWIC centrado no sintagma alvo)."""
     con = get_con()
-
-    # Acha os nós com o label pedido
-    nos = pd.read_sql(
-        "SELECT n.id, n.lft, n.rgt, n.sentenca_id, s.arquivo "
-        "FROM tb_nos n JOIN tb_sentencas s ON n.sentenca_id = s.id "
-        "WHERE n.label LIKE ? LIMIT ?",
-        con, params=(f"{label}%", limite)
-    )
-
-    if nos.empty:
-        con.close()
-        return pd.DataFrame()
-
-    rows = []
-    for _, no in nos.iterrows():
-        # Folhas da sentença inteira ordenadas por lft
-        folhas = pd.read_sql(
-            "SELECT token, lft FROM tb_nos "
-            "WHERE sentenca_id=? AND eh_folha=1 ORDER BY lft",
-            con, params=(int(no["sentenca_id"]),)
+    try:
+        # Acha os nós com o label pedido
+        nos = pd.read_sql(
+            "SELECT n.id, n.lft, n.rgt, n.sentenca_id, s.arquivo "
+            "FROM tb_nos n JOIN tb_sentencas s ON n.sentenca_id = s.id "
+            "WHERE n.label LIKE ? ESCAPE '\\' LIMIT ?",
+            con, params=(f"{escape_like(label)}%", limite)
         )
 
-        # Índices das folhas que pertencem ao sintagma alvo
-        within = folhas[(folhas["lft"] >= no["lft"]) & (folhas["lft"] <= no["rgt"])]
-        if within.empty:
-            continue
+        if nos.empty:
+            return pd.DataFrame()
 
-        idx_start = folhas.index[folhas["lft"] == within["lft"].min()][0]
-        idx_end = folhas.index[folhas["lft"] == within["lft"].max()][0]
+        rows = []
+        for _, no in nos.iterrows():
+            # Folhas da sentença inteira ordenadas por lft
+            folhas = pd.read_sql(
+                "SELECT token, lft FROM tb_nos "
+                "WHERE sentenca_id=? AND eh_folha=1 ORDER BY lft",
+                con, params=(int(no["sentenca_id"]),)
+            )
 
-        esq = " ".join(folhas.iloc[max(0, idx_start - horizonte): idx_start]["token"])
-        alvo = " ".join(within["token"])
-        dir_ = " ".join(folhas.iloc[idx_end + 1: idx_end + 1 + horizonte]["token"])
+            # Índices das folhas que pertencem ao sintagma alvo
+            within = folhas[(folhas["lft"] >= no["lft"]) & (folhas["lft"] <= no["rgt"])]
+            if within.empty:
+                continue
 
-        rows.append({
-            "Arquivo": no["arquivo"],
-            "Esquerda": esq,
-            f"[{label}]": alvo,
-            "Direita": dir_,
-        })
+            idx_start = folhas.index[folhas["lft"] == within["lft"].min()][0]
+            idx_end = folhas.index[folhas["lft"] == within["lft"].max()][0]
 
-    con.close()
-    return pd.DataFrame(rows)
+            esq = " ".join(folhas.iloc[max(0, idx_start - horizonte): idx_start]["token"])
+            alvo = " ".join(within["token"])
+            dir_ = " ".join(folhas.iloc[idx_end + 1: idx_end + 1 + horizonte]["token"])
+
+            rows.append({
+                "Arquivo": no["arquivo"],
+                "Esquerda": esq,
+                f"[{label}]": alvo,
+                "Direita": dir_,
+            })
+
+        return pd.DataFrame(rows)
+    finally:
+        con.close()
 
 
 # ── Exportação ────────────────────────────────────────────────────────────────
@@ -238,11 +255,12 @@ def exportar(df: pd.DataFrame, path: str):
         return
     try:
         df.to_excel(path, index=False)
-        print(f"Exportado → {path}")
-    except Exception:
+        print(f"Exportado -> {path}")
+    except Exception as e:
+        print(f"Aviso: Não foi possível exportar para Excel ({e}). Tentando CSV...")
         csv = path.replace(".xlsx", ".csv")
         df.to_csv(csv, index=False)
-        print(f"Exportado (CSV) → {csv}")
+        print(f"Exportado (CSV) -> {csv}")
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
@@ -271,6 +289,11 @@ def main():
                    help="Máximo de resultados (padrão: 20)")
     p.add_argument("--exportar", help="Salvar resultados em .xlsx")
     args = p.parse_args()
+
+    if args.limite <= 0:
+        p.error("--limite deve ser maior que 0")
+    if args.horizonte <= 0:
+        p.error("--horizonte deve ser maior que 0")
 
     df = pd.DataFrame()
 

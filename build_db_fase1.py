@@ -7,13 +7,10 @@ Este script:
   1. Lê os arquivos *_psd.txt com NLTK ParentedTree (estrutura completa de árvore).
   2. Lematiza cada folha (nó terminal) com spaCy (pt_core_news_sm).
   3. Armazena a árvore completa em SQLite usando o modelo Nested Sets (lft/rgt),
-     permitindo consultas de dominância hierárquica em O(log n).
-
-Tabelas geradas:
+     permitindo consultas de dominância hierárquica em O(lTabelas geradas:
   tb_sentencas   – metadados de cada sentença (arquivo, id_sentenca, texto_id)
   tb_nos         – cada nó da árvore (label, token, lemma, lft, rgt, depth)
-  tb_relacoes    – pares explícitos pai→filho (para c-comando e irmandade)
-  tb_folhas      – índice rápido para as folhas/palavras terminais
+  tb_relacoes    – pares explícitos pai->filho (para c-comando e irmandade)
 """
 
 import os
@@ -78,7 +75,7 @@ def extrair_blocos(filepath: str) -> list[str]:
     # Remove o bloco de ID final e separa em sentenças
     blocos = [b.strip() for b in content.split("\n\n") if b.strip()]
     # Filtra blocos CODE (sem estrutura de árvore sintática)
-    return [b for b in blocos if b.startswith("(") and "(IP-" in b or "(CP-" in b]
+    return [b for b in blocos if b.startswith("(") and ("(IP-" in b or "(CP-" in b)]
 
 
 def limpar_indices_coref(block: str) -> str:

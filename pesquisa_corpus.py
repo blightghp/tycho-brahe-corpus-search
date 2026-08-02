@@ -1,7 +1,6 @@
 import sqlite3
 import pandas as pd
 import argparse
-import urllib.request
 import math
 import sys
 import os
@@ -238,6 +237,7 @@ def dispersao(palavra):
     
     output_path = f'dispersao_{palavra}.png'
     plt.savefig(output_path)
+    plt.close(fig)
     print(f"Gráfico de dispersão salvo em: {output_path}")
 
 def export_df(df, filename):
@@ -263,6 +263,13 @@ if __name__ == '__main__':
     parser.add_argument('--exportar', type=str, help="Caminho do arquivo .xlsx para salvar os resultados (opcional)")
 
     args = parser.parse_args()
+
+    if args.n <= 0:
+        parser.error("--n deve ser maior que 0")
+    if args.horizonte <= 0:
+        parser.error("--horizonte deve ser maior que 0")
+    if args.limite <= 0:
+        parser.error("--limite deve ser maior que 0")
 
     df = None
     if args.acao == 'freq_palavras':
