@@ -1,19 +1,24 @@
-# Interface de Usuário (React + Tailwind)
+# Interface de Usuário (React + Tailwind + D3)
 
-Bem-vindo à área de desenvolvimento do _Frontend_. A UI foi construída com um princípio: permitir ao pesquisador/linguista explorar árvores abstratas complexas com a mesma facilidade que usa uma busca web.
+O frontend do Tycho Brahe Desktop foi concebido com rigor visual e metodológico para permitir a linguistas, pesquisadores e estudantes explorarem árvores sintáticas profundas e a hierarquia cartográfica em 5 Grandes Domínios.
 
-## Estrutura Visual e Componentes
+## Componentes Principais
 
-- **`App.tsx`**: Contém o contêiner mestre e gerencia o Menu lateral de navegação. 
-- **`SearchBar.tsx`**: Trata o estado de requisições de consulta ao banco. Componente desenhado pensando em validações (garantir que um pesquisador não passe uma busca sintática incorreta, como abrir chave `[` sem fechar `]`).
-- **`TreeView.tsx`**: O cérebro de exibição! Utilizando SVG nativo via `react-d3-tree`, a aplicação recebe as chaves sujas da estrutura JSON original e processa em nós visuais cartográficos coloridos.
-- **`HumanInTheLoop.tsx`**: O painel de Auditoria. Um fluxo onde o usuário decide aceitar ou rejeitar as modificações propostas pelo algoritmo. O React cuida para passar o estado de forma reativa.
-
-## Créditos do Projeto Histórico
-A Interface de usuário carrega a herança formal de dados do projeto **Tycho Brahe** original, da Universidade Estadual de Campinas (IEL). Como política fundamental da UI/UX, mantemos a intuição de visualização fiel aos pesquisadores veteranos e carregamos as devidas referências institucionais em links dispostos no aplicativo. (http://www.tycho.iel.unicamp.br/)
+- **`App.tsx`**: Contêiner mestre da aplicação, com navegação fluida em abas (*Pesquisa em Árvores*, *Quarentena/Auditoria*, *Status do Sistema*), monitoramento de saúde do motor Rust e cabeçalho institucional com links para a UNICAMP.
+- **`SearchBar.tsx`**: Barra de consulta com verificação em tempo real de balanceamento de colchetes sintáticos e chips de filtro rápido para os 5 Domínios Gerativos (`D1: VocP`, `D2: ForceP`, `D3: MoodP_eval`, `D3: T_anterior`, `D4: FocP_low`, `D5: VoiceP_agent`, `D5: ApplP_low`, `D5: Root`).
+- **`TreeView.tsx`**: Visualizador hierárquico SVG interativo com pan e zoom dinâmico baseado em `react-d3-tree`. Utiliza uma paleta cromática padronizada para os 5 Domínios Cartográficos:
+  - 🟣 **D1 (Ato de Fala)**: Violeta (`#8b5cf6`)
+  - 🔵 **D2 (Split-CP)**: Índigo / Azul (`#3b82f6`)
+  - 🟢 **D3 (Split-IP / Cinque)**: Esmeralda / Verde (`#10b981`)
+  - 🟠 **D4 (Baixa Periferia)**: Âmbar / Laranja (`#f59e0b`)
+  - 🔴 **D5 (Split-vP / First Phase)**: Rosa / Carmim (`#f43f5e`)
+  - ⚪ **Constituintes Canônicos**: Cinza / Ardósia (`#64748b`)
+- **`TermBreakdown.tsx`**: Grade analítica termo a termo que exibe cada palavra da sentença com seu lema spaCy, classe gramatical (POS), domínio gerativo, projeção correspondente e papel funcional.
+- **`HumanInTheLoop.tsx`**: Painel de curadoria e auditoria supervisionada para resolução de quarentenas e sentenças anômalas.
+- **`CreditsModal.tsx`**: Modal com atribuições formais, links oficiais ao portal da UNICAMP (http://www.tycho.iel.unicamp.br/) e referências bibliográficas fundamentais (Rizzi 1997, Cinque 1999, Belletti 2004, Ramchand 2008, Speas & Tenny 2003).
 
 ## Desenvolvimento Local
-Para trabalhar em alterações puramente visuais, sem recompilar o `.exe` inteiro, suba a aplicação com:
+Para executar em modo de desenvolvimento com hot-reload:
 ```bash
 npm run tauri dev
 ```

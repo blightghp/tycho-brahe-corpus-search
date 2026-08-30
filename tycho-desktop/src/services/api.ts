@@ -40,6 +40,19 @@ export interface QuarentenaItem {
   status: string;
 }
 
+export interface TokenCartografico {
+  indice: number;
+  termo: string;
+  lema: string;
+  pos: string;
+  dominio_id: number;
+  dominio_nome: string;
+  projecao: string;
+  papel_gerativo: string;
+  eh_cartografico: boolean;
+  trilha_arvore?: string;
+}
+
 export const getSystemHealth = async (): Promise<SystemHealth> => {
   try {
     return await invoke<SystemHealth>('check_system_health');
@@ -84,6 +97,35 @@ export const searchCorpus = async (query: string): Promise<SearchResult[]> => {
       }
     } catch (fallbackErr) {
       console.error('Falha geral no IPC:', fallbackErr);
+    }
+    return [];
+  }
+};
+
+export const tokenizarSentenca = async (texto: string): Promise<TokenCartografico[]> => {
+  try {
+    const res = await invoke<QueryResultWrapper>('run_backend_query', {
+      acao: 'tokenizar',
+      args: ['--token', texto],
+    });
+
+    if (res.success) {
+      return JSON.parse(res.data_json);
+    }
+    return [];
+  } catch (err) {
+    try {
+      const command = Command.sidecar('bin/tycho_backend', [
+        '--acao', 'tokenizar',
+        '--token', texto,
+        '--formato', 'json',
+      ]);
+      const output = await command.execute();
+      if (output.code === 0) {
+        return JSON.parse(output.stdout);
+      }
+    } catch (fallbackErr) {
+      console.error('Falha ao tokenizar sentenca:', fallbackErr);
     }
     return [];
   }

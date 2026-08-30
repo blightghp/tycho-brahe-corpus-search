@@ -1,8 +1,8 @@
 # Script para compilar o backend Python em um executável (.exe)
 # Isso permite que o aplicativo Tauri chame o Python sem precisar do ambiente Python instalado na máquina do usuário.
 
-Write-Host "Compilando pesquisa_sintatica.py..."
-C:\Users\Administrador\AppData\Roaming\Python\Python313\Scripts\pyinstaller.exe --onefile --name "tycho_backend" pesquisa_sintatica.py
+Write-Host "Compilando pesquisa_sintatica.py com PyInstaller..."
+C:\Users\Administrador\AppData\Roaming\Python\Python313\Scripts\pyinstaller.exe --onefile --hidden-import=cartografia_schema --hidden-import=tokenizador_cartografico --hidden-import=metadata_tycho --hidden-import=oracle --hidden-import=rewriter --hidden-import=spacy --name "tycho_backend" pesquisa_sintatica.py
 
 Write-Host "Copiando executável para src-tauri/bin..."
 New-Item -ItemType Directory -Force "../tycho-desktop/src-tauri/bin"
