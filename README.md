@@ -10,8 +10,8 @@ Ferramenta desenvolvida em Python para indexação e pesquisa rápida no **Corpu
 |------|-----------|
 | **Fase 0** | Pesquisa básica por frequência, KWIC e n-gramas (SQLite + folhas) |
 | **Fase 1** | Pesquisa por estrutura sintática gerativa: dominância, irmandade, lematização (SQLite + Nested Sets + spaCy) |
-| **Fase 2** | *(Planejada)* Cartografia sintática – Split-CP (Rizzi 1997; 2004) e Split-IP (Cinque 1999; 2002) como nós virtuais |
-| **Fase 3** | *(Planejada)* Transdutor algorítmico de árvores – transformação física do corpus para incorporar as categorias cartográficas expandidas em modelo "leque" |
+| **Fase 2** | *(Planejada)* [Cartografia sintática](docs/plano_arquitetural_fase2.md) – Split-CP e Split-IP como nós virtuais |
+| **Fase 3** | *(Planejada)* [Transdutor algorítmico de árvores](docs/plano_arquitetural_fase3.md) – transformação física em modelo "leque". Veja o [Plano de Projeto](docs/plano_projeto_implementacao.md) completo. |
 
 ---
 
@@ -135,8 +135,9 @@ python pesquisa_sintatica.py --acao domina_indireta --domina IP-MAT --contido N 
 
 ## 📂 Estrutura do Repositório
 
-| Arquivo | Descrição |
-|---------|-----------|
+| Arquivo/Diretório | Descrição |
+|-------------------|-----------|
+| `docs/` | Planos arquiteturais detalhados e guias de implementação (Fases 2 e 3) |
 | `build_db.py` | Builder Fase 0 – extrai folhas, cria `corpus.db` |
 | `pesquisa_corpus.py` | CLI Fase 0 – KWIC, frequência, colocados, n-gramas, keyness |
 | `build_db_fase1.py` | Builder Fase 1 – árvore completa + lemas, cria `corpus_fase1.db` |
