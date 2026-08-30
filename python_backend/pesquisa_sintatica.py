@@ -418,7 +418,8 @@ def main():
     p.add_argument("--db", help="Caminho do banco SQLite (padrão: corpus_fase3.db ou corpus_fase1.db)")
     p.add_argument("--acao", required=True,
                    choices=["freq_labels", "freq_cartografia", "busca", "domina_direta",
-                            "domina_indireta", "irmandade", "kwic", "ver_arvore", "quarentena_listar", "quarentena_resolver"],
+                            "domina_indireta", "irmandade", "kwic", "ver_arvore", 
+                            "quarentena_listar", "quarentena_resolver", "tokenizar"],
                    help="Ação a executar")
     p.add_argument("--label",        help="Label completo ex: ForceP, MoodP_evaluative, NP-SBJ")
     p.add_argument("--base",         help="Categoria base ex: NP, MoodP, CP")
@@ -493,6 +494,14 @@ def main():
         if not (args.token and args.lemma):
             p.error("--quarentena_resolver requer --token (id) e --lemma (acao)")
         df = quarentena_resolver(int(args.token), args.lemma)
+
+    elif args.acao == "tokenizar":
+        texto = args.token or args.label or ""
+        if not texto:
+            p.error("--tokenizar requer --token ou --label com a sentença/árvore")
+        from tokenizador_cartografico import processar_sentenca_texto
+        res_tok = processar_sentenca_texto(texto)
+        df = pd.DataFrame(res_tok["tokens"])
 
     elif args.acao == "ver_arvore":
         if not args.sentenca_id:

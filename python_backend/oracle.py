@@ -1,173 +1,135 @@
 """
 oracle.py
 =========
-Motor 2 – Classificador Léxico-Semântico e Topológico (O Oráculo Cartográfico).
+Motor 2 – Classificador Léxico-Semântico e Topológico (O Oráculo Cartográfico Universal).
 
-Mapeia evidências léxicas e estruturais no português (Corpus Tycho Brahe) para
-as projeções funcionais universais de:
-  • Rizzi (1997, 2004) – Periferia Esquerda (Split-CP)
-  • Cinque (1999, 2002) – Hierarquia Adverbial e Flexional (Split-IP)
+Mapeia evidências léxicas, morfológicas e estruturais no português (Corpus Tycho Brahe)
+para a hierarquia cartográfica universal estrita de 5 Domínios:
+  1. Domínio do Ato de Fala (Speas & Tenny 2003, Hill 2007): SAP, VocP, EvalP/AttP
+  2. Domínio Complementizador (Rizzi 1997, 2004): ForceP, TopP, IntP, FocP, ModP, QembP, FinP
+  3. Domínio Flexional (Cinque 1999): 23 Projeções Funcionais de Modo, Tempo e Aspecto
+  4. Baixa Periferia Esquerda (Belletti 2004): TopP_low, FocP_low (Sujeito Pós-Verbal)
+  5. Domínio Temático e Argumental (Ramchand 2008, Pylkkänen 2008, Harley 2013):
+     VoiceP_agent, InitP, ApplP_high, ProcP, ApplP_low, ResP, √Root
 """
 
-from typing import Dict, List, Optional, Tuple, Set, NamedTuple
+import re
+from typing import Dict, List, Optional, Tuple, Set, NamedTuple, Any
 from nltk.tree import ParentedTree, Tree
 
+from cartografia_schema import (
+    HIERARQUIA_CARTOGRAFICA_COMPLETA,
+    PROJECOES_MAP,
+    PROJECOES_RANKS
+)
 
-# ── Hierarquia de Cinque (Ordem Rígida Universal) ────────────────────────────
-# Ranks menores dominam ranks maiores: Rank 1 domina Rank 2, etc.
-CINQUE_HIERARCHY: List[Tuple[str, int, str]] = [
-    ("MoodP_speech_act",   1,  "Modo Ilocucionário / Ato de Fala"),
-    ("MoodP_evaluative",   2,  "Modo Avaliativo"),
-    ("MoodP_evidential",   3,  "Modo Evidencial"),
-    ("ModP_epistemic",     4,  "Modalidade Epistêmica"),
-    ("T_past",             5,  "Tempo Passado"),
-    ("T_future",           6,  "Tempo Futuro"),
-    ("MoodP_irrealis",     7,  "Modo Irrealis / Dúvida"),
-    ("ModP_necessity",     8,  "Modalidade Deôntica de Necessidade"),
-    ("ModP_possibility",   9,  "Modalidade Deôntica de Possibilidade"),
-    ("AspP_habitual",     10,  "Aspecto Habitual"),
-    ("AspP_repetitive",   11,  "Aspecto Repetitivo"),
-    ("AspP_frequentative", 12,  "Aspecto Frequentativo"),
-    ("ModP_volitional",   13,  "Modalidade Volitiva"),
-    ("AspP_celerative",   14,  "Aspecto Celerativo / Velocidade"),
-    ("T_anterior",        15,  "Tempo Anterior"),
-    ("AspP_terminative",  16,  "Aspecto Terminativo"),
-    ("AspP_continuative", 17,  "Aspecto Continuativo"),
-    ("AspP_perfect",      18,  "Aspecto Perfeito"),
-    ("AspP_retrospective",19,  "Aspecto Retrospectivo"),
-    ("AspP_proximative",  20,  "Aspecto Proximativo"),
-    ("AspP_durative",     21,  "Aspecto Durativo"),
-    ("AspP_generic",      22,  "Aspecto Genérico"),
-    ("AspP_prospective",  23,  "Aspecto Prospetivo"),
-    ("AspP_completive",   24,  "Aspecto Completivo"),
-    ("VoiceP",            25,  "Voz Passiva / Médio-Passiva"),
-]
-
-CINQUE_RANK_MAP: Dict[str, int] = {proj: rank for proj, rank, _ in CINQUE_HIERARCHY}
-
-
-# ── Léxico de Advérbios do Português Ancorados em Cinque ──────────────────────
-# Mapeia lemas e palavras para seus respectivos núcleos funcionais
+# ── Léxico Extensivo de Advérbios e Marcadores do Português Histórico ──────────
 ADVERB_CINQUE_LEXICON: Dict[str, str] = {
-    # MoodP_speech_act (Rank 1)
+    # ── Domínio 1 & 3: Speech Act & Evaluative ───────────────────────────────
     "francamente": "MoodP_speech_act",
     "honestamente": "MoodP_speech_act",
     "sinceramente": "MoodP_speech_act",
     "verdadeiramente": "MoodP_speech_act",
+    "em verdade": "MoodP_speech_act",
 
-    # MoodP_evaluative (Rank 2)
     "felizmente": "MoodP_evaluative",
     "infelizmente": "MoodP_evaluative",
     "lamentavelmente": "MoodP_evaluative",
     "desgraçadamente": "MoodP_evaluative",
     "afortunadamente": "MoodP_evaluative",
     "curiosamente": "MoodP_evaluative",
+    "louvado seja deus": "MoodP_evaluative",
+    "graças a deus": "MoodP_evaluative",
 
-    # MoodP_evidential (Rank 3)
+    # ── Evidencial ───────────────────────────────────────────────────────────
     "evidentemente": "MoodP_evidential",
     "claramente": "MoodP_evidential",
     "aparentemente": "MoodP_evidential",
     "visivelmente": "MoodP_evidential",
     "notoriamente": "MoodP_evidential",
     "manifestamente": "MoodP_evidential",
+    "ao que parece": "MoodP_evidential",
 
-    # ModP_epistemic (Rank 4)
+    # ── Epistêmico ───────────────────────────────────────────────────────────
     "provavelmente": "ModP_epistemic",
     "talvez": "ModP_epistemic",
     "quiçá": "ModP_epistemic",
     "quiça": "ModP_epistemic",
     "porventura": "ModP_epistemic",
     "possivelmente": "ModP_epistemic",
+    "por certo": "ModP_epistemic",
+    "com certeza": "ModP_epistemic",
 
-    # T_past (Rank 5)
-    "outrora": "T_past",
-    "dantes": "T_past",
-    "antigamente": "T_past",
-    "ontem": "T_past",
+    # ── Tempo Absoluto (T_Past / T_Future) ───────────────────────────────────
+    "outrora": "T_past_future",
+    "dantes": "T_past_future",
+    "antigamente": "T_past_future",
+    "ontem": "T_past_future",
+    "então": "T_past_future",
+    "entao": "T_past_future",
+    "amanhã": "T_past_future",
+    "amanha": "T_past_future",
+    "depois": "T_past_future",
+    "logo": "T_past_future",
 
-    # T_future (Rank 6)
-    "amanhã": "T_future",
-    "amanha": "T_future",
-    "depois": "T_future",
-    "logo": "T_future",
-
-    # MoodP_irrealis (Rank 7)
+    # ── Irrealis ─────────────────────────────────────────────────────────────
     "acaso": "MoodP_irrealis",
+    "oxalá": "MoodP_irrealis",
+    "oxala": "MoodP_irrealis",
 
-    # ModP_necessity (Rank 8)
+    # ── Necessidade & Obrigação ──────────────────────────────────────────────
     "necessariamente": "ModP_necessity",
     "forçosamente": "ModP_necessity",
     "impreterivelmente": "ModP_necessity",
+    "obrigatoriamente": "ModP_obligation",
+    "por obrigação": "ModP_obligation",
 
-    # ModP_possibility (Rank 9)
-    # possivelmente atua em epistêmico/possibilidade
-
-    # AspP_habitual (Rank 10)
-    "habitualmente": "AspP_habitual",
-    "costumadamente": "AspP_habitual",
-    "ordinariamente": "AspP_habitual",
-    "comumente": "AspP_habitual",
-
-    # AspP_repetitive (Rank 11)
-    "novamente": "AspP_repetitive",
-    "outra vez": "AspP_repetitive",
-    "de novo": "AspP_repetitive",
-
-    # AspP_frequentative (Rank 12)
-    "frequentemente": "AspP_frequentative",
-    "frequentissimamente": "AspP_frequentative",
-    "amiúde": "AspP_frequentative",
-    "amiude": "AspP_frequentative",
-    "amiudadamente": "AspP_frequentative",
-    "reiteradamente": "AspP_frequentative",
-    "muitas vezes": "AspP_frequentative",
-
-    # ModP_volitional (Rank 13)
+    # ── Volitivo ─────────────────────────────────────────────────────────────
     "voluntariamente": "ModP_volitional",
     "deliberadamente": "ModP_volitional",
     "intencionalmente": "ModP_volitional",
     "de propósito": "ModP_volitional",
 
-    # AspP_celerative (Rank 14)
-    "rapidamente": "AspP_celerative",
-    "depressa": "AspP_celerative",
-    "prestes": "AspP_celerative",
-    "velozmente": "AspP_celerative",
-    "prontamente": "AspP_celerative",
-    "ligeiramente": "AspP_celerative",
+    # ── Aspecto Habitual ─────────────────────────────────────────────────────
+    "habitualmente": "AspP_habitual",
+    "costumadamente": "AspP_habitual",
+    "ordinariamente": "AspP_habitual",
+    "comumente": "AspP_habitual",
+    "geralmente": "AspP_habitual",
+    "em geral": "AspP_habitual",
 
-    # T_anterior (Rank 15)
+    # ── Tempo Relativo / Anterioridade (T_Anterior) ──────────────────────────
     "já": "T_anterior",
     "ja": "T_anterior",
     "antes": "T_anterior",
 
-    # AspP_terminative (Rank 16)
+    # ── Aspecto Terminativo & Continuativo ───────────────────────────────────
     "não mais": "AspP_terminative",
     "nao mais": "AspP_terminative",
-
-    # AspP_continuative (Rank 17)
     "ainda": "AspP_continuative",
     "todavia": "AspP_continuative",
+    "sempre": "AspP_continuative",
 
-    # AspP_retrospective (Rank 19)
+    # ── Aspecto Retrospectivo, Proximativo e Durativo ────────────────────────
     "recentemente": "AspP_retrospective",
     "ultimamente": "AspP_retrospective",
     "há pouco": "AspP_retrospective",
     "ha pouco": "AspP_retrospective",
-
-    # AspP_proximative (Rank 20)
+    "recém": "AspP_retrospective",
+    "recem": "AspP_retrospective",
     "quase": "AspP_proximative",
-
-    # AspP_durative (Rank 21)
+    "prestes": "AspP_proximative",
     "longamente": "AspP_durative",
     "brevemente": "AspP_durative",
     "demoradamente": "AspP_durative",
 
-    # AspP_generic (Rank 22)
-    "geralmente": "AspP_generic",
-    "em geral": "AspP_generic",
+    # ── Aspecto Celerativo / Velocidade ───────────────────────────────────────
+    "rapidamente": "AspP_proximative",
+    "depressa": "AspP_proximative",
+    "velozmente": "AspP_proximative",
+    "prontamente": "AspP_proximative",
 
-    # AspP_completive (Rank 24)
+    # ── Aspecto Completivo ───────────────────────────────────────────────────
     "completamente": "AspP_completive",
     "inteiramente": "AspP_completive",
     "totalmente": "AspP_completive",
@@ -175,151 +137,263 @@ ADVERB_CINQUE_LEXICON: Dict[str, str] = {
 }
 
 
-class CinqueEvidence(NamedTuple):
-    projection: str
+class EvidenciaCartografica(NamedTuple):
+    dominio: int
+    projecao: str
     rank: int
     trigger_word: str
     tree_path: Tuple[int, ...]
     node_label: str
+    detalhes: Dict[str, Any]
 
 
-class RizziEvidence(NamedTuple):
-    cp_type: str            # 'CP-ADV', 'CP-REL', 'CP-QUE', 'CP-THT', etc.
-    has_wh: bool            # WNP, WPP, WADVP
-    wh_node: Optional[Tree]
-    topic_nodes: List[Tree]
+class AnalisePeriferiaCompleta(NamedTuple):
+    # Domínio 1: Ato de Fala
+    has_speech_act: bool
+    vocative_nodes: List[Tree]
+    evaluative_nodes: List[Tree]
+    
+    # Domínio 2: Split-CP
+    force_type: str        # DECLARATIVA, INTERROGATIVA, EXCLAMATIVA, IMPERATIVA
+    shift_topics: List[Tree]
+    int_nodes: List[Tree]
+    familiar_topics: List[Tree]
     focus_nodes: List[Tree]
-    fin_type: str           # 'finite' vs 'non-finite'
+    modifier_nodes: List[Tree]
+    qemb_nodes: List[Tree]
+    fin_type: str          # FINITA vs NAO_FINITA
+
+
+class AnaliseFirstPhasevP(NamedTuple):
+    # Domínio 5: Split-vP First Phase
+    agent_node: Optional[Tree]      # VoiceP_agent (Argumento Externo / Sujeito Agente)
+    initiator_node: Optional[Tree]  # InitP (Causador)
+    high_appl_node: Optional[Tree]  # ApplP_high (Beneficiário / Dativo Ético)
+    proc_node: Optional[Tree]       # ProcP (Núcleo do Verbo Lexical)
+    low_appl_node: Optional[Tree]   # ApplP_low (Meta / Objeto Indireto)
+    result_node: Optional[Tree]     # ResP (Resultado / Partícula Télica)
+    root_theme_node: Optional[Tree] # √Root + Tema (Argumento Interno Direto)
 
 
 def classificar_adverbio_cinque(token: str, lemma: Optional[str] = None) -> Optional[str]:
-    """Retorna a projeção de Cinque correspondente a um advérbio ou lema."""
-    t_clean = token.lower().strip()
-    if t_clean in ADVERB_CINQUE_LEXICON:
-        return ADVERB_CINQUE_LEXICON[t_clean]
-    
+    """Classifica um advérbio ou lema na hierarquia funcional de Cinque."""
+    t = token.lower().strip()
+    if t in ADVERB_CINQUE_LEXICON:
+        return ADVERB_CINQUE_LEXICON[t]
     if lemma:
-        l_clean = lemma.lower().strip()
-        if l_clean in ADVERB_CINQUE_LEXICON:
-            return ADVERB_CINQUE_LEXICON[l_clean]
-            
+        l = lemma.lower().strip()
+        if l in ADVERB_CINQUE_LEXICON:
+            return ADVERB_CINQUE_LEXICON[l]
     return None
 
 
-def extrair_evidencias_cinque(tree: ParentedTree) -> List[CinqueEvidence]:
+def extrair_evidencias_dominio1_e_3(tree: ParentedTree) -> List[EvidenciaCartografica]:
     """
-    Varre a árvore em busca de nós que contenham advérbios da hierarquia de Cinque.
-    Retorna a lista de evidências encontradas em ordem linear, evitando duplicação
-    entre sintagmas e seus nós filhos.
+    Varre a árvore em busca de nós funcionais do Domínio 1 (Ato de Fala) e Domínio 3 (Split-IP).
     """
     evidencias = []
     caminhos_processados = set()
-    
+
     for subtree in tree.subtrees():
         if not hasattr(subtree, "label"):
             continue
         path = subtree.treeposition()
-        
-        # Se este nó é descendente de um nó já classificado, pula para evitar duplicação
         if any(path[:len(p)] == p for p in caminhos_processados):
             continue
-            
+
         label = subtree.label()
-        
-        # Procura advérbios em ADVP ou nós ADV
+
+        # Domínio 1: Vocativos (VocP)
+        if label.startswith("NP-VOC") or label.startswith("VOC"):
+            caminhos_processados.add(path)
+            evidencias.append(EvidenciaCartografica(
+                dominio=1,
+                projecao="VocP",
+                rank=PROJECOES_RANKS.get("VocP", 2),
+                trigger_word=" ".join(subtree.leaves()),
+                tree_path=path,
+                node_label=label,
+                detalhes={"tipo": "vocativo"}
+            ))
+            continue
+
+        # Domínio 3: Advérbios funcionais
         if label.startswith("ADVP") or label.startswith("ADV"):
             words = subtree.leaves()
             phrase = " ".join(words).lower()
-            
-            # Testa a frase inteira ou palavras isoladas
             proj = classificar_adverbio_cinque(phrase)
-            word_match = phrase
-            
+            matched = phrase
+
             if not proj:
                 for w in words:
                     proj = classificar_adverbio_cinque(w)
                     if proj:
-                        word_match = w
+                        matched = w
                         break
-                        
+
             if proj:
                 caminhos_processados.add(path)
-                rank = CINQUE_RANK_MAP.get(proj, 99)
-                evidencias.append(CinqueEvidence(
-                    projection=proj,
+                rank = PROJECOES_RANKS.get(proj, 99)
+                dom = 3
+                evidencias.append(EvidenciaCartografica(
+                    dominio=dom,
+                    projecao=proj,
                     rank=rank,
-                    trigger_word=word_match,
+                    trigger_word=matched,
                     tree_path=path,
-                    node_label=label
+                    node_label=label,
+                    detalhes={"adverbio": matched}
                 ))
-                
+
     return evidencias
 
 
-def validar_ordem_cinque(evidencias: List[CinqueEvidence]) -> Tuple[bool, Optional[str]]:
+def diagnosticar_periferia_completa(cp_tree: ParentedTree) -> AnalisePeriferiaCompleta:
     """
-    Verifica se a sequência linear de advérbios respeita a ordem rígida universal.
-    Se um advérbio de rank maior (mais baixo na árvore) aparecer antes de um de rank menor,
-    uma violação de ordem canônica é detectada!
-    """
-    if len(evidencias) <= 1:
-        return True, None
-        
-    for i in range(len(evidencias) - 1):
-        curr = evidencias[i]
-        nxt = evidencias[i+1]
-        
-        # Em ordem canônica linear: advérbios mais altos (menor rank) aparecem antes
-        if curr.rank > nxt.rank:
-            motivo = (
-                f"Violação de Ordem Cinque: '{curr.trigger_word}' ({curr.projection}, rank {curr.rank}) "
-                f"precede '{nxt.trigger_word}' ({nxt.projection}, rank {nxt.rank})"
-            )
-            return False, motivo
-            
-    return True, None
-
-
-def analisar_periferia_rizzi(cp_tree: ParentedTree) -> RizziEvidence:
-    """
-    Analisa um nó CP do Tycho Brahe e diagnostica os componentes da periferia esquerda:
-      - ForceP: derivado da função do CP (REL, QUE, ADV, THT, CAR, etc.)
-      - FocP: presenças de operadores-Wh (WNP, WPP, WADVP) ou traços *T*
-      - TopP: sintagmas deslocados à esquerda antes do sujeito ou separados por pontuação
-      - FinP: complementizador (C) ou adjacente ao IP imediatamente embutido
+    Diagnostica minuciosamente os Domínios 1 e 2 na periferia esquerda da sentença.
     """
     cp_label = cp_tree.label()
-    wh_node = None
+    vocatives = []
+    evaluatives = []
+    shift_topics = []
+    int_nodes = []
+    familiar_topics = []
     focus_nodes = []
-    topic_nodes = []
-    
-    # Procura filhos imediatos do CP
+    modifiers = []
+    qemb_nodes = []
+
+    force_type = "DECLARATIVA"
+    if "QUE" in cp_label or "INTERROG" in cp_label:
+        force_type = "INTERROGATIVA"
+    elif "EXC" in cp_label:
+        force_type = "EXCLAMATIVA"
+    elif "IMP" in cp_label:
+        force_type = "IMPERATIVA"
+
     for child in cp_tree:
         if not isinstance(child, (Tree, ParentedTree)):
             continue
         lbl = child.label()
-        
-        # Operador Wh -> Projeção de FocP
-        if lbl.startswith("WNP") or lbl.startswith("WPP") or lbl.startswith("WADVP"):
-            wh_node = child
-            focus_nodes.append(child)
-            
-        # Tópicos deslocados (geralmente sintagmas pré-IP não-wh marcados com função ou adjunção)
+
+        # Domínio 1: Vocativo e Avaliação
+        if lbl.startswith("NP-VOC") or lbl.startswith("VOC"):
+            vocatives.append(child)
+        elif lbl.startswith("ADVP-EVAL") or lbl.startswith("CP-EVAL"):
+            evaluatives.append(child)
+
+        # Domínio 2: Operadores Wh / Foco
+        elif lbl.startswith("WNP") or lbl.startswith("WPP") or lbl.startswith("WADVP"):
+            if force_type == "INTERROGATIVA" and ("EMB" in cp_label or "SUB" in cp_label):
+                qemb_nodes.append(child)
+            else:
+                focus_nodes.append(child)
+
+        # Interrogativo estrutural puro (ex: 'se')
+        elif lbl == "C" and any(w.lower() in ("se", "si") for w in child.leaves()):
+            int_nodes.append(child)
+
+        # Tópicos
         elif lbl.startswith("NP-TOP") or lbl.startswith("PP-TOP"):
-            topic_nodes.append(child)
-            
-    # Determina finitude
-    fin_type = "finite"
+            shift_topics.append(child)
+        elif lbl.startswith("NP-FAM") or lbl.startswith("PP-FAM"):
+            familiar_topics.append(child)
+
+        # Modificadores
+        elif lbl.startswith("ADVP-MOD") or lbl.startswith("PP-MOD"):
+            modifiers.append(child)
+
+    fin_type = "FINITA"
     for st in cp_tree.subtrees():
         if st.label().startswith("IP-INF") or st.label().startswith("IP-GER") or st.label().startswith("IP-PPL"):
-            fin_type = "non-finite"
+            fin_type = "NAO_FINITA"
             break
 
-    return RizziEvidence(
-        cp_type=cp_label,
-        has_wh=(wh_node is not None),
-        wh_node=wh_node,
-        topic_nodes=topic_nodes,
+    return AnalisePeriferiaCompleta(
+        has_speech_act=True,
+        vocative_nodes=vocatives,
+        evaluative_nodes=evaluatives,
+        force_type=force_type,
+        shift_topics=shift_topics,
+        int_nodes=int_nodes,
+        familiar_topics=familiar_topics,
         focus_nodes=focus_nodes,
+        modifier_nodes=modifiers,
+        qemb_nodes=qemb_nodes,
         fin_type=fin_type
     )
+
+
+def diagnosticar_baixa_periferia_e_vP(ip_tree: ParentedTree) -> Tuple[List[Tree], Optional[Tree], AnaliseFirstPhasevP]:
+    """
+    Diagnostica o Domínio 4 (Baixa Periferia Belletti) e Domínio 5 (Split-vP Ramchand/Harley).
+    Retorna (low_topics, low_focus_sujeito_posposto, first_phase_vp).
+    """
+    low_topics = []
+    low_focus = None
+    agent = None
+    initiator = None
+    high_appl = None
+    proc = None
+    low_appl = None
+    res = None
+    root_theme = None
+
+    encontrou_verbo = False
+
+    for child in ip_tree:
+        if not isinstance(child, (Tree, ParentedTree)):
+            continue
+        lbl = child.label()
+
+        if lbl.startswith("V") or lbl.startswith("HV") or lbl.startswith("ET") or lbl.startswith("TR"):
+            encontrou_verbo = True
+            proc = child
+            continue
+
+        # Sujeito posposto (Domínio 4: FocP_low - Belletti 2004)
+        if encontrou_verbo and lbl.startswith("NP-SBJ"):
+            low_focus = child
+            continue
+
+        # Sujeito pré-verbal agente (Domínio 5: VoiceP_agent)
+        if not encontrou_verbo and lbl.startswith("NP-SBJ"):
+            agent = child
+            continue
+
+        # Objeto indireto / Meta / Aplicativo Baixo (Domínio 5: ApplP_low)
+        if lbl.startswith("PP-DAT") or lbl.startswith("NP-DAT") or (lbl.startswith("PP") and any(w.lower() in ("a", "ao", "aos", "para") for w in child.leaves())):
+            low_appl = child
+            continue
+
+        # Objeto direto / Tema (Domínio 5: √Root)
+        if lbl.startswith("NP-ACC") or lbl.startswith("NP"):
+            root_theme = child
+            continue
+
+    first_phase = AnaliseFirstPhasevP(
+        agent_node=agent,
+        initiator_node=initiator,
+        high_appl_node=high_appl,
+        proc=proc,
+        low_appl_node=low_appl,
+        result_node=res,
+        root_theme_node=root_theme
+    )
+
+    return low_topics, low_focus, first_phase
+
+
+def validar_ordem_cinque(evidencias: List[Any]) -> Tuple[bool, Optional[str]]:
+    """Verifica se a ordem linear dos advérbios respeita os ranks estritos de Cinque."""
+    ev_d3 = [e for e in evidencias if getattr(e, "dominio", 3) == 3]
+    for i in range(len(ev_d3) - 1):
+        if ev_d3[i].rank > ev_d3[i+1].rank:
+            motivo = f"Violação de Ordem Cinque: '{ev_d3[i].trigger_word}' precede '{ev_d3[i+1].trigger_word}'"
+            return False, motivo
+    return True, None
+
+
+# Aliases para retrocompatibilidade
+extrair_evidencias_cinque = extrair_evidencias_dominio1_e_3
+analisar_periferia_rizzi = diagnosticar_periferia_completa
+
