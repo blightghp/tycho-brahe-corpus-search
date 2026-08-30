@@ -15,21 +15,50 @@ import json
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 
-DB_CARTOGRAFIA_PATH = "corpus_cartografia.db"
+
+def resolver_db_cartografia_path(custom_path: Optional[str] = None) -> str:
+    """Resolve o caminho do banco de cartografia com fallbacks dinâmicos."""
+    if custom_path:
+        return custom_path
+    
+    # 1. Checa diretório atual
+    if os.path.exists("corpus_cartografia.db"):
+        return "corpus_cartografia.db"
+        
+    # 2. Checa pasta ../corpus_data/
+    corpus_data = os.path.join(os.path.dirname(__file__), "..", "corpus_data", "corpus_cartografia.db")
+    if os.path.exists(corpus_data):
+        return os.path.abspath(corpus_data)
+        
+    # 3. Checa APPDATA
+    appdata = os.getenv("APPDATA")
+    if appdata:
+        appdata_db = os.path.join(appdata, "tycho-desktop", "corpus_cartografia.db")
+        if os.path.exists(appdata_db):
+            return appdata_db
+
+    # Padrão
+    return "corpus_cartografia.db"
 
 
-def get_db_connection(db_path: str = DB_CARTOGRAFIA_PATH) -> sqlite3.Connection:
-    """Retorna uma conexão configurada com WAL para concorrência eficiente."""
-    con = sqlite3.connect(db_path)
+DB_CARTOGRAFIA_PATH = resolver_db_cartografia_path()
+
+
+def get_db_connection(db_path: Optional[str] = None) -> sqlite3.Connection:
+    """Retorna uma conexão configurada com WAL e cache de alta performance."""
+    path = db_path or resolver_db_cartografia_path()
+    con = sqlite3.connect(path)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA journal_mode=WAL")
     con.execute("PRAGMA synchronous=NORMAL")
     con.execute("PRAGMA foreign_keys=ON")
+    con.execute("PRAGMA cache_size=-64000")  # 64MB cache
+    con.execute("PRAGMA temp_store=MEMORY")
     return con
 
 
-def inicializar_banco_cartografia(db_path: str = DB_CARTOGRAFIA_PATH):
-    """Cria o esquema de tabelas para expansão e quarentena humana."""
+def inicializar_banco_cartografia(db_path: Optional[str] = None):
+    """Cria o esquema de tabelas e índices para expansão e quarentena humana."""
     con = get_db_connection(db_path)
     cur = con.cursor()
     
@@ -65,6 +94,7 @@ def inicializar_banco_cartografia(db_path: str = DB_CARTOGRAFIA_PATH):
         CREATE INDEX IF NOT EXISTS idx_exp_status ON tb_arvores_expandidas(status);
         CREATE INDEX IF NOT EXISTS idx_quar_status ON tb_quarentena(status);
         CREATE INDEX IF NOT EXISTS idx_quar_tipo ON tb_quarentena(tipo_anomalia);
+        CREATE INDEX IF NOT EXISTS idx_quar_arq ON tb_quarentena(arquivo);
     """)
     con.commit()
     con.close()
@@ -78,7 +108,7 @@ def salvar_arvore_expandida(
     sent_id_externo: str = "",
     sentenca_id_fase1: Optional[int] = None,
     status: str = "AUTOMATICO",
-    db_path: str = DB_CARTOGRAFIA_PATH
+    db_path: Optional[str] = None
 ) -> int:
     """Insere ou atualiza uma árvore expandida com sucesso."""
     con = get_db_connection(db_path)
@@ -104,7 +134,7 @@ def registrar_quarentena(
     tipo: str,
     sent_id_externo: str = "",
     arvore_sugerida: str = "",
-    db_path: str = DB_CARTOGRAFIA_PATH
+    db_path: Optional[str] = None
 ) -> int:
     """Insere uma sentença anômala na quarentena para auditoria humana."""
     con = get_db_connection(db_path)
@@ -123,8 +153,8 @@ def registrar_quarentena(
         con.close()
 
 
-def obter_estatisticas(db_path: str = DB_CARTOGRAFIA_PATH) -> Dict[str, Any]:
-    """Calcula estatísticas de transformação e quarentena."""
+def obter_estatisticas(db_path: Optional[str] = None) -> Dict[str, Any]:
+    """Calcula estatísticas completas de transformação e quarentena."""
     con = get_db_connection(db_path)
     try:
         cur = con.cursor()
@@ -143,11 +173,18 @@ def obter_estatisticas(db_path: str = DB_CARTOGRAFIA_PATH) -> Dict[str, Any]:
             except Exception:
                 pass
                 
+        # Anomalias mais comuns
+        anomalias_rows = cur.execute(
+            "SELECT tipo_anomalia, COUNT(*) as cnt FROM tb_quarentena GROUP BY tipo_anomalia ORDER BY cnt DESC"
+        ).fetchall()
+        anomalias_counts = {r["tipo_anomalia"]: r["cnt"] for r in anomalias_rows}
+
         return {
             "total_expandidas": total_expandidas,
             "total_quarentena": total_quarentena,
             "quarentena_pendente": quarentena_pendente,
             "quarentena_resolvida": quarentena_resolvida,
+            "anomalias_frequencia": anomalias_counts,
             "projecoes_frequencia": dict(sorted(proj_counts.items(), key=lambda x: x[1], reverse=True))
         }
     finally:
@@ -156,4 +193,4 @@ def obter_estatisticas(db_path: str = DB_CARTOGRAFIA_PATH) -> Dict[str, Any]:
 
 if __name__ == "__main__":
     inicializar_banco_cartografia()
-    print("Banco de cartografia inicializado com sucesso.")
+    print("Banco de cartografia inicializado com sucesso em:", resolver_db_cartografia_path())
