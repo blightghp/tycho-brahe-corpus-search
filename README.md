@@ -1,42 +1,127 @@
-# Tycho Brahe - Pesquisa Sintática Gerativa
+# Tycho Brahe Search: Plataforma de Pesquisa Sintática Gerativa e Cartográfica
 
-Este repositório contém a infraestrutura e o aplicativo de pesquisa e análise sintática estrutural das árvores anotadas do projeto Tycho Brahe (http://www.tycho.iel.unicamp.br/). 
+[![Release v1.0.0](https://img.shields.io/badge/release-v1.0.0-emerald.svg)](https://github.com/blightghp/tycho-brahe-corpus-search/releases)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%20x64-indigo.svg)](https://github.com/blightghp/tycho-brahe-corpus-search/releases)
+[![Rust](https://img.shields.io/badge/core-Rust%20%2F%20Tauri%20v2-orange.svg)](https://tauri.app/)
+[![Python NLP](https://img.shields.io/badge/nlp-Python%20%2F%20spaCy%20%2F%20NLTK-yellow.svg)](https://spacy.io/)
+[![Frontend](https://img.shields.io/badge/ui-React%2019%20%2F%20Tailwind%20%2F%20D3-cyan.svg)](https://react.dev/)
 
-## Arquitetura do Repositório
-Para facilitar o desenvolvimento descentralizado e a clareza do escopo de cada agente de software (React vs Rust vs Python), o projeto foi reestruturado nas seguintes áreas:
+> **Desenvolvido por Gabriel Pinheiro**  
+> *Pesquisador em Linguística no Instituto de Estudos da Linguagem (IEL) / Universidade Estadual de Campinas (UNICAMP)*  
+> Projeto associado ao [Tycho Brahe Parsed Corpus of Historical Portuguese](http://www.tycho.iel.unicamp.br/)
 
-- `/python_backend`: Contém a inteligência de manipulação das árvores, o roteamento da lógica de tokenização com NLTK/spaCy, a conversão para SQLite e a orquestração da auditoria da cartografia. (Leia o `README.md` interno para passos de processamento).
-- `/corpus_data`: Armazena os dados textuais puros (`*_psd.txt`) e os bancos de dados SQLite pré-computados (`.db`).
-- `/tycho-desktop/src-tauri`: É o "Motor Rust" responsável por envelopar o backend em background, intermediar as permissões do SO e interagir com o front-end por via de IPC seguro. (Leia o `README.md` interno).
-- `/tycho-desktop/src`: É o Frontend em React/TypeScript, contendo a Interface de Usuário estilizada, componentes gráficos em D3 e as telas de interação do pesquisador. (Leia o `README.md` interno).
+---
+
+## 📖 Apresentação do Projeto
+
+O **Tycho Brahe Search** é um ambiente computacional integrado para investigação morfossintática, análise diacrônica e visualização cartográfica de árvores sintáticas históricas em língua portuguesa. 
+
+O software realiza a transdução algorítmica das anotações sintáticas clássicas do *Corpus Tycho Brahe* em **árvores cartográficas universais de 5 domínios**, permitindo o mapeamento fino de traços de ato de fala, complementizadores (Split-CP), hierarquia adverbial e flexional de Cinque (Split-IP), baixa periferia informacional e estrutura temática de primeira fase (Split-vP).
+
+```
+ ┌─────────────────────────────────────────────────────────────────────────────┐
+ │                      OS 5 GRANDES DOMÍNIOS CARTOGRÁFICOS                    │
+ ├─────────────────────────────────────────────────────────────────────────────┤
+ │  🟣 Domínio 1 (Ato de Fala)         : SAP → VocP → EvalP / AttP             │
+ │  🔵 Domínio 2 (Split-CP)            : ForceP → TopP* → IntP → FocP → FinP   │
+ │  🟢 Domínio 3 (Split-IP / Cinque)   : MoodP → ModP → TP → AspP → VoiceP     │
+ │  🟡 Domínio 4 (Baixa Periferia)     : TopP_low → FocP_low (Sujeito Pós-V)   │
+ │  🔴 Domínio 5 (First Phase Syntax)  : VoiceP → InitP → ProcP → ResP → Root  │
+ └─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Plano Diretor de Manutenção e Implementação (Passo a Passo)
+## ✨ Principais Funcionalidades
 
-Abaixo está a orientação detalhada sobre como o fluxo deve ser operado e atualizado, dividindo o sistema do "Core" para a "Camada de Apresentação".
-
-### 1. Camada de Dados e Tokenização Sintática (O mais demorado e procedural)
-*Diretório: `/python_backend` e `/corpus_data`*
-O que fazer/Implementar:
-1. **Geração Inicial**: Se o banco de dados principal corromper ou for atualizado (com a Fase 3 e dados expandidos), você deve reconstruir o banco SQLite executando `python_backend/build_db_fase3.py`. Esse arquivo consumirá `corpus_data/*.txt`.
-2. **Transformação Cartográfica (Oráculo)**: A árvore NLTK é importada, inspecionada nó a nó, e o `rewriter.py` insere as categorias expandidas (como TopP, MoodP). Se um nó anômalo for encontrado, ele será lançado na quarentena (`tb_quarentena` do SQLite `corpus_cartografia.db`).
-3. **Compilação**: Para ligar o Python ao App, não rodamos servidores Flask (por segurança e estabilidade). Rodamos o script PowerShell `build_backend.ps1`, que empacota todo o NLP usando PyInstaller em um único `tycho_backend.exe`.
-
-### 2. O Motor (Rust & Tauri Shell)
-*Diretório: `/tycho-desktop/src-tauri`*
-O que fazer/Implementar:
-1. **Configuração de Recursos**: O arquivo `tauri.conf.json` governa como a aplicação mapeia os dados do usuário. Se adicionar novos arquivos ao `/corpus_data`, deve-se mapeá-los no array `bundle.resources` lá.
-2. **Sidecar / Gates Seguros**: O Rust não roda código Python diretamente. Ele executa o `.exe` gerado pelo PyInstaller. Para isso, o `capabilities/default.json` bloqueia toda a execução local, exceto o binário assinado do backend. Qualquer nova ferramenta paralela deve ser mapeada na lista de capabilities do Tauri V2.
-3. **Redução de Tamanho (LTO)**: O compilador Rust já foi ajustado com _Link-Time Optimization_. Apenas rode `npm run tauri build` se desejar um `.msi` novo; ele já sai ultra-comprimido.
-
-### 3. A Interface e UX (Frontend React)
-*Diretório: `/tycho-desktop/src`*
-O que fazer/Implementar:
-1. **Estilização & Créditos**: O frontend deve carregar os créditos formais ao projeto Tycho Brahe (IEL-Unicamp) explicitamente.
-2. **Navegação Intuitiva**: A barra lateral altera o fluxo entre _Pesquisa em Árvores_ e a aba de _Human-in-the-Loop_ (Auditoria). Em caso de expansões, os componentes Tailwind devem enfatizar mensagens limpas e feedback responsivo.
-3. **Comunicação Segura (IPC)**: A API do frontend (`services/api.ts`) é a única porta de entrada autorizada a despachar dados pela rede nativa usando `@tauri-apps/plugin-shell`. Se você criar um botão novo, conecte a lógica nessa ponte.
+- 🌳 **Visualizador Interativo de Árvores D3.js**: Renderização gráfica dinâmica em SVG com zoom contínuo, pan, centralização e codificação cromática por domínio teórico.
+- 🔬 **Decomposição Morfossintática Termo a Termo**: Grade estrutural com extração automática de tokens arcaicos, lemas normatizados, POS tags spaCy e papéis gerativos formais.
+- ⚡ **Motor de Busca Hierárquica de Alta Performance**: Consultas instantâneas por labels exatos, categorias base, funções sintáticas, dominância direta ($A < B$), dominância indireta ($A \ll B$) e co-irmandade ($A \$ B$) indexadas em SQLite (*Nested Set Model*).
+- 🛡️ **Módulo Human-in-the-Loop (Auditoria de Quarentena)**: Isolamento automático e interface de revisão comparativa de sentenças com inversões ou anomalias da hierarquia universal de Cinque.
+- 🚀 **Arquitetura Tripartida Segura**: Core nativo em Rust (Tauri v2) com sandboxing estrito e Content Security Policy (CSP), sidecar analítico Python (PyInstaller) e frontend reativo em React 19 + TypeScript.
+- 📦 **Distribuição 100% Portátil**: Executável único pronto para uso, sem necessidade de instalar Node.js, Python ou compiladores.
 
 ---
-**Créditos e Metadados do Domínio**:
-O processamento computacional foi gerado tendo como base arquitetural as árvores históricas geradas pelo *Tycho Brahe Parsed Corpus of Historical Portuguese*. Para referências teóricas, acesse o [site original do projeto](http://www.tycho.iel.unicamp.br/).
+
+## 📥 Download e Execução Imediata
+
+Você pode baixar a versão pronta para uso diretamente da pasta [`release/`](./release) deste repositório ou na aba [Releases](https://github.com/blightghp/tycho-brahe-corpus-search/releases):
+
+| Pacote | Tamanho | Descrição | Link de Download |
+| :--- | :---: | :--- | :--- |
+| 📦 **Versão Portátil (.ZIP)** | ~243 MB | **Recomendado**. Descompacte e execute com 1 clique (sem instalação). | [`TychoBrahe_v1.0.0_Windows_x64_Portable.zip`](./release/TychoBrahe_v1.0.0_Windows_x64_Portable.zip) |
+| ⚙️ **Instalador Setup (.EXE)** | ~115 MB | Instalador guiado padrão do Windows com atalho no menu iniciar. | [`Tycho_Brahe_Search_v1.0.0_Setup.exe`](./release/installers/Tycho_Brahe_Search_v1.0.0_Setup.exe) |
+| 🛡️ **Pacote MSI (.MSI)** | ~143 MB | Instalador corporativo/acadêmico Windows Installer WiX. | [`Tycho_Brahe_Search_v1.0.0_x64.msi`](./release/installers/Tycho_Brahe_Search_v1.0.0_x64.msi) |
+
+### Como Executar a Versão Portátil (1 Clique):
+1. Baixe o [`TychoBrahe_v1.0.0_Windows_x64_Portable.zip`](./release/TychoBrahe_v1.0.0_Windows_x64_Portable.zip).
+2. Extraia o arquivo ZIP em qualquer diretório.
+3. Dê um duplo clique em **`INICIAR_TYCHO_BRAHE.bat`** (ou `Tycho Brahe Search.exe`).
+
+---
+
+## 📚 Documentação do Projeto
+
+Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`docs/`](./docs):
+
+- 📘 [**Manual do Usuário**](./docs/MANUAL_DO_USUARIO.md): Guia completo de navegação, consultas, atalhos e auditoria.
+- 🔬 [**Guia de Cartografia Sintática**](./docs/GUIA_CARTOGRAFIA_SINTATICA.md): Fundamentação teórica dos 5 grandes domínios e 44 projeções funcionais universais.
+- 🏛️ [**Arquitetura do Sistema**](./docs/ARQUITETURA_DO_SISTEMA.md): Diagrama detalhado do pipeline Rust + Python + TypeScript/D3.
+- 🛡️ [**Relatório de Auditoria AppSec**](./docs/revisao_appsec.md): Medidas defensivas, mitigação de SQLi, prevenção de Self-DoS e sandboxing CSP.
+- 🎓 [**Referências Bibliográficas e Créditos**](./docs/REFERENCIAS_E_CREDITOS.md): Atribuições acadêmicas, histórico do Corpus Tycho Brahe e citação em BibTeX.
+
+---
+
+## 🏛️ Estrutura do Repositório
+
+```
+tycho-brahe-corpus-search/
+├── README.md                     <- Apresentação principal do projeto
+├── release/                      <- Binários executáveis, instaladores e ZIP portátil
+│   ├── TychoBrahe_v1.0.0_Windows_x64_Portable.zip
+│   ├── installers/               <- Instaladores MSI e Setup.exe
+│   └── TychoBrahe_v1.0.0_Portable/ <- Diretório descompactado pronto para execução
+├── docs/                         <- Manuais e documentações teóricas e arquiteturais
+│   ├── MANUAL_DO_USUARIO.md
+│   ├── GUIA_CARTOGRAFIA_SINTATICA.md
+│   ├── ARQUITETURA_DO_SISTEMA.md
+│   ├── REFERENCIAS_E_CREDITOS.md
+│   └── revisao_appsec.md
+├── corpus_data/                  <- Textos históricos (.txt) e bancos SQLite (.db)
+├── python_backend/               <- Oráculo cartográfico, rewriter, tokenizador e CLI
+│   ├── cartografia_schema.py
+│   ├── oracle.py
+│   ├── rewriter.py
+│   ├── tokenizador_cartografico.py
+│   ├── pesquisa_sintatica.py
+│   └── test_e2e_pipeline.py
+└── tycho-desktop/                <- Aplicação Desktop Tauri v2 + React 19 + TypeScript
+    ├── src/                      <- Componentes React, D3 TreeView, TermBreakdown
+    └── src-tauri/                <- Motor Rust, sidecars e configuração de segurança
+```
+
+---
+
+## 🔬 Como Citar
+
+Se você utilizar este software em suas pesquisas e publicações acadêmicas, por favor cite:
+
+```bibtex
+@software{pinheiro2026tychobrahe,
+  author = {Gabriel Pinheiro},
+  title = {Tycho Brahe Search: Motor Desktop de Pesquisa Sintática Gerativa e Cartográfica},
+  year = {2026},
+  publisher = {GitHub},
+  howpublished = {\url{https://github.com/blightghp/tycho-brahe-corpus-search}},
+  institution = {Instituto de Estudos da Linguagem, Universidade Estadual de Campinas (UNICAMP)}
+}
+```
+
+---
+
+## 🎓 Agradecimentos e Créditos Institucionais
+
+- **Corpus Tycho Brahe**: *Tycho Brahe Parsed Corpus of Historical Portuguese*  
+  Universidade Estadual de Campinas (UNICAMP) / Instituto de Estudos da Linguagem (IEL) / FAPESP  
+  Portal Oficial: [http://www.tycho.iel.unicamp.br/](http://www.tycho.iel.unicamp.br/)

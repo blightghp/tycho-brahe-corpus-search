@@ -11,3 +11,7 @@ python_backend/build/
 python_backend/dist/
 python_backend/__pycache__/
 tycho-desktop/src-tauri/target/
+release/
+*.zip
+*.msi
+*.exe
