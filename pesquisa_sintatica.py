@@ -1,37 +1,58 @@
 """
 pesquisa_sintatica.py
 =====================
-Fase 1 – Camada 3 do Plano Arquitetural Gerativo.
+Motor de Consulta Sintática e Cartográfica (Fases 1, 2 e 3).
 
-Motor de consulta sintática baseado em SQL + Nested Sets.
 Suporta:
-  • Busca por label exato       : --label NP-SBJ
-  • Busca por categoria base    : --base NP  (cobre NP-SBJ, NP-ACC ...)
-  • Busca por função sintática  : --funcao SBJ
+  • Busca por label exato       : --label NP-SBJ / --label ForceP / --label MoodP_evaluative
+  • Busca por categoria base    : --base NP / --base ModP
+  • Busca por função sintática  : --funcao SBJ / --funcao ACC
   • Busca por token             : --token rei
   • Busca por lema              : --lemma oferecer
-  • Dominância direta  (A < B)  : --pai X --filho Y
-  • Dominância indireta(A << B) : --domina X --contido Y
-  • Co-irmandade       (A $ B)  : --irmao X --com Y
-  • KWIC sintático              : --kwic-label X  (retorna contexto de folhas)
-  • Frequência de labels        : --freq-labels
-  • Exportação para Excel       : --exportar resultado.xlsx
+  • Dominância direta  (A < B)  : --pai IP-MAT --filho ForceP
+  • Dominância indireta(A << B) : --domina ForceP --contido NP-SBJ
+  • Co-irmandade       (A $ B)  : --irmao FocP --com FinP
+  • KWIC sintático              : --kwic --label ForceP
+  • Frequência de labels        : --acao freq_labels
+  • Frequência cartográfica     : --acao freq_cartografia
+  • Visualização de Árvore      : --acao ver_arvore --sentenca-id 1
+  • Comparação de Árvores       : --acao comparar --sentenca-id 1
+  • Exportação para Excel/CSV   : --exportar resultado.xlsx
 """
 
 import sqlite3
 import argparse
 import sys
 import os
+from typing import Optional
 import pandas as pd
+from nltk.tree import Tree
 
-DB_PATH = "corpus_fase1.db"
+from tree_io import deserialize_tree, serialize_tree
+
+DEFAULT_DB_FASE3 = "corpus_fase3.db"
+DEFAULT_DB_FASE1 = "corpus_fase1.db"
 
 
-def get_con():
-    if not os.path.exists(DB_PATH):
-        print(f"Erro: '{DB_PATH}' não encontrado. Execute 'python build_db_fase1.py' primeiro.")
-        sys.exit(1)
-    con = sqlite3.connect(DB_PATH)
+def resolver_db_path(custom_path: Optional[str] = None) -> str:
+    """Resolve o banco de dados ativo (prioriza corpus_fase3.db se existir)."""
+    if custom_path:
+        if not os.path.exists(custom_path):
+            print(f"Erro: Banco '{custom_path}' não encontrado.")
+            sys.exit(1)
+        return custom_path
+    if os.path.exists(DEFAULT_DB_FASE3):
+        return DEFAULT_DB_FASE3
+    if os.path.exists(DEFAULT_DB_FASE1):
+        return DEFAULT_DB_FASE1
+    print(f"Erro: Nenhum banco de dados encontrado ('{DEFAULT_DB_FASE3}' ou '{DEFAULT_DB_FASE1}').")
+    print("Execute 'python build_db_fase3.py' ou 'python build_db_fase1.py' primeiro.")
+    sys.exit(1)
+
+
+def get_con(db_path: Optional[str] = None) -> sqlite3.Connection:
+    path = resolver_db_path(db_path)
+    con = sqlite3.connect(path)
     con.row_factory = sqlite3.Row
     return con
 
@@ -43,9 +64,9 @@ def escape_like(s: str) -> str:
     return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
-# ── Frequência de labels ──────────────────────────────────────────────────────
-def freq_labels(limite: int = 30) -> pd.DataFrame:
-    con = get_con()
+# ── Frequência de Labels ──────────────────────────────────────────────────────
+def freq_labels(limite: int = 30, db_path: Optional[str] = None) -> pd.DataFrame:
+    con = get_con(db_path)
     try:
         sql = """
             SELECT label, label_base, funcao,
@@ -61,12 +82,37 @@ def freq_labels(limite: int = 30) -> pd.DataFrame:
         con.close()
 
 
+def freq_cartografia(limite: int = 30, db_path: Optional[str] = None) -> pd.DataFrame:
+    """Retorna a frequência apenas dos nós gerados pela expansão cartográfica (Fases 2 e 3)."""
+    con = get_con(db_path)
+    try:
+        # Verifica se a coluna eh_cartografico existe na tabela
+        cur = con.cursor()
+        colunas = [r[1] for r in cur.execute("PRAGMA table_info(tb_nos)").fetchall()]
+        if "eh_cartografico" not in colunas:
+            print("Aviso: O banco atual não possui anotação cartográfica (Fase 3). Executando frequência geral.")
+            return freq_labels(limite, db_path)
+
+        sql = """
+            SELECT label, COUNT(*) as frequencia
+            FROM   tb_nos
+            WHERE  eh_cartografico = 1
+            GROUP  BY label
+            ORDER  BY frequencia DESC
+            LIMIT  ?
+        """
+        return pd.read_sql(sql, con, params=(limite,))
+    finally:
+        con.close()
+
+
 # ── Busca básica por atributo ────────────────────────────────────────────────
 def busca_por_atributo(
     label: str = None, base: str = None, funcao: str = None,
-    token: str = None, lemma: str = None, limite: int = 20
+    token: str = None, lemma: str = None, apenas_carto: bool = False,
+    limite: int = 20, db_path: Optional[str] = None
 ) -> pd.DataFrame:
-    con = get_con()
+    con = get_con(db_path)
     try:
         condicoes = []
         params = []
@@ -81,6 +127,11 @@ def busca_por_atributo(
             condicoes.append("n.token = ?"); params.append(token)
         if lemma:
             condicoes.append("n.lemma = ?"); params.append(lemma)
+            
+        cur = con.cursor()
+        colunas = [r[1] for r in cur.execute("PRAGMA table_info(tb_nos)").fetchall()]
+        if apenas_carto and "eh_cartografico" in colunas:
+            condicoes.append("n.eh_cartografico = 1")
 
         where = ("WHERE " + " AND ".join(condicoes)) if condicoes else ""
         sql = f"""
@@ -100,11 +151,9 @@ def busca_por_atributo(
 
 
 # ── Dominância direta A < B ──────────────────────────────────────────────────
-def dominancia_direta(label_pai: str, label_filho: str, limite: int = 20) -> pd.DataFrame:
-    """Retorna pares (pai, filho) onde pai domina diretamente filho.
-    Equivalente à notação Tgrep: 'A < B'.
-    """
-    con = get_con()
+def dominancia_direta(label_pai: str, label_filho: str, limite: int = 20, db_path: Optional[str] = None) -> pd.DataFrame:
+    """Retorna pares (pai, filho) onde pai domina diretamente filho (A < B)."""
+    con = get_con(db_path)
     try:
         sql = """
             SELECT pai.id as id_pai, pai.label as label_pai,
@@ -128,15 +177,13 @@ def dominancia_direta(label_pai: str, label_filho: str, limite: int = 20) -> pd.
 
 
 # ── Dominância indireta A << B ───────────────────────────────────────────────
-def dominancia_indireta(label_ancestral: str, label_descendente: str,
-                         token_descendente: str = None,
-                         lemma_descendente: str = None,
-                         limite: int = 20) -> pd.DataFrame:
-    """Retorna pares (ancestral, descendente) usando lft/rgt (Nested Sets).
-    Equivalente à notação Tgrep: 'A << B'.
-    A << B: anc.lft < desc.lft AND anc.rgt > desc.rgt
-    """
-    con = get_con()
+def dominancia_indireta(
+    label_ancestral: str, label_descendente: str,
+    token_descendente: str = None, lemma_descendente: str = None,
+    limite: int = 20, db_path: Optional[str] = None
+) -> pd.DataFrame:
+    """Retorna pares (ancestral, descendente) usando coordenadas lft/rgt (A << B)."""
+    con = get_con(db_path)
     try:
         extra_cond = ""
         extra_params = []
@@ -169,11 +216,9 @@ def dominancia_indireta(label_ancestral: str, label_descendente: str,
 
 
 # ── Co-irmandade A $ B ────────────────────────────────────────────────────────
-def irmandade(label_a: str, label_b: str, limite: int = 20) -> pd.DataFrame:
-    """Nós A e B que são irmãos (mesmo pai).
-    Equivalente à notação Tgrep: 'A $ B'.
-    """
-    con = get_con()
+def irmandade(label_a: str, label_b: str, limite: int = 20, db_path: Optional[str] = None) -> pd.DataFrame:
+    """Nós A e B que são irmãos sob o mesmo pai imediato (A $ B)."""
+    con = get_con(db_path)
     try:
         sql = """
             SELECT a.label as label_a, a.token as token_a, a.lemma as lemma_a,
@@ -199,12 +244,10 @@ def irmandade(label_a: str, label_b: str, limite: int = 20) -> pd.DataFrame:
 
 
 # ── KWIC Sintático ────────────────────────────────────────────────────────────
-def kwic_sintatico(label: str, horizonte: int = 4, limite: int = 20) -> pd.DataFrame:
-    """Para cada ocorrência do nó com o label dado, extrai as folhas
-    lexicais adjacentes (KWIC centrado no sintagma alvo)."""
-    con = get_con()
+def kwic_sintatico(label: str, horizonte: int = 4, limite: int = 20, db_path: Optional[str] = None) -> pd.DataFrame:
+    """Gera concordâncias KWIC centradas no constituinte sintático alvo."""
+    con = get_con(db_path)
     try:
-        # Acha os nós com o label pedido
         nos = pd.read_sql(
             "SELECT n.id, n.lft, n.rgt, n.sentenca_id, s.arquivo "
             "FROM tb_nos n JOIN tb_sentencas s ON n.sentenca_id = s.id "
@@ -217,14 +260,12 @@ def kwic_sintatico(label: str, horizonte: int = 4, limite: int = 20) -> pd.DataF
 
         rows = []
         for _, no in nos.iterrows():
-            # Folhas da sentença inteira ordenadas por lft
             folhas = pd.read_sql(
                 "SELECT token, lft FROM tb_nos "
                 "WHERE sentenca_id=? AND eh_folha=1 ORDER BY lft",
                 con, params=(int(no["sentenca_id"]),)
             )
 
-            # Índices das folhas que pertencem ao sintagma alvo
             within = folhas[(folhas["lft"] >= no["lft"]) & (folhas["lft"] <= no["rgt"])]
             if within.empty:
                 continue
@@ -248,6 +289,49 @@ def kwic_sintatico(label: str, horizonte: int = 4, limite: int = 20) -> pd.DataF
         con.close()
 
 
+# ── Visualizador de Árvores Sintáticas ─────────────────────────────────────────
+def ver_arvore(sentenca_id: int, formato: str = "diagrama", db_path: Optional[str] = None):
+    """Exibe o diagrama visual em árvore sintática para uma sentença."""
+    con = get_con(db_path)
+    try:
+        cur = con.cursor()
+        colunas = [r[1] for r in cur.execute("PRAGMA table_info(tb_sentencas)").fetchall()]
+        
+        campo_arvore = "sent_expandida" if "sent_expandida" in colunas else "sent_orig"
+        row = cur.execute(
+            f"SELECT arquivo, id, {campo_arvore} FROM tb_sentencas WHERE id = ?",
+            (sentenca_id,)
+        ).fetchone()
+        
+        if not row:
+            print(f"Sentença #{sentenca_id} não encontrada no banco.")
+            return
+
+        print("=" * 65)
+        print(f"  ÁRVORE SINTÁTICA DA SENTENÇA #{row['id']} ({row['arquivo']})")
+        print("=" * 65)
+        
+        raw_tree = row[2]
+        tree = deserialize_tree(raw_tree)
+        
+        if tree is None:
+            print("String da árvore:")
+            print(raw_tree)
+            return
+
+        if formato == "diagrama":
+            # Imprime visualmente em formato de árvore vertical / ASCII
+            try:
+                tree.pretty_print()
+            except Exception:
+                print(serialize_tree(tree, indent=2))
+        else:
+            print(serialize_tree(tree, indent=2))
+        print("=" * 65)
+    finally:
+        con.close()
+
+
 # ── Exportação ────────────────────────────────────────────────────────────────
 def exportar(df: pd.DataFrame, path: str):
     if df.empty:
@@ -263,31 +347,33 @@ def exportar(df: pd.DataFrame, path: str):
         print(f"Exportado (CSV) -> {csv}")
 
 
-# ── CLI ───────────────────────────────────────────────────────────────────────
+# ── CLI Principal ─────────────────────────────────────────────────────────────
 def main():
     p = argparse.ArgumentParser(
-        description="Pesquisa Sintática Gerativa – Corpus Tycho Brahe (Fase 1)"
+        description="Motor de Busca Sintática Gerativa e Cartográfica – Corpus Tycho Brahe"
     )
+    p.add_argument("--db", help="Caminho do banco SQLite (padrão: corpus_fase3.db ou corpus_fase1.db)")
     p.add_argument("--acao", required=True,
-                   choices=["freq_labels", "busca", "domina_direta",
-                            "domina_indireta", "irmandade", "kwic"],
+                   choices=["freq_labels", "freq_cartografia", "busca", "domina_direta",
+                            "domina_indireta", "irmandade", "kwic", "ver_arvore"],
                    help="Ação a executar")
-    p.add_argument("--label",   help="Label completo   ex: NP-SBJ")
-    p.add_argument("--base",    help="Categoria base   ex: NP  (cobre NP-SBJ, NP-ACC...)")
-    p.add_argument("--funcao",  help="Função sintática ex: SBJ, ACC, VOC")
-    p.add_argument("--token",   help="Forma ortográfica exata")
-    p.add_argument("--lemma",   help="Lema da palavra")
-    p.add_argument("--pai",     help="Label do nó pai  (dominância direta)")
-    p.add_argument("--filho",   help="Label do nó filho(dominância direta)")
-    p.add_argument("--domina",  help="Label do ancestral (dominância indireta)")
-    p.add_argument("--contido", help="Label do descendente (dominância indireta)")
-    p.add_argument("--irmao",   help="Label do nó A (irmandade)")
-    p.add_argument("--com",     help="Label do nó B (irmandade)")
-    p.add_argument("--horizonte", type=int, default=4,
-                   help="Horizonte de palavras no KWIC (padrão: 4)")
-    p.add_argument("--limite",  type=int, default=20,
-                   help="Máximo de resultados (padrão: 20)")
-    p.add_argument("--exportar", help="Salvar resultados em .xlsx")
+    p.add_argument("--label",        help="Label completo ex: ForceP, MoodP_evaluative, NP-SBJ")
+    p.add_argument("--base",         help="Categoria base ex: NP, MoodP, CP")
+    p.add_argument("--funcao",       help="Função sintática ex: SBJ, ACC, VOC")
+    p.add_argument("--token",        help="Forma ortográfica exata")
+    p.add_argument("--lemma",        help="Lema da palavra")
+    p.add_argument("--pai",          help="Label do nó pai (dominância direta)")
+    p.add_argument("--filho",        help="Label do nó filho (dominância direta)")
+    p.add_argument("--domina",       help="Label do ancestral (dominância indireta)")
+    p.add_argument("--contido",      help="Label do descendente (dominância indireta)")
+    p.add_argument("--irmao",        help="Label do nó A (irmandade)")
+    p.add_argument("--com",          help="Label do nó B (irmandade)")
+    p.add_argument("--sentenca-id",  type=int, help="ID da sentença para visualização")
+    p.add_argument("--formato-arvore", default="diagrama", choices=["diagrama", "sexp"], help="Formato de exibição da árvore")
+    p.add_argument("--apenas-carto", action="store_true", help="Filtrar apenas nós cartográficos injetados")
+    p.add_argument("--horizonte",    type=int, default=4, help="Horizonte de palavras no KWIC (padrão: 4)")
+    p.add_argument("--limite",       type=int, default=20, help="Máximo de resultados (padrão: 20)")
+    p.add_argument("--exportar",     help="Salvar resultados em .xlsx")
     args = p.parse_args()
 
     if args.limite <= 0:
@@ -298,18 +384,22 @@ def main():
     df = pd.DataFrame()
 
     if args.acao == "freq_labels":
-        df = freq_labels(args.limite)
+        df = freq_labels(args.limite, db_path=args.db)
+
+    elif args.acao == "freq_cartografia":
+        df = freq_cartografia(args.limite, db_path=args.db)
 
     elif args.acao == "busca":
         df = busca_por_atributo(
             label=args.label, base=args.base, funcao=args.funcao,
-            token=args.token, lemma=args.lemma, limite=args.limite
+            token=args.token, lemma=args.lemma, apenas_carto=args.apenas_carto,
+            limite=args.limite, db_path=args.db
         )
 
     elif args.acao == "domina_direta":
         if not (args.pai and args.filho):
             p.error("--domina_direta requer --pai e --filho")
-        df = dominancia_direta(args.pai, args.filho, args.limite)
+        df = dominancia_direta(args.pai, args.filho, args.limite, db_path=args.db)
 
     elif args.acao == "domina_indireta":
         if not (args.domina and args.contido):
@@ -318,18 +408,24 @@ def main():
             args.domina, args.contido,
             token_descendente=args.token,
             lemma_descendente=args.lemma,
-            limite=args.limite
+            limite=args.limite, db_path=args.db
         )
 
     elif args.acao == "irmandade":
         if not (args.irmao and args.com):
             p.error("--irmandade requer --irmao e --com")
-        df = irmandade(args.irmao, args.com, args.limite)
+        df = irmandade(args.irmao, args.com, args.limite, db_path=args.db)
 
     elif args.acao == "kwic":
         if not args.label:
             p.error("--kwic requer --label")
-        df = kwic_sintatico(args.label, args.horizonte, args.limite)
+        df = kwic_sintatico(args.label, args.horizonte, args.limite, db_path=args.db)
+
+    elif args.acao == "ver_arvore":
+        if not args.sentenca_id:
+            p.error("--ver_arvore requer --sentenca-id")
+        ver_arvore(args.sentenca_id, formato=args.formato_arvore, db_path=args.db)
+        return
 
     if not df.empty:
         print(df.to_string(index=False))
