@@ -1,4 +1,6 @@
-corpus.db
+*.db
+*.db-wal
+*.db-shm
 *.png
 *.xlsx
 *.csv
