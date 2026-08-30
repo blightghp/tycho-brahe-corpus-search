@@ -58,6 +58,19 @@ pub async fn run_backend_query(
 ) -> Result<QueryResultWrapper, String> {
     let start = Instant::now();
 
+    // AppSec: Validação de input para evitar Self-DoS ou buffer overflow local
+    if acao.len() > 100 {
+        return Err("Ação fornecida excede o limite de caracteres permitido.".to_string());
+    }
+    for arg in &args {
+        if arg.len() > 2000 {
+            return Err("Argumento fornecido excede o limite de caracteres permitido.".to_string());
+        }
+    }
+    if args.len() > 20 {
+        return Err("Muitos argumentos fornecidos.".to_string());
+    }
+
     let mut full_args = vec![
         "--acao".to_string(),
         acao,
