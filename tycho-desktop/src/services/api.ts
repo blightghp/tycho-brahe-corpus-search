@@ -1,4 +1,23 @@
+import { invoke } from '@tauri-apps/api/core';
 import { Command } from '@tauri-apps/plugin-shell';
+
+export interface SystemHealth {
+  engine_status: string;
+  os_info: string;
+  app_version: string;
+  db_exists: boolean;
+  db_path: string;
+  cartografia_db_exists: boolean;
+  cartografia_db_path: string;
+  sidecar_binary_exists: boolean;
+}
+
+export interface QueryResultWrapper {
+  success: boolean;
+  elapsed_ms: number;
+  data_json: string;
+  error?: string;
+}
 
 export interface SearchResult {
   id: string;
@@ -9,30 +28,6 @@ export interface SearchResult {
   arvore: any;
   eh_cartografico: boolean;
 }
-
-export const searchCorpus = async (query: string): Promise<SearchResult[]> => {
-  try {
-    // Chama o executável sidecar compilado (tycho_backend.exe)
-    const command = Command.sidecar('bin/tycho_backend', [
-      '--acao', 'busca',
-      '--label', query,
-      '--formato', 'json'
-    ]);
-    
-    const output = await command.execute();
-    
-    if (output.code !== 0) {
-      console.error("Erro no backend:", output.stderr);
-      return [];
-    }
-
-    const data: SearchResult[] = JSON.parse(output.stdout);
-    return data;
-  } catch (err) {
-    console.error("Erro ao chamar sidecar:", err);
-    return [];
-  }
-};
 
 export interface QuarentenaItem {
   id: number;
@@ -45,31 +40,99 @@ export interface QuarentenaItem {
   status: string;
 }
 
+export const getSystemHealth = async (): Promise<SystemHealth> => {
+  try {
+    return await invoke<SystemHealth>('check_system_health');
+  } catch (err) {
+    console.error('Falha ao checar saúde do motor Rust:', err);
+    return {
+      engine_status: 'OFFLINE',
+      os_info: 'unknown',
+      app_version: '0.1.0',
+      db_exists: false,
+      db_path: '',
+      cartografia_db_exists: false,
+      cartografia_db_path: '',
+      sidecar_binary_exists: false,
+    };
+  }
+};
+
+export const searchCorpus = async (query: string): Promise<SearchResult[]> => {
+  try {
+    const res = await invoke<QueryResultWrapper>('run_backend_query', {
+      acao: 'busca',
+      args: ['--label', query],
+    });
+
+    if (res.success) {
+      return JSON.parse(res.data_json);
+    }
+    console.warn('Erro retornado pelo motor Rust:', res.error);
+    return [];
+  } catch (err) {
+    console.warn('Fallback para shell plugin direto:', err);
+    try {
+      const command = Command.sidecar('bin/tycho_backend', [
+        '--acao', 'busca',
+        '--label', query,
+        '--formato', 'json',
+      ]);
+      const output = await command.execute();
+      if (output.code === 0) {
+        return JSON.parse(output.stdout);
+      }
+    } catch (fallbackErr) {
+      console.error('Falha geral no IPC:', fallbackErr);
+    }
+    return [];
+  }
+};
+
 export const listarQuarentena = async (): Promise<QuarentenaItem[]> => {
   try {
-    const command = Command.sidecar('bin/tycho_backend', [
-      '--acao', 'quarentena_listar',
-      '--formato', 'json'
-    ]);
-    const output = await command.execute();
-    if (output.code !== 0) return [];
-    return JSON.parse(output.stdout);
+    const res = await invoke<QueryResultWrapper>('run_backend_query', {
+      acao: 'quarentena_listar',
+      args: [],
+    });
+    if (res.success) {
+      return JSON.parse(res.data_json);
+    }
+    return [];
   } catch (err) {
+    try {
+      const command = Command.sidecar('bin/tycho_backend', [
+        '--acao', 'quarentena_listar',
+        '--formato', 'json',
+      ]);
+      const output = await command.execute();
+      if (output.code === 0) return JSON.parse(output.stdout);
+    } catch (fallbackErr) {
+      console.error(fallbackErr);
+    }
     return [];
   }
 };
 
 export const resolverQuarentena = async (id: number, acao: string): Promise<boolean> => {
   try {
-    const command = Command.sidecar('bin/tycho_backend', [
-      '--acao', 'quarentena_resolver',
-      '--token', id.toString(),
-      '--lemma', acao,
-      '--formato', 'json'
-    ]);
-    const output = await command.execute();
-    return output.code === 0;
+    const res = await invoke<QueryResultWrapper>('run_backend_query', {
+      acao: 'quarentena_resolver',
+      args: ['--token', id.toString(), '--lemma', acao],
+    });
+    return res.success;
   } catch (err) {
-    return false;
+    try {
+      const command = Command.sidecar('bin/tycho_backend', [
+        '--acao', 'quarentena_resolver',
+        '--token', id.toString(),
+        '--lemma', acao,
+        '--formato', 'json',
+      ]);
+      const output = await command.execute();
+      return output.code === 0;
+    } catch (fallbackErr) {
+      return false;
+    }
   }
 };
