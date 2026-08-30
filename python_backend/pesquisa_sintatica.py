@@ -28,6 +28,17 @@ from typing import Optional
 import pandas as pd
 from nltk.tree import Tree
 
+# Garantir resolução local de módulos (tree_io, oracle, rewriter, etc.)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+
+# Forçar saída em UTF-8 no Windows
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 from tree_io import deserialize_tree, serialize_tree
 
 DEFAULT_DB_FASE3 = "corpus_fase3.db"

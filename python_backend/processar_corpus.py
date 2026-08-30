@@ -96,11 +96,19 @@ def processar_arquivo(
 
 
 def executar_pipeline(
-    corpus_dir: str = ".",
+    corpus_dir: str = "",
     limite_arquivos: int = 0,
     reset_db: bool = False
 ):
     """Executa o processamento em lote para todos os arquivos do corpus."""
+    if not corpus_dir:
+        for candidate in ["../corpus_data", "corpus_data", "."]:
+            if os.path.isdir(candidate) and glob.glob(os.path.join(candidate, "*_psd.txt")):
+                corpus_dir = candidate
+                break
+        if not corpus_dir:
+            corpus_dir = "."
+
     if reset_db and os.path.exists(DB_CARTOGRAFIA_PATH):
         print(f"Resetando banco de cartografia '{DB_CARTOGRAFIA_PATH}'...")
         os.remove(DB_CARTOGRAFIA_PATH)
