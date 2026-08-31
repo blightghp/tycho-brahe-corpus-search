@@ -1,6 +1,19 @@
 import os
 import shutil
 import zipfile
+import sys
+
+
+# Os pacotes v1.0.0 foram congelados para auditoria no Marco 1. A publicação
+# só pode ser retomada conscientemente após a reconstrução e a validação dos
+# bancos; este opt-in evita sobrescrever a evidência legada por engano.
+if os.environ.get("TYCHO_ALLOW_EXPERIMENTAL_RELEASE") != "1":
+    sys.stderr.write(
+        "Publicação bloqueada: os artefatos atuais são experimentais e estão "
+        "congelados. Consulte docs/STATUS_DE_ARTEFATOS.md. Para uma auditoria "
+        "controlada, defina TYCHO_ALLOW_EXPERIMENTAL_RELEASE=1 explicitamente.\n"
+    )
+    raise SystemExit(2)
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 release_dir = os.path.join(root, 'release')
