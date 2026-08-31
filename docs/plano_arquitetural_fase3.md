@@ -1,5 +1,10 @@
 # Plano Arquitetural (Fase 3): Protocolo de Transformação e Expansão Algorítmica da Tokenização do Corpus
 
+> [!NOTE]
+> Documento histórico de planejamento. Não descreve o estado executável atual;
+> para a sequência vigente e os artefatos permitidos, consulte
+> [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md).
+
 Este documento descreve o plano arquitetural para a **Fase 3**. O foco é definir um **Protocolo com Sistemas de Cálculo Algorítmico Avançado** para manipular as árvores sintáticas (AST) do corpus Tycho Brahe e realizar uma transformação estrutural. 
 
 O objetivo é gerar uma nova versão do corpus, onde a tokenização original é expandida para englobar as categorias cartográficas de Rizzi e Cinque de forma permanente e pesquisável.

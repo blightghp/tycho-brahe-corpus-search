@@ -1,6 +1,16 @@
 # Guia Teórico da Cartografia Sintática e os 5 Grandes Domínios
 
-Este documento descreve o modelo teórico de Gramática Gerativa formal implementado no **Tycho Brahe Search**, fundamentado no Programa Cartográfico (*Cartographic Approach*) iniciado por Luigi Rizzi (1997, 2004), Guglielmo Cinque (1999), Adriana Belletti (2004), Gillian Ramchand (2008) e pesquisadores associados.
+Este documento descreve a ontologia teórica de Gramática Gerativa que orienta a
+reconstrução do **Tycho Brahe Search**, fundamentada no Programa Cartográfico
+(*Cartographic Approach*) iniciado por Luigi Rizzi (1997, 2004), Guglielmo
+Cinque (1999), Adriana Belletti (2004), Gillian Ramchand (2008) e pesquisadores
+associados.
+
+> [!IMPORTANT]
+> A listagem de projeções é uma referência teórica e de implementação. Ela não
+> demonstra instanciação, cobertura ou validação dessas projeções nos bancos
+> distribuídos. Consulte [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md) para
+> distinguir ontologia, hipótese inferida e dado validado.
 
 ---
 

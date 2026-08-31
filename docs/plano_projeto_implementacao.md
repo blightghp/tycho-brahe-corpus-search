@@ -1,5 +1,10 @@
 # Plano de Projeto e Implementação (Fases 2 e 3)
 
+> [!NOTE]
+> Documento histórico de planejamento. Não descreve o estado executável atual;
+> para a sequência vigente e os artefatos permitidos, consulte
+> [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md).
+
 Este documento detalha o passo a passo para a construção do **Transdutor Algorítmico Cartográfico**, materializando as Fases 2 (Mapeamento Cartográfico) e 3 (Mutação em Leque) sobre o Corpus Tycho Brahe.
 
 ## Visão Geral

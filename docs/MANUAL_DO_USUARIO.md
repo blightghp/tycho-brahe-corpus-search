@@ -1,23 +1,36 @@
-# Manual do Usuário - Tycho Brahe Search v1.0.0
+# Manual de Interface Histórico — Tycho Brahe Search
 
-**Tycho Brahe Search** é uma plataforma desktop de alto desempenho para pesquisa sintática, visualização cartográfica e análise estrutural baseada no *Tycho Brahe Parsed Corpus of Historical Portuguese*.
+> [!WARNING]
+> Este documento descreve a experiência-alvo e a interface histórica. Os
+> pacotes `v1.0.0`, os bancos cartográficos e a busca atual estão em
+> reconstrução controlada; não constituem produto estável nem corpus validado.
+> Consulte [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md) antes de executar
+> ou citar resultados.
+
+**Tycho Brahe Search** é uma plataforma desktop em reconstrução para pesquisa
+sintática, visualização cartográfica e análise estrutural baseada no *Tycho
+Brahe Parsed Corpus of Historical Portuguese*.
 
 Desenvolvido por **Gabriel Pinheiro** (Pesquisador em Linguística no IEL / Unicamp).
 
 ---
 
-## 1. Instalação e Execução
+## 1. Estado de instalação e execução
 
-### Opção A: Versão Portátil (Recomendada - Sem Instalação)
+Não há distribuição estável suportada nesta revisão. Os arquivos em `release/`
+foram congelados para auditoria e não devem ser apresentados como uma versão
+funcional, redistribuídos ou utilizados para resultados de pesquisa.
+
+### Referência histórica: versão portátil
 1. Baixe o arquivo `TychoBrahe_v1.0.0_Windows_x64_Portable.zip` na pasta `release/` ou na aba de Releases do GitHub.
 2. Descompacte o arquivo `.zip` em qualquer pasta de sua preferência.
 3. Dê um duplo clique no arquivo `INICIAR_TYCHO_BRAHE.bat` ou diretamente em `Tycho Brahe Search.exe`.
-4. O programa inicializará instantaneamente com todos os bancos de dados pré-carregados.
+4. Esta sequência é histórica e **não é um procedimento de instalação validado**.
 
-### Opção B: Instalador Automático Windows (Setup / MSI)
+### Referência histórica: instalador Windows
 1. Execute `Tycho_Brahe_Search_v1.0.0_Setup.exe` ou `Tycho_Brahe_Search_v1.0.0_x64.msi`.
 2. Siga as instruções do assistente de instalação.
-3. Abra o programa pelo menu Iniciar ou pelo atalho na Área de Trabalho.
+3. Não use esses instaladores como distribuição aprovada nesta etapa.
 
 ---
 
@@ -46,12 +59,12 @@ A aplicação é dividida em quatro áreas principais:
 
 ---
 
-## 3. Funcionalidades de Pesquisa Sintática
+## 3. Funcionalidades previstas de pesquisa sintática
 
-### 3.1. Tipos de Consultas Suportadas
+### 3.1. Tipos de consultas em validação
 - **Projeções Cartográficas Universais**: Busque por `SAP`, `VocP`, `ForceP`, `TopP`, `FocP`, `FinP`, `MoodP_evaluative`, `T_future`, `AspP_durative`, `VoiceP`, `ProcP`, `Root`, etc.
 - **Constituintes Tradicionais do Corpus Tycho Brahe**: Busque por `NP-SBJ` (Sujeito), `NP-ACC` (Objeto Direto), `PP` (Sintagma Preposicional), `ADVP` (Sintagma Adverbial), `IP-MAT` (Oração Matriz), `CP-REL` (Oração Relativa).
-- **Busca Lexical e Lemática**: Filtre por palavras específicas (ex: *rei*, *senhor*, *deu*) ou seus lemas subjacentes.
+- **Busca Lexical e Lemática**: prevista para filtrar por palavras específicas (ex: *rei*, *senhor*, *deu*) ou seus lemas subjacentes; ainda não deve ser considerada validada na interface atual.
 
 ### 3.2. Chips de Filtro Rápido
 Clique nos chips coloridos abaixo da barra de pesquisa para aplicar filtros imediatos dos 5 Grandes Domínios Cartográficos:
@@ -96,13 +109,14 @@ Abaixo da árvore sintática, a aplicação exibe a **Decomposição Morfossint�
 
 ---
 
-## 6. Módulo Human-in-the-Loop (Auditoria de Quarentena)
+## 6. Módulo Human-in-the-Loop (fluxo em validação)
 
 Sentenças históricas com anomalias estruturais ou ordens não-canônicas que violam a hierarquia universal de Cinque (1999) são automaticamente isoladas para auditoria humana:
 1. Acesse a aba **🛡️ Revisão Quarentena**.
 2. Visualize a lista de sentenças em quarentena com o diagnóstico da anomalia (ex: `HIERARQUIA_CINQUE_VIOLADA`, `CP_DESCONHECIDO`).
 3. Compare a árvore original com a derivação cartográfica proposta.
-4. Clique em **Aprovar**, **Rejeitar** ou **Editar Manualmente** para atualizar o status no banco de dados.
+4. A persistência das decisões está em correção; não use a interface atual para
+   produzir decisões de curadoria definitivas.
 
 ---
 

@@ -2,6 +2,12 @@
 
 Este documento consolida os resultados da auditoria de segurança de software ponta a ponta realizada sobre o projeto. Foram validadas as camadas do Frontend, Backend em Rust e Motor em Python.
 
+> [!IMPORTANT]
+> Esta revisão cobre controles de segurança no escopo de código analisado. Ela
+> não certifica disponibilidade funcional, integridade do corpus, validade
+> linguística, completude dos bancos ou aprovação de uma distribuição. Para o
+> estado de publicação, consulte [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md).
+
 ## 1. Prevenção contra SQL Injection (Python Backend)
 Todos os scripts Python responsáveis por interagir com os bancos SQLite (`build_db.py`, `build_db_fase3.py`, `pesquisa_sintatica.py`, etc.) foram auditados.
 - **Constatação**: Não há concatenações inseguras (`f"..."` ou `%s`) de strings geradas pelo usuário diretamente em *statements* SQL.
@@ -32,5 +38,8 @@ Ataques baseados em Directory Traversal (`../..`) ou Unicode.
 - Os arquivos e identificadores apontados pelo IPC CLI não concedem vazamento de dados arbitrários (app rodando local com escopo de pastas isoladas via `PathBuf`).
 
 ## Conclusão
-O software encontra-se em conformidade de arquitetura defensiva para distribuição desktop (`Release Candidate`).
-Nenhuma credencial `hardcoded` ou chaves criptográficas ativas residem no repositório.
+
+Os controles descritos devem ser reavaliados após a reconstrução da busca,
+persistência e empacotamento. Nenhuma credencial `hardcoded` ou chave
+criptográfica ativa foi identificada no escopo analisado. Esta constatação não
+constitui certificação de *Release Candidate*.

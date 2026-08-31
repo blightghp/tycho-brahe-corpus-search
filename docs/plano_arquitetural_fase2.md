@@ -1,5 +1,10 @@
 # Plano Arquitetural (Fase 2): Implementação da Cartografia Sintática (Split-CP e Split-IP)
 
+> [!NOTE]
+> Documento histórico de planejamento. Não descreve o estado executável atual;
+> para a sequência vigente e os artefatos permitidos, consulte
+> [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md).
+
 Este documento detalha o segundo plano de sequência arquitetural. O foco desta fase é estender o motor de busca gerativo (detalhado na Fase 1) para suportar a **sequência estendida de núcleos funcionais** (A Abordagem Cartográfica), incorporando as projeções finas do sistema Complementizador (CP), conforme **Rizzi (1997; 2004)**, e do sistema Flexional (IP), conforme **Cinque (1999; 2002)**.
 
 Como a anotação nativa do Corpus Tycho Brahe (`_psd`) utiliza um esquema mais "achatado" (flat) com base estrutural no *Penn Treebank* (ex: agrupa tudo em categorias amplas como `CP-ADV`, `IP-MAT`), este plano propõe uma arquitetura capaz de **mapear, projetar e consultar** a hierarquia cartográfica fina sobre a estrutura original.

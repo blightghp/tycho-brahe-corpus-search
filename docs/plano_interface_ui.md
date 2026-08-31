@@ -1,5 +1,10 @@
 # Plano Arquitetural - Fase 4: Interface de Usuário (UI/UX) e Distribuição Desktop
 
+> [!NOTE]
+> Documento histórico de planejamento. Não descreve o estado executável atual;
+> para a sequência vigente e os artefatos permitidos, consulte
+> [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md).
+
 ## 1. Visão Geral
 Este documento detalha o planejamento para a criação de uma interface gráfica (GUI) baseada em tecnologias web (TypeScript, React/Vue) empacotada como um aplicativo Desktop autônomo (via Tauri ou Electron). O objetivo é democratizar o acesso às ferramentas de pesquisa sintática gerativa e cartográfica do Corpus Tycho Brahe, eliminando a necessidade de os pesquisadores utilizarem linha de comando ou instalarem Python manualmente.
 

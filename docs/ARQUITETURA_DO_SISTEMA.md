@@ -2,9 +2,16 @@
 
 O **Tycho Brahe Search** foi arquitetado como uma aplicação tripartida de alta performance e desacoplamento modular, combinando o ecossistema nativo do **Rust (Tauri v2)**, o poder analítico de **Python (NLP, spaCy, NLTK, SQLite)** e uma interface moderna em **React 19 + TypeScript + Tailwind CSS + D3.js**.
 
+> [!WARNING]
+> Este diagrama descreve a arquitetura pretendida e parte da implementação
+> existente; não certifica que todos os fluxos estejam operacionais. No Marco
+> 1, as fontes PSD são canônicas e os bancos/pacotes atuais estão congelados
+> como derivados experimentais. Consulte
+> [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md) para o estado verificável.
+
 ---
 
-## 1. Diagrama Geral de Camadas
+## 1. Diagrama-alvo de camadas
 
 ```mermaid
 graph TD

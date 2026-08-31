@@ -2,6 +2,12 @@
 
 O frontend do Tycho Brahe Desktop foi concebido com rigor visual e metodológico para permitir a linguistas, pesquisadores e estudantes explorarem árvores sintáticas profundas e a hierarquia cartográfica em 5 Grandes Domínios.
 
+> [!WARNING]
+> A interface é experimental. A presença de chips, cores e componentes para os
+> cinco domínios não comprova que a busca, os bancos ou a persistência de
+> auditoria estejam validados. Veja
+> [`../../docs/STATUS_DE_ARTEFATOS.md`](../../docs/STATUS_DE_ARTEFATOS.md).
+
 ## Componentes Principais
 
 - **`App.tsx`**: Contêiner mestre da aplicação, com navegação fluida em abas (*Pesquisa em Árvores*, *Quarentena/Auditoria*, *Status do Sistema*), monitoramento de saúde do motor Rust e cabeçalho institucional com links para a UNICAMP.

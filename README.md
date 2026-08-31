@@ -1,8 +1,8 @@
 # Tycho Brahe Search: Plataforma de Pesquisa Sintática Gerativa e Cartográfica
 
-[![Release v1.0.0](https://img.shields.io/badge/release-v1.0.0-emerald.svg)](https://github.com/blightghp/tycho-brahe-corpus-search/releases)
+[![Estado](https://img.shields.io/badge/estado-reconstru%C3%A7%C3%A3o%20controlada-amber.svg)](docs/STATUS_DE_ARTEFATOS.md)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20x64-indigo.svg)](https://github.com/blightghp/tycho-brahe-corpus-search/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows%20x64-indigo.svg)](docs/STATUS_DE_ARTEFATOS.md)
 [![Rust](https://img.shields.io/badge/core-Rust%20%2F%20Tauri%20v2-orange.svg)](https://tauri.app/)
 [![Python NLP](https://img.shields.io/badge/nlp-Python%20%2F%20spaCy%20%2F%20NLTK-yellow.svg)](https://spacy.io/)
 [![Frontend](https://img.shields.io/badge/ui-React%2019%20%2F%20Tailwind%20%2F%20D3-cyan.svg)](https://react.dev/)
@@ -11,13 +11,26 @@
 > *Pesquisador em Linguística no Instituto de Estudos da Linguagem (IEL) / Universidade Estadual de Campinas (UNICAMP)*  
 > Projeto associado ao [Tycho Brahe Parsed Corpus of Historical Portuguese](http://www.tycho.iel.unicamp.br/)
 
+> [!WARNING]
+> **Estado do projeto: reconstrução controlada — marco 1.** Os bancos
+> `corpus_cartografia.db` e `corpus_fase3.db`, assim como os pacotes rotulados
+> `v1.0.0`, são artefatos experimentais arquivados. Não devem ser usados para
+> resultados científicos, redistribuídos como versão estável ou tomados como
+> corpus cartográfico validado. Consulte o
+> [estado dos artefatos](docs/STATUS_DE_ARTEFATOS.md).
+
 ---
 
 ## 📖 Apresentação do Projeto
 
-O **Tycho Brahe Search** é um ambiente computacional integrado para investigação morfossintática, análise diacrônica e visualização cartográfica de árvores sintáticas históricas em língua portuguesa. 
+O **Tycho Brahe Search** é um ambiente computacional em reconstrução para
+investigação morfossintática, análise diacrônica e visualização cartográfica de
+árvores sintáticas históricas em língua portuguesa.
 
-O software realiza a transdução algorítmica das anotações sintáticas clássicas do *Corpus Tycho Brahe* em **árvores cartográficas universais de 5 domínios**, permitindo o mapeamento fino de traços de ato de fala, complementizadores (Split-CP), hierarquia adverbial e flexional de Cinque (Split-IP), baixa periferia informacional e estrutura temática de primeira fase (Split-vP).
+Os cinco domínios abaixo formam a ontologia e a meta de implementação. A sua
+instanciação integral e a distribuição pesquisável estão em validação; a
+situação verificável está documentada em
+[STATUS_DE_ARTEFATOS.md](docs/STATUS_DE_ARTEFATOS.md).
 
 ```
  ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -33,31 +46,24 @@ O software realiza a transdução algorítmica das anotações sintáticas clás
 
 ---
 
-## ✨ Principais Funcionalidades
+## ✨ Arquitetura-alvo em reconstrução
 
 - 🌳 **Visualizador Interativo de Árvores D3.js**: Renderização gráfica dinâmica em SVG com zoom contínuo, pan, centralização e codificação cromática por domínio teórico.
 - 🔬 **Decomposição Morfossintática Termo a Termo**: Grade estrutural com extração automática de tokens arcaicos, lemas normatizados, POS tags spaCy e papéis gerativos formais.
-- ⚡ **Motor de Busca Hierárquica de Alta Performance**: Consultas instantâneas por labels exatos, categorias base, funções sintáticas, dominância direta ($A < B$), dominância indireta ($A \ll B$) e co-irmandade ($A \$ B$) indexadas em SQLite (*Nested Set Model*).
+- ⚡ **Motor de Busca Hierárquica**: consultas por labels, categorias, funções e relações estruturais, em reconstrução com contrato de resultados por sentença.
 - 🛡️ **Módulo Human-in-the-Loop (Auditoria de Quarentena)**: Isolamento automático e interface de revisão comparativa de sentenças com inversões ou anomalias da hierarquia universal de Cinque.
 - 🚀 **Arquitetura Tripartida Segura**: Core nativo em Rust (Tauri v2) com sandboxing estrito e Content Security Policy (CSP), sidecar analítico Python (PyInstaller) e frontend reativo em React 19 + TypeScript.
-- 📦 **Distribuição 100% Portátil**: Executável único pronto para uso, sem necessidade de instalar Node.js, Python ou compiladores.
+- 📦 **Distribuição verificável**: será publicada após reconstrução do corpus, testes ponta a ponta e manifesto de proveniência.
 
 ---
 
-## 📥 Download e Execução Imediata
+## 📥 Estado de distribuição
 
-Você pode baixar a versão pronta para uso diretamente da pasta [`release/`](./release) deste repositório ou na aba [Releases](https://github.com/blightghp/tycho-brahe-corpus-search/releases):
-
-| Pacote | Tamanho | Descrição | Link de Download |
-| :--- | :---: | :--- | :--- |
-| 📦 **Versão Portátil (.ZIP)** | ~243 MB | **Recomendado**. Descompacte e execute com 1 clique (sem instalação). | [`TychoBrahe_v1.0.0_Windows_x64_Portable.zip`](./release/TychoBrahe_v1.0.0_Windows_x64_Portable.zip) |
-| ⚙️ **Instalador Setup (.EXE)** | ~115 MB | Instalador guiado padrão do Windows com atalho no menu iniciar. | [`Tycho_Brahe_Search_v1.0.0_Setup.exe`](./release/installers/Tycho_Brahe_Search_v1.0.0_Setup.exe) |
-| 🛡️ **Pacote MSI (.MSI)** | ~143 MB | Instalador corporativo/acadêmico Windows Installer WiX. | [`Tycho_Brahe_Search_v1.0.0_x64.msi`](./release/installers/Tycho_Brahe_Search_v1.0.0_x64.msi) |
-
-### Como Executar a Versão Portátil (1 Clique):
-1. Baixe o [`TychoBrahe_v1.0.0_Windows_x64_Portable.zip`](./release/TychoBrahe_v1.0.0_Windows_x64_Portable.zip).
-2. Extraia o arquivo ZIP em qualquer diretório.
-3. Dê um duplo clique em **`INICIAR_TYCHO_BRAHE.bat`** (ou `Tycho Brahe Search.exe`).
+Não há versão estável disponível para download nesta revisão. Os instaladores,
+ZIP e diretório `release/` existentes foram retirados de circulação e mantidos
+somente para auditoria. A próxima distribuição será publicada após reconstrução
+integral do banco, validação das invariantes linguísticas e teste em ambiente
+limpo.
 
 ---
 
@@ -66,6 +72,7 @@ Você pode baixar a versão pronta para uso diretamente da pasta [`release/`](./
 Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`docs/`](./docs):
 
 - 📘 [**Manual do Usuário**](./docs/MANUAL_DO_USUARIO.md): Guia completo de navegação, consultas, atalhos e auditoria.
+- 🧭 [**Estado dos Artefatos**](./docs/STATUS_DE_ARTEFATOS.md): Fonte de verdade sobre dados, bancos, pacotes e política de publicação.
 - 🔬 [**Guia de Cartografia Sintática**](./docs/GUIA_CARTOGRAFIA_SINTATICA.md): Fundamentação teórica dos 5 grandes domínios e 44 projeções funcionais universais.
 - 🏛️ [**Arquitetura do Sistema**](./docs/ARQUITETURA_DO_SISTEMA.md): Diagrama detalhado do pipeline Rust + Python + TypeScript/D3.
 - 🛡️ [**Relatório de Auditoria AppSec**](./docs/revisao_appsec.md): Medidas defensivas, mitigação de SQLi, prevenção de Self-DoS e sandboxing CSP.
@@ -78,7 +85,7 @@ Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`
 ```
 tycho-brahe-corpus-search/
 ├── README.md                     <- Apresentação principal do projeto
-├── release/                      <- Binários executáveis, instaladores e ZIP portátil
+├── release/                      <- Artefatos legados congelados; não são uma distribuição suportada
 │   ├── TychoBrahe_v1.0.0_Windows_x64_Portable.zip
 │   ├── installers/               <- Instaladores MSI e Setup.exe
 │   └── TychoBrahe_v1.0.0_Portable/ <- Diretório descompactado pronto para execução
