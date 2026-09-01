@@ -1,0 +1,1708 @@
+{
+  "schema_version": 2,
+  "format": "tycho-brahe/artifact-provenance@2",
+  "manifest_kind": "tycho_brahe_experimental_artifact_snapshot",
+  "snapshot_id": "experimental-baseline-2026-09-01",
+  "created_at_utc": "2026-09-01T03:34:08+00:00",
+  "repository_root": ".",
+  "verification": {
+    "algorithm": "sha256",
+    "paths": "repository-relative-posix",
+    "set_digest_format": "path + NUL + sha256 + LF, sorted by path"
+  },
+  "status": {
+    "classification": "EXPERIMENTAL_NOT_FOR_RESEARCH_OR_DISTRIBUTION",
+    "canonical_source": "corpus_data/*_psd.txt",
+    "derived_databases": "observed_only_not_canonical",
+    "release_artifacts": "observed_only_not_approved"
+  },
+  "policy": {
+    "do_not_overwrite_sources": true,
+    "rebuild_from": "canonical PSD sources after parser and transducer validation",
+    "canonical_sources_are_only_build_input": true,
+    "experimental_artifacts_are_optional_in_git_clone": true
+  },
+  "canonical_sources": {
+    "identity_scheme": {
+      "name": "relative_path_ordinal_block_sha256",
+      "fields": [
+        "source_relative_path",
+        "candidate_ordinal",
+        "block_sha256"
+      ],
+      "external_id": "metadata_only_not_unique"
+    },
+    "physical_import_identity_scheme": {
+      "name": "relative_path_physical_ordinal_candidate_ordinal_raw_sha256",
+      "fields": [
+        "source_relative_path",
+        "physical_ordinal",
+        "candidate_ordinal",
+        "raw_block_sha256"
+      ],
+      "segmentation_version": "literal-blank-line-bytes@1",
+      "external_id": "metadata_only_not_unique"
+    },
+    "summary": {
+      "file_count": 30,
+      "byte_count": 37062781,
+      "id_record_count": 60376,
+      "candidate_tree_count": 56936,
+      "physical_block_count": 63784,
+      "physical_historical_candidate_count": 56936,
+      "candidate_without_external_id_count": 267,
+      "reused_external_id_rows": 49,
+      "unbalanced_file_count": 1,
+      "set_sha256": "bcd2e4fe75546ce7f9005740d29194fb1e6bf88df259e1e83594abf079b2c17f",
+      "physical_block_set_sha256": "bb80066a86c56f7a32f78c4e66e27a08daa549cae187b24702aa0186ddc02a50",
+      "physical_historical_candidate_set_sha256": "2d656a0d605a21644253d8891bcb5e1820e6ffb04481965d0c53084410b670bc"
+    },
+    "files": [
+      {
+        "path": "corpus_data/a_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1809055,
+        "sha256": "e1e3ff21f53a59692b7ddc7d02d546a273382ac2dc03dc7e1ad7bd1f16bc4446",
+        "id_records": 4068,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 4251,
+          "candidate_tree_count": 4067,
+          "candidate_without_external_id_count": 6,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "7c088b4d2ebe1ee45ce55fd3117c769c01b38b7183325e60b0b013bf9913c4a0"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 4251,
+          "historical_candidate_count": 4067,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "7d55c5db57c401156a857bb45ed1baa4382ce66a4fb3372358ea98f9c6888519",
+          "historical_candidate_identity_sha256": "58ddb0fdba8e305d534efa97ca471c18a33ba7809a0994f644adecd7f15f917a"
+        }
+      },
+      {
+        "path": "corpus_data/a_003_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1618004,
+        "sha256": "5c5cdee96ea70dcb1f284191b1f78020b7e8f9e6afe042041bcfdf5346434f6c",
+        "id_records": 2409,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2571,
+          "candidate_tree_count": 2408,
+          "candidate_without_external_id_count": 12,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "2bfc67a318641730874d1935254adb057a8e99ac05298e829cb96863d86def06"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2571,
+          "historical_candidate_count": 2408,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "a955591c8c8ec7465073d04ed10768dda5f30d238dc0d1a59f3ce57ffc98dee2",
+          "historical_candidate_identity_sha256": "7dffeabb5e3c3475d3e8de723944ec9a6a87d3dacbe5708fb38568e9911b4913"
+        }
+      },
+      {
+        "path": "corpus_data/a_004_part_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 693435,
+        "sha256": "ea3af758ecca3c1487211e79b99be25b7ed630e3e2b4e797cec609bb354d5606",
+        "id_records": 1240,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1355,
+          "candidate_tree_count": 1192,
+          "candidate_without_external_id_count": 16,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "ac0ec9e6a63d3ed6b98d6b3aa705ca9a275ef06658018e30d6fbe7dc1c986571"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1355,
+          "historical_candidate_count": 1192,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "93dbd1f2cdfc6c2ebcc348d5e8b8ed7a48bd02034771b5ca6f56df42633335d5",
+          "historical_candidate_identity_sha256": "af86a80dfb8c60af2257f9d3fd140aa1414325a6b8a419c61dcf595596d5c770"
+        }
+      },
+      {
+        "path": "corpus_data/b_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1272033,
+        "sha256": "75c95ddcea3ca53fe27df80fcd32992c039d9b419001b711c269dc117ec1b171",
+        "id_records": 1760,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1950,
+          "candidate_tree_count": 1758,
+          "candidate_without_external_id_count": 5,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "717f4ddb11f302848cc44f8175dbb87ae2825e2c915c0488976e680eb55c41f9"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1950,
+          "historical_candidate_count": 1758,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "41209b1d775892da7a1a9157f5cda3808da0b9d412c476c85c91a7f841da0545",
+          "historical_candidate_identity_sha256": "f5aa853dad8f99e650b44fb8a2fbcdf6c6950e217f385e9dfc00f8455ec7db02"
+        }
+      },
+      {
+        "path": "corpus_data/b_003_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1463459,
+        "sha256": "146ab7df17719927d94e0229332af519b82a714de5da0a42252edd20a900432d",
+        "id_records": 2772,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2772,
+          "candidate_tree_count": 2305,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "88fdad399f7359f14fcd4a366c6760b23c7e45105b6ffc7a6c88f374adb1c0fc"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2772,
+          "historical_candidate_count": 2305,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "e8380dae21205c4dc2edf34d827d3e78d9e78f01eacc7de7455e5d756cba60ed",
+          "historical_candidate_identity_sha256": "04f4d714893a8ebdb02c5c2201b0198cf6bec97c210791e9d3ce4b05bbbd58ab"
+        }
+      },
+      {
+        "path": "corpus_data/b_005_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 685215,
+        "sha256": "dd9e68c9e83002dd89ddfefe94efa4fb2518c72733c85b14c63b9c0e75940c53",
+        "id_records": 1776,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1837,
+          "candidate_tree_count": 1700,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "b10afdbfa2993410a141e100fc7a3f5a12a656378cb55a72e85a038ed83a3f51"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1837,
+          "historical_candidate_count": 1700,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "897197051e94ac7de1521702b49300fcaf22b6d2fb833482c0db493593c8f682",
+          "historical_candidate_identity_sha256": "1d8284128711e8a20fe8e65d6228489b0ec49a07f1ab06e0a7e4b4508f5f404e"
+        }
+      },
+      {
+        "path": "corpus_data/b_008_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 948085,
+        "sha256": "35ff2aceb96dd30d7f4bab5f1841bfe66ce77b7f9012f053c0f192ee9875f758",
+        "id_records": 1474,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1627,
+          "candidate_tree_count": 1381,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "6fc971bc0a1234355e68f3fc75688bd364620ac03fa59345f7fe3728be41889f"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1627,
+          "historical_candidate_count": 1381,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "6a4638cfdcdd24eb3bea55c7dd5f0349900831057f68240e382923b498702fae",
+          "historical_candidate_identity_sha256": "47798ff3bb3922bef80c4118ca3035bb5da9afd0fd4b0a1eb61977e50dea75ba"
+        }
+      },
+      {
+        "path": "corpus_data/c_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1535127,
+        "sha256": "521db203313578379f01642aff55d112abbf178fd89e130f73b77eb7b81c82fb",
+        "id_records": 2788,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2991,
+          "candidate_tree_count": 2647,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "e1acf7f663c38c16bf0bce7ffa1a6249e2eabde7501745eae9f0d145ea0c1210"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2991,
+          "historical_candidate_count": 2647,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "4a6bed6db25e06f5f241d45e5ea461f5469fb163ceccd290c3886aadb4ed8b86",
+          "historical_candidate_identity_sha256": "159df90625f64fb7b57a77515ad5abf19aa1af641ceced31254f5fe369bbe24f"
+        }
+      },
+      {
+        "path": "corpus_data/c_002_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 803879,
+        "sha256": "4456290a979a5bb04ed27d84e917bb1f926b829b5ad5877d6b9d243493ea632b",
+        "id_records": 1178,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1270,
+          "candidate_tree_count": 1167,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "798670826bdae7621f18771ad772d75c449dbb906d644d70c6322d0253610c51"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1270,
+          "historical_candidate_count": 1167,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "09aaf602cb104cf2bbaad195d4bb01053987f94d3ae3680a9b00a3f99f534ed7",
+          "historical_candidate_identity_sha256": "0722ec78ec51f99d5bd05ffb839be1ddff3cb63c0059631effe33934d61912c2"
+        }
+      },
+      {
+        "path": "corpus_data/c_003_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1466376,
+        "sha256": "37e3fc8d172ae046f72537546a45a614dd535a1775609fba6da161ca27d77a51",
+        "id_records": 2718,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2718,
+          "candidate_tree_count": 2517,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "b2f718617c536e95db4dddd9ae209e8642c7e6d9c41919e8081e05c272f79ed4"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2718,
+          "historical_candidate_count": 2517,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "f5702fab9d41293c67de4d054dfd300deb9776438514b143e9bbcc601bb43d36",
+          "historical_candidate_identity_sha256": "0e0cbb6e55ff15f07b230b844c5f5c53eb89c73d1ffc0a428c8f33d992636408"
+        }
+      },
+      {
+        "path": "corpus_data/c_005_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 648312,
+        "sha256": "aa802cf1db4618f9b80312e27f45267424dd7eef5b1a4a896b16d669bfaf50c6",
+        "id_records": 2212,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2396,
+          "candidate_tree_count": 1909,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "2d5edb16b0ac8e482ab762cecf134812c6f3401cbb266e45fc7e8936001dfc9b"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2396,
+          "historical_candidate_count": 1909,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "f3b401064dde050ca575a43a805ab64386648b91f2847d25b5054eebb6b45d5b",
+          "historical_candidate_identity_sha256": "da1375b040887f932f7aaa27b25ed1b63481379e8925d1b6921fce74fdaed71f"
+        }
+      },
+      {
+        "path": "corpus_data/c_007_part_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 957869,
+        "sha256": "3dd457f7ac5c213b288ab43cc7a7e7856a89486e38ead1a82c7b3502834c0c46",
+        "id_records": 1141,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1258,
+          "candidate_tree_count": 1123,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "948d599c4878dc420336eae52a0ee8be33a87ea7d57d9a8138d6213540ba480a"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1258,
+          "historical_candidate_count": 1123,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "41dfe8a63b60faaf41116825297007a859e113e053767acd2f4ce169a61cd07c",
+          "historical_candidate_identity_sha256": "1732e873e2f4e26c8dcb017421640b1bb97a59ea89ff046593ae48ec8a6bf4de"
+        }
+      },
+      {
+        "path": "corpus_data/g_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 737494,
+        "sha256": "bafc6f570c377e1134ce015519bfd289ca4f2cefa86f0f64daecf45ea794ad28",
+        "id_records": 1372,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1463,
+          "candidate_tree_count": 1370,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "61534f31e84f67c0d1f5202d2d40b321275b173fe442e4a4ba3ac2569e389d57"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1463,
+          "historical_candidate_count": 1370,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "4a78d8a7edce72011bd64e641539691a6bff082527fb4d797d408fc347abcd24",
+          "historical_candidate_identity_sha256": "c105623c5b10b14d2d0ed68c3a11d6ff2bdfdc5f5eb65eaeea95f9195e0b3dad"
+        }
+      },
+      {
+        "path": "corpus_data/g_004_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1142914,
+        "sha256": "270d7ea4149f21d2e9df4cc4007a209d0b87f758dad39be50bc6cf7bb5ccb19d",
+        "id_records": 4257,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 4257,
+          "candidate_tree_count": 3765,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "110f0524614bdac79be9d27c11d7d377c660e2d3fedbbcefdf1cfc7a61e6a8cd"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 4257,
+          "historical_candidate_count": 3765,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "69cc6ddd6a18568078b5100df6212002a4fbadd86acdfdf4eb92b300b0d6f632",
+          "historical_candidate_identity_sha256": "7450d11f465c5eda4070608c4d7b2297972aca0aacdfd0a50d57fae7920ffd44"
+        }
+      },
+      {
+        "path": "corpus_data/g_008_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 674867,
+        "sha256": "2607031dfc3121b502b5eaabc30b31c872ced712dea333a9c288550cabdbf4e3",
+        "id_records": 878,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 911,
+          "candidate_tree_count": 880,
+          "candidate_without_external_id_count": 2,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "e30469f3c5a95a45f5c9262fb3007cd4e373c35ac958919eb797b2a3f77f51e3"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 911,
+          "historical_candidate_count": 880,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "c1069a632cf34d36062bb176c0758d4ee64e68891c1c8de58b3e7d67dabab3ff",
+          "historical_candidate_identity_sha256": "8cfa9eac823ac951b457fc563a7a4feea924e46355ffeb529395fe2b2e89ae0c"
+        }
+      },
+      {
+        "path": "corpus_data/l_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1711341,
+        "sha256": "2ce4c61438b54a09ab677bf69b6bdb85ead6474b2f87f44f316e49175d0a2047",
+        "id_records": 1900,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1900,
+          "candidate_tree_count": 1875,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "aff81393a8ed87947bf464c86134ea3a7050ed464f45c36f2488fbd98822dda6"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1900,
+          "historical_candidate_count": 1875,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "c31143e9907f44ae632b53eb538832e2a13bf8baf51ddbb8cd6dc0b11a5f6b21",
+          "historical_candidate_identity_sha256": "e95ba98bf17be856a1849668b925db2807966f29756a852a0b5ed98ffa9771a9"
+        }
+      },
+      {
+        "path": "corpus_data/m_003_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1490157,
+        "sha256": "7d938b9397812c438c0e6c08a6536cff0f9de161686e81a7b3aca65cc2856765",
+        "id_records": 2852,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2853,
+          "candidate_tree_count": 2646,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "589ab9c0ff22a4f4c97af606c45630efe1a93c967c5124bd5b1b5a5e00fd82c1"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2853,
+          "historical_candidate_count": 2646,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "2c37bb744287b8775fc9c7c4cff94aadc50d1a51bb554680cc1ac221464d0974",
+          "historical_candidate_identity_sha256": "37440fbbc23e97ab062d24665ff66b62e214c68ed40f3a226bdad9a665d26760"
+        }
+      },
+      {
+        "path": "corpus_data/m_008_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1400981,
+        "sha256": "fa4df13b6c04cfcbf7167b00b9db2869eda23d7f340425cbf4676a2c89edf05a",
+        "id_records": 1870,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2174,
+          "candidate_tree_count": 1867,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "739c8b2383da2352a21da29bc21fa28d2cc5959929446fe9368d4522d45e2245"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2174,
+          "historical_candidate_count": 1867,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "b8f75cbebc0024bcb464458f00b9004fe4de439a2d8e3dec2e846f2ca133875c",
+          "historical_candidate_identity_sha256": "e7a4281a07033c9f01bd3e27fa9ce4c00b8653ea79d145632e580a79a77636c3"
+        }
+      },
+      {
+        "path": "corpus_data/o_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 934750,
+        "sha256": "bbd57a9801feb8730834822b7d7ab1fd911c5316971d54f61eeb9ef125a35480",
+        "id_records": 2131,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2263,
+          "candidate_tree_count": 1911,
+          "candidate_without_external_id_count": 1,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "03ca28cd8fe44200e3b480cd782bf5ed536cb07efbdb3a8633876e63ef5e195e"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2263,
+          "historical_candidate_count": 1911,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "00f776fda07369a112ac06854ec4264429043611130419481ebdc435da713add",
+          "historical_candidate_identity_sha256": "6fb821b341ed6e9ffdeaa722496ffc62b9a7fa809e18deb5798d1e32138b94f7"
+        }
+      },
+      {
+        "path": "corpus_data/p_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1394231,
+        "sha256": "4b8e31dd932f100745be522efd4a9acecb457240c41e4c8d455936dc778cb3e2",
+        "id_records": 944,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1050,
+          "candidate_tree_count": 943,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "c541f5c1ce80b8be884d0fffbb95e7626e38f914959cb7920835267d533e0302"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1050,
+          "historical_candidate_count": 943,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "10fd4d04e205faa720c20cc1fd177aa04b068962206f6f3fd513fd7472abf40f",
+          "historical_candidate_identity_sha256": "7f241c07774ea299c2ba4c564c13e8412d88ef6855cb055a2adc92481bf78f35"
+        }
+      },
+      {
+        "path": "corpus_data/s_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1720329,
+        "sha256": "a207b8654b5f5501834d06c2da52e6232014a5f73748c6e8dcfb192eef6afe08",
+        "id_records": 2173,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2348,
+          "candidate_tree_count": 2102,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "04075d9a838c1ccb766c082e984d37a24406cba3f2bee469ef5f32ba42132e76"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2348,
+          "historical_candidate_count": 2102,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "80b8928f2572df78d89aa2fff6a2891e874a02668a4a368ebc4be18c3d6d274f",
+          "historical_candidate_identity_sha256": "2ff49d4af0766269c5a778d8a3e43bba11017918e29872083c46fc9092ed1e39"
+        }
+      },
+      {
+        "path": "corpus_data/s_004_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1228426,
+        "sha256": "ae4506c81196d833131516e11f4f7a5eaad2163fd80fd646a5e4a519fb5385a9",
+        "id_records": 4136,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 4373,
+          "candidate_tree_count": 3880,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "0ef7ff28dcfa18e3bb493cca27835e08c6a8429f03f8b3dbac3f28406ca539d1"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 4373,
+          "historical_candidate_count": 3880,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "f8d0cede2585beeedcc82cb6e9b8b80ad74828b4178486367c7f52b57673eee4",
+          "historical_candidate_identity_sha256": "63773baec775fa6c0e0a3902756798cf43e2c0ae42524ed15775ed0cc5d76be8"
+        }
+      },
+      {
+        "path": "corpus_data/v_001_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1411152,
+        "sha256": "63fd7908d6f74a768b14f1ff9c9db26b9a89b18dc6dd01f58193ace228433f67",
+        "id_records": 2406,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2406,
+          "candidate_tree_count": 2375,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "01198aa9a4b437b1035ce4a1b68f522ff55b78a2d681d956b7f1d3c8dd986741"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2406,
+          "historical_candidate_count": 2375,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "8b3db4d864e211e32ff4fdcb5f51645b51a007e6c32edd985ba54b5598adc41b",
+          "historical_candidate_identity_sha256": "d5e702a880f69e3c5848fec5e561ca3e1125ab54a9850e9b77678e866b63c09b"
+        }
+      },
+      {
+        "path": "corpus_data/v_002_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1653424,
+        "sha256": "0585861e5bdde7f93c773ffa90b289664e956198c5df9130b77bfe7f8cd3b8dc",
+        "id_records": 1963,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1964,
+          "candidate_tree_count": 1893,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "c0c62ec1d294c2dfd97b3a797cffaf78eff780bccf14d92623fe5cd699391e2e"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1964,
+          "historical_candidate_count": 1893,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "d1233d55913d7aee2ae8f32b98adbe47503c81c6bb234fe9412ea0f338dc9987",
+          "historical_candidate_identity_sha256": "028c7c763c170deeea55c380bec7d400e17d5762704c767286e41331333e95fa"
+        }
+      },
+      {
+        "path": "corpus_data/v_004_part_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1011619,
+        "sha256": "8e0a99c3f505290b96a3ac289efdfb59918d03053cd4a7f64724c15bd7b3646b",
+        "id_records": 2108,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 2201,
+          "candidate_tree_count": 1765,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "5eac4c9aa4e5685b9f860c134ec2c09ad78955d87b433ac29838e895f7e2c7d1"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 2201,
+          "historical_candidate_count": 1765,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "6f4fcfd5b9171dad73be266ee7eddc5ba4133f2642158e6523a6c38954fffb0b",
+          "historical_candidate_identity_sha256": "32eb196202bae5ef4e67ffa867747ac7292fba4d89df76be77b0307558f27be9"
+        }
+      },
+      {
+        "path": "corpus_data/va_002_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1335884,
+        "sha256": "1dc407b54f741ead4ab4b21b894af4db0c6d61f81affc9cac796a2d8d4a490a2",
+        "id_records": 2901,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 3191,
+          "candidate_tree_count": 2347,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "32668926043dd552fac25869d4973f3b63ccf92da39842a9b227c76fee0864ef"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 3191,
+          "historical_candidate_count": 2347,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "4fb9625a1141317cb37c570336ccec6dc454126d58fe648e207398845a3032ff",
+          "historical_candidate_identity_sha256": "9c95dba441b5e2e9cdb6c9e8487fe66bc234232cdc3264872323736932ed0742"
+        }
+      },
+      {
+        "path": "corpus_data/va_009_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1366319,
+        "sha256": "5f5bc6bde934245239ce42350824cb99921dd14a60b2f56414b1bc5c9a9b913e",
+        "id_records": 1695,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 1799,
+          "candidate_tree_count": 1688,
+          "candidate_without_external_id_count": 0,
+          "reused_external_id_rows": 0,
+          "candidate_identity_sha256": "f27d42c277d61f3df85e1eb6509a472bba95675512d973a88cae02557dfcd7c3"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 1798,
+          "historical_candidate_count": 1688,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "463d715c4e6d8ecd602a011f5c5c933fdaf17a7dcb9436ed2ec0dd03e9b67da9",
+          "historical_candidate_identity_sha256": "e4e9f6e4cbcbd2b9a098349c4593e9126bae9be91d2498c294f0a55d8180625c"
+        }
+      },
+      {
+        "path": "corpus_data/va_013_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 2240475,
+        "sha256": "01165cc4d20c51bd805fc4ff829237873dd147a48ee9ed5009dab4829b5659ef",
+        "id_records": 802,
+        "parentheses_balance": -2,
+        "parse_fingerprint": {
+          "top_level_block_count": 945,
+          "candidate_tree_count": 837,
+          "candidate_without_external_id_count": 48,
+          "reused_external_id_rows": 43,
+          "candidate_identity_sha256": "2bc85d9da363a398606bc0b52e7b950f459251f3b24bacd7caa6069e7d7e10fa"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 939,
+          "historical_candidate_count": 837,
+          "terminal_dos_trailer_bytes": 1,
+          "physical_block_identity_sha256": "75a59aba44a100ac46937a76d0b0c29e48789e758f80dd219f5a9f212a5c180d",
+          "historical_candidate_identity_sha256": "3f2cdb34fbdd41f7fe4e17ff78f07af98e7f28cfca0ea5f78883f53a58a54a59"
+        }
+      },
+      {
+        "path": "corpus_data/va_014_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 1081514,
+        "sha256": "279b85e25faeaf711d698eab08d65cfe33306eb84b5fc5788a1f7e2f55c6d339",
+        "id_records": 193,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 406,
+          "candidate_tree_count": 360,
+          "candidate_without_external_id_count": 174,
+          "reused_external_id_rows": 3,
+          "candidate_identity_sha256": "0b1e1731190fb5070f41a68ed4c3b79574a3bdb02a800410fd60457753a0bf2a"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 406,
+          "historical_candidate_count": 360,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "23ce0952a15bb625d1462f2a5967afeb40b5ac48493965c5670effd7bc33f100",
+          "historical_candidate_identity_sha256": "d03547371127526db02fd03319a4ca0bad7cbcf79c5e51b81020747414a4d8ea"
+        }
+      },
+      {
+        "path": "corpus_data/va_015_psd.txt",
+        "category": "canonical_psd_source",
+        "status": "CANONICAL_INPUT",
+        "required": true,
+        "eligible_as_build_input": true,
+        "bytes": 626055,
+        "sha256": "31f3bbd86c16df4b932c61c6ef71e9c22bcc6628fba44ec59625fc3ad35f17d6",
+        "id_records": 259,
+        "parentheses_balance": 0,
+        "parse_fingerprint": {
+          "top_level_block_count": 291,
+          "candidate_tree_count": 258,
+          "candidate_without_external_id_count": 3,
+          "reused_external_id_rows": 3,
+          "candidate_identity_sha256": "5b1a73df7f59063cdd440f72971ec63c15555ba79a1dd66fc86f553211e8c9c6"
+        },
+        "physical_fingerprint": {
+          "segmentation_version": "literal-blank-line-bytes@1",
+          "physical_block_count": 291,
+          "historical_candidate_count": 258,
+          "terminal_dos_trailer_bytes": 0,
+          "physical_block_identity_sha256": "4c6a5a4531e08c57e9c14a2e12f555ed95d505c3b77cffdfab563666b3413946",
+          "historical_candidate_identity_sha256": "22561cc9026c0807feb65b79776f5f35dc4e22de61ace91ea83cf6d4aface1ad"
+        }
+      }
+    ]
+  },
+  "pipeline_snapshot": {
+    "file_count": 50,
+    "set_sha256": "ce2db4404948d1fc7e021f9bc2496b2482bddb5f4986f1454c07d81fd5b99c63",
+    "files": [
+      {
+        "path": "python_backend/build_backend.ps1",
+        "bytes": 861,
+        "sha256": "a488e34f0b51e274a335724da549640de003de0bf2748ccf38e57b098e04a40e",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/build_db.py",
+        "bytes": 3570,
+        "sha256": "05c36a67669174eb1aa21b8554004b99e2b8bb3e219eb7c45761e00778243652",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/build_db_fase1.py",
+        "bytes": 10733,
+        "sha256": "a360fc29a0e2f0957d0ce6d163033221ad77eaa06272faf7d82a5fa69bb3f4e9",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/build_db_fase3.py",
+        "bytes": 12515,
+        "sha256": "c16b1b2ad695c5386b2fe6051a46e25226ea247a895495142ca660988c847036",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/cartografia_schema.py",
+        "bytes": 7124,
+        "sha256": "728ad8ad544c7864bd0eae123d6de8448504162d810c67fbfe2eef71c6c7ce6b",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/controle_artefatos.py",
+        "bytes": 33385,
+        "sha256": "4a5033703f546740583bb49abf0ac246c701454770acf5a4ddcb7282de20e345",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/db_cartografia.py",
+        "bytes": 7537,
+        "sha256": "a8813c6a7fe41e0adec18a904559dcaa437b604f46b5d26e1228ea238fdcaa3e",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/exportar_corpus_expandido.py",
+        "bytes": 2842,
+        "sha256": "7bcd7bf62722c2d383b5d3b251daa6e67b432ae8cdc5f60d388429f9382b04db",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/gerenciador_db.py",
+        "bytes": 9199,
+        "sha256": "003c91445855c3d4b287915e64df95ae05cfccc227ff02b502e312e26b0a61cf",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/importador_rastreavel.py",
+        "bytes": 60930,
+        "sha256": "c7a78a19bbe0511a15cb46825701197a22540caee1ade557bc4617433b41aefd",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/metadata_tycho.py",
+        "bytes": 8186,
+        "sha256": "5fac4f2abe68c7604df795da33a1ebd19ff5b76ca3905115f43c742729ff3a21",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/oracle.py",
+        "bytes": 15363,
+        "sha256": "cdd06c6061c69f283ccb78a254ab6beca468d5314947c52482399ed56b0c1ac2",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/package_release.py",
+        "bytes": 34941,
+        "sha256": "aa24fed4265aa59411424542368aff47796f6624881996742591e8720d44c0e5",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/pesquisa_corpus.py",
+        "bytes": 11144,
+        "sha256": "28298aca9a9fb98e83e9e044c966fa5dc29bfa7f2c976697df6d26b578a5375d",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/pesquisa_sintatica.py",
+        "bytes": 22150,
+        "sha256": "38c9802f2bc0af6ae26ebec35bd9ebb70d09f4ad1abd551aa9a9ed48cfbee059",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/processar_corpus.py",
+        "bytes": 5826,
+        "sha256": "bb2c05fe606fb00f47b88c6aef6ea567a592161551179c980e47d08c889678a5",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/requirements.txt",
+        "bytes": 38,
+        "sha256": "3981a6880fc0c426943fb2333d7795b1af232519be27b15319164d1e09df3541",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/revisor_cli.py",
+        "bytes": 8058,
+        "sha256": "3765f82343dec0e4ab4d4130c56cd61a9c0db6a55acf5e53c7a15efd274542f8",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/rewriter.py",
+        "bytes": 12595,
+        "sha256": "74821fcf3bfed7fa2163a98362cd3a3b38fb3c5d80f011b17a8172b66160f8cd",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/test_cartografia.py",
+        "bytes": 4309,
+        "sha256": "8b78f934cc17c0d50d85530472ffd4a449c2d7820059facb5a2532c59dfcdec2",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/test_controle_artefatos.py",
+        "bytes": 7394,
+        "sha256": "28ce209a4a338432989595380b784df2b1d2e04c32b4d7230383ab4b414bd589",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/test_e2e_pipeline.py",
+        "bytes": 4533,
+        "sha256": "2408577adb10092cc13a29991ae9f667f5ab8b5ac271d4bb03776059f270621f",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/test_importador_rastreavel.py",
+        "bytes": 16374,
+        "sha256": "5a30ca34694cb1510e5db1548742ddafe3b97d9fb31abf2dd097f2445c2ecf81",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/test_tree_io.py",
+        "bytes": 1049,
+        "sha256": "011ae5a5e60a850606601c7c727a955880da146772eebec6a3bbc1d5b5c4eedf",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/tokenizador_cartografico.py",
+        "bytes": 10956,
+        "sha256": "e7de5486fda829f60e629331e38dce27f310837193b44a4bf36da148806c0463",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/tree_io.py",
+        "bytes": 4218,
+        "sha256": "c2c25c18439ebd032f3c063232ba1a8a8b57792dce7f050677811da4ee12493a",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "python_backend/tycho_backend.spec",
+        "bytes": 814,
+        "sha256": "c7fb38ccc569b28656e20df8e1bd1390208ea9c7905e4be6691674b637ab1f19",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/index.html",
+        "bytes": 390,
+        "sha256": "7822d26a73db455395fb18ed264712fb3d00339872bb3c8baa3ec64b89a4e791",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/package-lock.json",
+        "bytes": 115348,
+        "sha256": "c3e5e2e2688749dab0e3d606e6a59bbe11a6c6f1ed628fc6153154a3617036ab",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/package.json",
+        "bytes": 849,
+        "sha256": "e62e02180811bb268ddf72ebac5b8d39aad695c0b669d561dedd32cfcff13c5d",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/App.tsx",
+        "bytes": 20740,
+        "sha256": "7eec2cbacd08beca44923e04abf21127f11e9f5a26b5214e9c1ab20e992fe3d8",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/components/CreditsModal.tsx",
+        "bytes": 5190,
+        "sha256": "9a386f3e88c2eb1ce673993c171e783a591047564dab39fff7f8d84ca0774331",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/components/HumanInTheLoop.tsx",
+        "bytes": 9427,
+        "sha256": "e7eba4792a9e03a11eaf80ccbfbea8d27ef72608b015247f0591c31d243696b6",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/components/SearchBar.tsx",
+        "bytes": 4154,
+        "sha256": "a25b46c2a899e87b3500f9709d518dded12fc2d397c5ed78c092d9a93714b94b",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/components/TermBreakdown.tsx",
+        "bytes": 4695,
+        "sha256": "45d110bd6d415f3bdf06b650834acaecb4a9a7e5cb72725b125bc213095489f0",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/components/TreeView.tsx",
+        "bytes": 7115,
+        "sha256": "3c1c46296067ca24cbc5c50dd08b94b9a5ab840dfe2e5d140743021c75518593",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/main.tsx",
+        "bytes": 238,
+        "sha256": "8f55009f27569355469b6c65ddd242e2b38aa30b7a070ee2e438f4909a47a233",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/services/api.ts",
+        "bytes": 4506,
+        "sha256": "42dae892253b24839fe4d812b48b70767e64d27ba5bb2fa7ea7771a787fb6020",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src/vite-env.d.ts",
+        "bytes": 39,
+        "sha256": "424faf9241dd699dda995b367ed36665732da1e6ec1f33b2fd40394488ecac92",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/build.rs",
+        "bytes": 42,
+        "sha256": "4ae2333b11623039cc115e29b696e7ff5cdfcd5b7d628280ddf48fa733e6418d",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/Cargo.lock",
+        "bytes": 126030,
+        "sha256": "f636697f6d25b6af2a4a3e4baeba8e54ec3f797f6efacb62d082f0dc819d5ec8",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/Cargo.toml",
+        "bytes": 858,
+        "sha256": "de6e91311edf100b44860340562e91e656ec53803f0e136b86c30548fcabcf4e",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/src/commands.rs",
+        "bytes": 3726,
+        "sha256": "07f83396505e547ae247c0e9148a123aac08ddbc83bdfbfd27ee47f8f6c1d90c",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/src/lib.rs",
+        "bytes": 646,
+        "sha256": "0ed01523e524f4f4bbad974f789c9d68b882a2f7a62a6290fb4f16bab5980bc8",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/src/main.rs",
+        "bytes": 194,
+        "sha256": "c84b86460717892ed2a3d8f814bec9fad7edc04740e040cd586c863c8069bb82",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/src/models.rs",
+        "bytes": 550,
+        "sha256": "99054d5ca1fb8feeef73e2e2d7ff5f06b195a785e6a4b16beb351f420b7eb227",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/src-tauri/tauri.conf.json",
+        "bytes": 1083,
+        "sha256": "7f29b93f7e7e51bb534b7db59ef4dbf23e96100ec76af4aab1e4489198389218",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/tsconfig.json",
+        "bytes": 630,
+        "sha256": "cb4dd1777bc7f478cb417906c32099ae5e661865b3181df116ac70790e9a1a7e",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/tsconfig.node.json",
+        "bytes": 223,
+        "sha256": "6ec602b8aa146888c76f0b41ca3515f91f95919f6e6417a4670decaba8fcb982",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      },
+      {
+        "path": "tycho-desktop/vite.config.ts",
+        "bytes": 850,
+        "sha256": "d0c7e96eb844636ee7e73113ff6d194eb942d15398a00989d36335400ac8a86d",
+        "category": "pipeline_snapshot",
+        "status": "PIPELINE_SNAPSHOT",
+        "required": true,
+        "eligible_as_build_input": false
+      }
+    ]
+  },
+  "experimental_artifacts": [
+    {
+      "path": "corpus_data/corpus.db",
+      "bytes": 56266752,
+      "sha256": "40d8ce3afb22e96e0febc81bd949e602ace2ba2d6291cc87709cb9ea3e6ad331",
+      "sqlite": {
+        "integrity_check": [
+          "ok"
+        ],
+        "foreign_key_error_count": 0,
+        "table_counts": {
+          "tb_etiquetas": 652,
+          "tb_formas": 123014,
+          "tb_unigramas": 1522054,
+          "tb_unigramas_freq": 133247
+        }
+      },
+      "category": "experimental_database",
+      "status": "UNKNOWN_PRE_MANIFEST",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "corpus_data/corpus_cartografia.db",
+      "bytes": 46551040,
+      "sha256": "ce825bcf9ae9e525409e377a2c5759d8be5d239705988e5a95cc2e659d9f3f46",
+      "sqlite": {
+        "integrity_check": [
+          "ok"
+        ],
+        "foreign_key_error_count": 0,
+        "table_counts": {
+          "tb_arvores_expandidas": 14049,
+          "tb_quarentena": 91
+        },
+        "cartographic_database": {
+          "expanded_tree_count": 14049,
+          "distinct_source_files": 3,
+          "duplicate_original_tree_rows": 6428,
+          "surface_yield_mismatches": 2538,
+          "missing_external_id_count": 52,
+          "quarantine_count": 91,
+          "pending_quarantine_count": 91
+        }
+      },
+      "category": "experimental_database",
+      "status": "LEGACY_EXPERIMENTAL",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "corpus_data/corpus_fase1.db",
+      "bytes": 470253568,
+      "sha256": "5ae661377e8612fb06e00ba9b1d646188df10040573879882f95464f73f0b1c2",
+      "sqlite": {
+        "integrity_check": [
+          "ok"
+        ],
+        "foreign_key_error_count": 0,
+        "table_counts": {
+          "tb_nos": 2382194,
+          "tb_relacoes": 2325398,
+          "tb_sentencas": 56796
+        },
+        "phase_database": {
+          "sentence_count": 56796,
+          "node_count": 2382194,
+          "relation_count": 2325398,
+          "distinct_source_files": 30
+        }
+      },
+      "category": "experimental_database",
+      "status": "LEGACY_REFERENCE",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "corpus_data/corpus_fase3.db",
+      "bytes": 149303296,
+      "sha256": "5440ceaa33ce3b4f384e8ed0796086c4becb64244cf7fbb5d0d7e8bd26766824",
+      "sqlite": {
+        "integrity_check": [
+          "ok"
+        ],
+        "foreign_key_error_count": 0,
+        "table_counts": {
+          "tb_nos": 540125,
+          "tb_relacoes": 533683,
+          "tb_sentencas": 6442
+        },
+        "phase_database": {
+          "sentence_count": 6442,
+          "node_count": 540125,
+          "relation_count": 533683,
+          "distinct_source_files": 2,
+          "cartographic_node_count": 54737,
+          "surface_yield_mismatches": 1015,
+          "missing_external_id_count": 18,
+          "reused_external_id_rows": 16
+        }
+      },
+      "category": "experimental_database",
+      "status": "LEGACY_EXPERIMENTAL",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "python_backend/dist/tycho_backend.exe",
+      "bytes": 104005988,
+      "sha256": "d34dcaa96ae352f0beee2c6287a505ea90d3d148e7b7e618519a755d79ff054e",
+      "category": "runtime_binary_snapshot",
+      "status": "RUNTIME_SNAPSHOT",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/INICIAR_TYCHO_BRAHE.bat",
+      "bytes": 522,
+      "sha256": "fb96b1f2b23a01a08805a10fc51c41d8a6dbfbc5e6a20ca38e12dee4f2875a48",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/LEIA-ME.txt",
+      "bytes": 1435,
+      "sha256": "8757c10964da2ca508e4f4c085afa892bb26d2cd4137a46b5940e6bd2e2639c8",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/Tycho Brahe Search.exe",
+      "bytes": 4629504,
+      "sha256": "5e86d024d5fca28c7c2a10cbf67ab000abd5c8ba3913733af21450098ebb88eb",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/bin/tycho_backend-x86_64-pc-windows-msvc.exe",
+      "bytes": 104005988,
+      "sha256": "d34dcaa96ae352f0beee2c6287a505ea90d3d148e7b7e618519a755d79ff054e",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/bin/tycho_backend.exe",
+      "bytes": 104005988,
+      "sha256": "d34dcaa96ae352f0beee2c6287a505ea90d3d148e7b7e618519a755d79ff054e",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_cartografia.db",
+      "bytes": 46551040,
+      "sha256": "ce825bcf9ae9e525409e377a2c5759d8be5d239705988e5a95cc2e659d9f3f46",
+      "sqlite": {
+        "integrity_check": [
+          "ok"
+        ],
+        "foreign_key_error_count": 0,
+        "table_counts": {
+          "tb_arvores_expandidas": 14049,
+          "tb_quarentena": 91
+        },
+        "cartographic_database": {
+          "expanded_tree_count": 14049,
+          "distinct_source_files": 3,
+          "duplicate_original_tree_rows": 6428,
+          "surface_yield_mismatches": 2538,
+          "missing_external_id_count": 52,
+          "quarantine_count": 91,
+          "pending_quarantine_count": 91
+        }
+      },
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_cartografia.db-shm",
+      "bytes": 32768,
+      "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_cartografia.db-wal",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_fase3.db",
+      "bytes": 149303296,
+      "sha256": "5440ceaa33ce3b4f384e8ed0796086c4becb64244cf7fbb5d0d7e8bd26766824",
+      "sqlite": {
+        "integrity_check": [
+          "ok"
+        ],
+        "foreign_key_error_count": 0,
+        "table_counts": {
+          "tb_nos": 540125,
+          "tb_relacoes": 533683,
+          "tb_sentencas": 6442
+        },
+        "phase_database": {
+          "sentence_count": 6442,
+          "node_count": 540125,
+          "relation_count": 533683,
+          "distinct_source_files": 2,
+          "cartographic_node_count": 54737,
+          "surface_yield_mismatches": 1015,
+          "missing_external_id_count": 18,
+          "reused_external_id_rows": 16
+        }
+      },
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_fase3.db-shm",
+      "bytes": 32768,
+      "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_fase3.db-wal",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/docs/ARQUITETURA_DO_SISTEMA.md",
+      "bytes": 3181,
+      "sha256": "37b55b073fa13921a22fbb62b1d00207f3493799ea499fcc2aa6ef4ca394599b",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/docs/GUIA_CARTOGRAFIA_SINTATICA.md",
+      "bytes": 5939,
+      "sha256": "502aa3ce948fb44a4daa83103fb97c0e29c28ec6bec42c48f8c1e129b444e387",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/docs/MANUAL_DO_USUARIO.md",
+      "bytes": 7290,
+      "sha256": "984e00c9b7b3eae87c919b0693f68f2eb997f487eac1d0ba3a2d42d473155217",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Portable/docs/REFERENCIAS_E_CREDITOS.md",
+      "bytes": 3018,
+      "sha256": "bae377f995b707676205a5432b894af3f9036aebfc44f9a9e151508d4c535946",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/TychoBrahe_v1.0.0_Windows_x64_Portable.zip",
+      "bytes": 255117926,
+      "sha256": "2a6a381099be8f236baa2fb9bfd6f6ffef9b4745cb46f9b8c492f15f780a3d1d",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/installers/Tycho_Brahe_Search_v1.0.0_Setup.exe",
+      "bytes": 121407229,
+      "sha256": "2d008ec3c03d23d75b0a3c949f58516012ba4352e1fa12096b57cfe9decd6436",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "release/installers/Tycho_Brahe_Search_v1.0.0_x64.msi",
+      "bytes": 150962176,
+      "sha256": "98836f468e02ea844324a05334acd7f6aeca7f7bf03d7013b096b2c325518218",
+      "category": "experimental_release",
+      "status": "RETIRED_DISTRIBUTION",
+      "required": false,
+      "eligible_as_build_input": false
+    },
+    {
+      "path": "tycho-desktop/src-tauri/bin/tycho_backend-x86_64-pc-windows-msvc.exe",
+      "bytes": 104005988,
+      "sha256": "d34dcaa96ae352f0beee2c6287a505ea90d3d148e7b7e618519a755d79ff054e",
+      "category": "runtime_binary_snapshot",
+      "status": "RUNTIME_SNAPSHOT",
+      "required": false,
+      "eligible_as_build_input": false
+    }
+  ],
+  "findings": [
+    {
+      "level": "ATENCAO",
+      "artifact": "canonical_sources",
+      "message": "há 1 arquivo(s) PSD com saldo bruto de parênteses diferente de zero; a próxima etapa deve registrar o resultado do parser por bloco"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "corpus_data/corpus_cartografia.db",
+      "message": "cobre 3 de 30 arquivos PSD versionados; a expansão cartográfica está incompleta"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "corpus_data/corpus_cartografia.db",
+      "message": "apresenta 6428 árvores originais duplicadas"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "corpus_data/corpus_cartografia.db",
+      "message": "apresenta 2538 árvores expandidas com sequência superficial divergente"
+    },
+    {
+      "level": "ATENCAO",
+      "artifact": "corpus_data/corpus_fase1.db",
+      "message": "contém 56796 sentenças para 56936 blocos candidatos; cada diferença deve ter um resultado explícito de importação ou rejeição"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "corpus_data/corpus_fase3.db",
+      "message": "cobre 2 de 30 arquivos PSD versionados; não pode ser tratado como corpus completo"
+    },
+    {
+      "level": "ATENCAO",
+      "artifact": "corpus_data/corpus_fase3.db",
+      "message": "contém 6442 sentenças para 56936 blocos candidatos; cada diferença deve ter um resultado explícito de importação ou rejeição"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "corpus_data/corpus_fase3.db",
+      "message": "apresenta 1015 árvores com sequência superficial divergente"
+    },
+    {
+      "level": "ATENCAO",
+      "artifact": "corpus_data/corpus_fase3.db",
+      "message": "reutiliza 16 IDs externos; o próximo importador deve usar arquivo, ordinal e hash do bloco como identidade"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_cartografia.db",
+      "message": "cobre 3 de 30 arquivos PSD versionados; a expansão cartográfica está incompleta"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_cartografia.db",
+      "message": "apresenta 6428 árvores originais duplicadas"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_cartografia.db",
+      "message": "apresenta 2538 árvores expandidas com sequência superficial divergente"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_fase3.db",
+      "message": "cobre 2 de 30 arquivos PSD versionados; não pode ser tratado como corpus completo"
+    },
+    {
+      "level": "ATENCAO",
+      "artifact": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_fase3.db",
+      "message": "contém 6442 sentenças para 56936 blocos candidatos; cada diferença deve ter um resultado explícito de importação ou rejeição"
+    },
+    {
+      "level": "ALERTA",
+      "artifact": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_fase3.db",
+      "message": "apresenta 1015 árvores com sequência superficial divergente"
+    },
+    {
+      "level": "ATENCAO",
+      "artifact": "release/TychoBrahe_v1.0.0_Portable/corpus_data/corpus_fase3.db",
+      "message": "reutiliza 16 IDs externos; o próximo importador deve usar arquivo, ordinal e hash do bloco como identidade"
+    }
+  ]
+}

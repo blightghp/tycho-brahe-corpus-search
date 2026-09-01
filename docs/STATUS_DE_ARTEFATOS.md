@@ -1,16 +1,24 @@
 # Estado dos artefatos e política de publicação
 
-## Marco 1 — contenção e proveniência
+## Estado verificável — Marco 2 concluído
 
-O projeto está em **reconstrução controlada**. Os bancos cartográficos e os
-pacotes identificados como `v1.0.0` foram congelados para auditoria: não são
-uma versão estável, não devem ser redistribuídos como produto validado e não
-devem sustentar resultados científicos corpus-integrais.
+O projeto permanece em **reconstrução controlada**. O Marco 2 concluiu a
+importação PSD rastreável: há um parser isolado, um banco reconstruível e um
+ledger explícito para cada candidato histórico físico. Isso ainda **não**
+certifica a cartografia expandida, a busca desktop ou uma distribuição
+científica/publicável.
 
-O retrato verificável deste congelamento está em
-[`manifests/estado_experimental_2026-08-31.json`](manifests/estado_experimental_2026-08-31.json).
-Ele registra SHA-256, tamanho e sinais estruturais dos dados disponíveis no
-momento da auditoria, sem versionar os bancos ou binários grandes.
+Os bancos cartográficos e os pacotes `v1.0.0` continuam congelados para
+auditoria. Há dois retratos de proveniência:
+
+- [`manifests/estado_experimental_2026-08-31.json`](manifests/estado_experimental_2026-08-31.json)
+  preserva o congelamento histórico inicial;
+- [`manifests/marco2_importacao_rastreavel_2026-08-31.json`](manifests/marco2_importacao_rastreavel_2026-08-31.json)
+  é o contrato atual de fonte física e pipeline.
+
+O banco Marco 2 é produzido em um destino externo explícito e não é instalado
+em `corpus_data/`. Consulte [IMPORTACAO_RASTREAVEL.md](IMPORTACAO_RASTREAVEL.md)
+para reconstruí-lo e verificá-lo.
 
 ## Classificação
 
@@ -20,6 +28,7 @@ momento da auditoria, sem versionar os bancos ou binários grandes.
 | Referência derivada legada | `corpus_data/corpus_fase1.db` | Preservar em leitura; usar apenas para comparação e diagnóstico. |
 | Derivado experimental | `corpus_data/corpus_cartografia.db`, `corpus_data/corpus_fase3.db` | Não publicar, não tratar como corpus completo e não reutilizar como entrada de build. |
 | Legado sem qualificação | `corpus_data/corpus.db` | Não consumir até que receba inventário e validação explícitos. |
+| Banco Marco 2 | Destino externo de `importador_rastreavel.py` | Reconstruível e validável; não substituir nem alimentar os bancos congelados. |
 | Distribuição retirada | `release/` e pacotes `v1.0.0` | Guardados para auditoria; não suportados e não publicáveis. |
 | Snapshot de runtime | sidecars Python atuais | Registrados apenas para comparação; não certificam o funcionamento do pacote. |
 
@@ -30,15 +39,20 @@ o estado das fontes PSD, mas uma cópia presente e divergente é reportada.
 ## Identidade da fonte
 
 `sent_id_externo` não é uma chave confiável: há blocos sem ID e há IDs
-reutilizados. A identidade canônica a ser usada pelo novo importador será:
+reutilizados. A identidade canônica do importador Marco 2 é:
 
 ```text
-arquivo_relativo + ordinal_do_bloco + SHA-256_do_bloco
+arquivo_relativo + ordinal_bloco_fisico + ordinal_candidato + SHA-256_do_BLOB_bruto
 ```
 
-O ID externo será preservado como metadado. O manifesto já guarda, por arquivo,
-o digest agregado dessas identidades candidatas, para impedir perdas silenciosas
-no próximo parser.
+O caminho é portátil, por exemplo `corpus_data/a_001_psd.txt`; o ordinal de
+candidato é nulo em blocos físicos fora do subconjunto IP/CP. O ID externo é
+somente metadado.
+
+O Marco 2 registra dois fingerprints por documento: o histórico de
+S-expressões, para compatibilidade com o congelamento, e o físico de blocos,
+ordinais e hashes brutos, para provar o conteúdo do ledger. Eles não são
+intercambiáveis em fontes malformadas ou grupos mistos.
 
 ## Como verificar o congelamento
 
@@ -46,22 +60,18 @@ Execute a partir da raiz do repositório:
 
 ```powershell
 python python_backend/controle_artefatos.py verify `
-  --manifest docs/manifests/estado_experimental_2026-08-31.json
-```
-
-Isso exige todas as fontes PSD e o snapshot de código; bancos, binários e
-pacotes legados ausentes geram aviso. Para exigir também os artefatos legados
-que existem nesta cópia de trabalho:
-
-```powershell
-python python_backend/controle_artefatos.py verify `
-  --manifest docs/manifests/estado_experimental_2026-08-31.json `
+  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json `
   --require-experimental
 ```
 
-`"ok": true` nesse comando atesta somente a integridade dos arquivos
-observados. O resultado também declara `publication_approved: false`: nenhum
-artefato deste manifesto é uma distribuição aprovada.
+`"ok": true` nesse comando atesta a integridade das fontes, do pipeline Marco
+2 e dos artefatos observados. O resultado ainda declara
+`publication_approved: false`: integridade não torna os derivados uma
+distribuição aprovada nem declara a busca funcional.
+
+O manifesto histórico permanece como evidência do Marco 1, mas seu snapshot de
+pipeline não é o contrato de builds novos. Para reconstruir e conferir o banco
+Marco 2, use [IMPORTACAO_RASTREAVEL.md](IMPORTACAO_RASTREAVEL.md).
 
 Para produzir um novo retrato observacional, sem modificar o corpus ou bancos:
 
@@ -79,19 +89,18 @@ python python_backend/test_controle_artefatos.py
 
 ## Evidências registradas neste marco
 
-- Há 30 arquivos PSD versionados.
-- O corpus bruto possui 60.376 ocorrências de registros `ID` e 56.936 blocos
-  candidatos segundo o filtro histórico `(IP-|CP-)`.
-- `corpus_data/va_013_psd.txt` tem saldo bruto de parênteses igual a `-2`. É
-  um sinal de integridade a investigar pelo novo parser, não uma licença para
-  editar a fonte canônica.
-- O banco Fase 1 observado contém 56.796 sentenças. A diferença deve ser
-  explicada por resultados explícitos de importação ou rejeição na próxima
-  reconstrução; falhas silenciosas não serão aceitas.
-- O banco cartográfico observado cobre apenas três arquivos, contém duplicatas
-  e apresenta árvores cuja sequência superficial diverge da origem.
-- O Fase 3 observado cobre apenas dois arquivos. Logo, nenhum dos dois pode
-  ser apresentado como corpus cartográfico integral.
+- Há 30 arquivos PSD versionados, 63.784 blocos físicos preservados e 56.936
+  candidatos históricos físicos com decisão no ledger.
+- A reconstrução validada registra 56.926 `IMPORTADO`, 10 `REJEITADO` e
+  2.385.719 nós de origem, sem depender dos bancos legados.
+- `corpus_data/va_013_psd.txt` conserva o trailer DOS `0x1A`; os blocos
+  defeituosos são rejeitados explicitamente sem impedir os registros seguintes.
+- As dez rejeições, seus ordinais e motivos são listados em
+  [IMPORTACAO_RASTREAVEL.md](IMPORTACAO_RASTREAVEL.md); elas não são perdas
+  silenciosas nem licença para editar a fonte canônica.
+- O banco Fase 1 observado contém 56.796 sentenças, e os bancos cartográfico e
+  Fase 3 continuam referências incompletas/experimentais, não saídas do Marco
+  2 nem bases cartográficas integrais.
 
 ## Regras operacionais até o próximo marco
 
@@ -101,17 +110,20 @@ python python_backend/test_controle_artefatos.py
 3. Não sobrescrever nem editar os PSD de `corpus_data/`.
 4. Toda reconstrução deve escrever primeiro em caminhos temporários, validar
    cobertura, folhas e integridade, e só então promover o resultado.
-5. A próxima base deverá registrar, para cada bloco candidato, `IMPORTADO` ou
-   `REJEITADO` com motivo, além do hash da fonte e da versão das regras.
+5. Não ocultar as dez rejeições: qualquer recuperação deve ser versionada,
+   revisável e produzir novo manifesto.
+6. Não apresentar o banco Marco 2 como cartografia expandida integral antes da
+   camada de análise gramatical e da busca verificável.
 
 ## Próximos marcos da reconstrução
 
-1. **Importação rastreável:** parser isolado, tabela de proveniência por bloco
-   e ledger explícito de importação/rejeição, inclusive para `va_013`.
-2. **Gramática expandida:** transdutor versionado que separa núcleo lexical,
-   projeções funcionais, evidência e nível de confiança, preservando as folhas.
-3. **Busca verificável:** índice e contrato único de resultados por sentença,
-   exercitados pela API Python, comando Tauri e interface React.
+1. **Gramática expandida:** transdutor versionado ligado aos nós `recon_*` que
+   separe núcleo lexical, projeções funcionais, evidência e confiança,
+   preservando as folhas.
+2. **Busca verificável:** índice e contrato único de resultados por sentença,
+   análise e evidência, exercitados pela API Python, comando Tauri e React.
+3. **Curadoria de rejeições:** resolução explícita dos dez casos, sem alterar
+   a fonte canônica fora de processo autorizado.
 4. **Publicação:** migração limpa, testes ponta a ponta, pacote novo e
    manifesto produzido no próprio build.
 

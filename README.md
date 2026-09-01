@@ -12,12 +12,13 @@
 > Projeto associado ao [Tycho Brahe Parsed Corpus of Historical Portuguese](http://www.tycho.iel.unicamp.br/)
 
 > [!WARNING]
-> **Estado do projeto: reconstrução controlada — marco 1.** Os bancos
-> `corpus_cartografia.db` e `corpus_fase3.db`, assim como os pacotes rotulados
-> `v1.0.0`, são artefatos experimentais arquivados. Não devem ser usados para
-> resultados científicos, redistribuídos como versão estável ou tomados como
-> corpus cartográfico validado. Consulte o
-> [estado dos artefatos](docs/STATUS_DE_ARTEFATOS.md).
+> **Estado do projeto: reconstrução controlada — Marco 2 concluído.** A
+> importação PSD agora é rastreável e reproduzível, mas os bancos
+> `corpus_cartografia.db`, `corpus_fase3.db` e os pacotes `v1.0.0` continuam
+> artefatos experimentais arquivados. A cartografia expandida, a busca desktop
+> e uma distribuição estável ainda não estão certificadas. Consulte o
+> [estado dos artefatos](docs/STATUS_DE_ARTEFATOS.md) e a
+> [importação rastreável](docs/IMPORTACAO_RASTREAVEL.md).
 
 ---
 
@@ -73,6 +74,7 @@ Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`
 
 - 📘 [**Manual do Usuário**](./docs/MANUAL_DO_USUARIO.md): Guia completo de navegação, consultas, atalhos e auditoria.
 - 🧭 [**Estado dos Artefatos**](./docs/STATUS_DE_ARTEFATOS.md): Fonte de verdade sobre dados, bancos, pacotes e política de publicação.
+- 🧱 [**Importação Rastreável**](./docs/IMPORTACAO_RASTREAVEL.md): Contrato do banco Marco 2, evidências, rejeições e reprodução segura.
 - 🔬 [**Guia de Cartografia Sintática**](./docs/GUIA_CARTOGRAFIA_SINTATICA.md): Fundamentação teórica dos 5 grandes domínios e 44 projeções funcionais universais.
 - 🏛️ [**Arquitetura do Sistema**](./docs/ARQUITETURA_DO_SISTEMA.md): Diagrama detalhado do pipeline Rust + Python + TypeScript/D3.
 - 🛡️ [**Relatório de Auditoria AppSec**](./docs/revisao_appsec.md): Medidas defensivas, mitigação de SQLi, prevenção de Self-DoS e sandboxing CSP.

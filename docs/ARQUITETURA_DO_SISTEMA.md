@@ -5,8 +5,10 @@ O **Tycho Brahe Search** foi arquitetado como uma aplicação tripartida de alta
 > [!WARNING]
 > Este diagrama descreve a arquitetura pretendida e parte da implementação
 > existente; não certifica que todos os fluxos estejam operacionais. No Marco
-> 1, as fontes PSD são canônicas e os bancos/pacotes atuais estão congelados
-> como derivados experimentais. Consulte
+> 2, as fontes PSD são canônicas e a importação de origem é rastreável; os
+> bancos/pacotes legados continuam congelados como derivados experimentais.
+> Cartografia expandida, busca e distribuição ainda dependem dos próximos
+> marcos. Consulte
 > [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md) para o estado verificável.
 
 ---
@@ -15,6 +17,13 @@ O **Tycho Brahe Search** foi arquitetado como uma aplicação tripartida de alta
 
 ```mermaid
 graph TD
+    subgraph DataFoundation [Camada 0: Fundamento de Proveniência Marco 2]
+        PSD[PSD canônico: corpus_data/*_psd.txt]
+        Manifest[Manifesto físico Marco 2]
+        Importer[importador_rastreavel.py]
+        Recon[(SQLite recon_* de fatos de origem)]
+    end
+
     subgraph Frontend [Camada 1: Frontend Desktop React 19 + TypeScript]
         UI[Interface de Pesquisa & Visualizador D3]
         HitL[Painel Human-in-the-Loop]
@@ -32,9 +41,12 @@ graph TD
         Oracle[Oráculo Cartográfico: oracle.py]
         Rewriter[Transdutor de Árvores: rewriter.py]
         Tokenizer[Tokenizador Termo a Termo: tokenizador_cartografico.py]
-        DB[(Bancos de Dados SQLite: corpus_fase3.db & corpus_cartografia.db)]
+        DB[(Futuro índice analítico; bancos legados congelados)]
     end
 
+    PSD --> Importer
+    Manifest --> Importer
+    Importer --> Recon
     UI --> API
     HitL --> API
     API -- Invocação Tauri IPC --> Handler
@@ -44,10 +56,27 @@ graph TD
     Oracle --> Rewriter
     Rewriter --> Tokenizer
     Tokenizer --> DB
+    Recon -. fonte imutável para análise futura .-> Oracle
     Sidecar -- Resposta JSON UTF-8 --> Handler
     Handler -- Retorno Assíncrono --> API
     API --> UI
 ```
+
+---
+
+## 0. Fundamento de proveniência — Marco 2
+
+Antes de qualquer expansão cartográfica, o importador isolado produz um banco
+`recon_*` com todos os grupos físicos PSD, um ledger de decisão para cada
+candidato histórico e a topologia fonte em adjacência/nested set. A ligação
+com o manifesto externo impede que hashes internos do banco sejam tomados como
+prova suficiente: documento, BLOB e fingerprint físico são reconferidos contra
+o retrato Marco 2.
+
+Essa camada não chama NLTK, spaCy, `rewriter.py` ou bancos legados. A futura
+análise de núcleos lexicais e funcionais deve ser uma camada versionada ligada a
+`sentenca_id`/`no_id` de `recon_*`, sem reescrever os fatos de origem. Veja
+[IMPORTACAO_RASTREAVEL.md](IMPORTACAO_RASTREAVEL.md).
 
 ---
 

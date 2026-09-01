@@ -9,6 +9,38 @@ Este módulo centraliza todo o trabalho duro e procedural (lógico) de tokeniza�
 > [`../docs/STATUS_DE_ARTEFATOS.md`](../docs/STATUS_DE_ARTEFATOS.md) e valide o
 > manifesto de proveniência.
 
+## Importação rastreável — Marco 2
+
+`importador_rastreavel.py` é a entrada atual para criar uma base nova de fatos
+de origem. Ele usa somente a biblioteca padrão, lê exclusivamente os PSD
+canônicos, preserva cada grupo físico em BLOB e decide `IMPORTADO` ou
+`REJEITADO` para todo candidato histórico físico. Não importa, não altera e não
+usa os bancos legados como insumo.
+
+O SQLite de saída contém as tabelas `recon_documentos`,
+`recon_blocos_origem`, `recon_ledger_importacao`, `recon_sentencas`,
+`recon_nos` e `recon_relacoes`. Ele é criado em staging e promovido apenas se
+as identidades físicas, árvores, folhas, relações, nested set, FKs e o
+manifesto externo coincidirem.
+
+```powershell
+$destino = 'C:\builds\tycho\corpus_marco2.sqlite'
+python python_backend/importador_rastreavel.py build `
+  --source-dir corpus_data `
+  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json `
+  --output $destino
+
+python python_backend/importador_rastreavel.py verify `
+  --db $destino `
+  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json
+```
+
+O destino é recusado dentro de `corpus_data/`. No corpus atual há dez
+rejeições explícitas; portanto `--fail-on-rejections` é esperado falhar até a
+curadoria versionada desses casos. Consulte
+[`../docs/IMPORTACAO_RASTREAVEL.md`](../docs/IMPORTACAO_RASTREAVEL.md) para o
+esquema, as contagens e os limites do Marco 2.
+
 ## Estrutura histórica dos bancos SQLite
 
 O diretório de trabalho pode conter os seguintes bancos derivados. Sua presença
@@ -35,6 +67,11 @@ As únicas entradas canônicas da próxima reconstrução são os arquivos
 
 ## Processo histórico de tokenização e expansão
 
+> [!NOTE]
+> O fluxo abaixo descreve scripts legados e a arquitetura pretendida. Ele não
+> é a rota autorizada para reconstruir a base atual; a rota Marco 2 acima deve
+> preceder qualquer transdutor cartográfico futuro.
+
 1. **Leitura**: O sistema consome os arquivos textuais anotados (`*_psd.txt`) localizados na pasta `../corpus_data`.
 2. **Parsing**: Utilizando a estrutura `tree_io.py`, cada árvore de colchetes e parênteses lida é convertida para instâncias interpretáveis da classe `ParentedTree` da biblioteca NLP NLTK.
 3. **Cartografia (Rizzi/Cinque)**: Passamos essas árvores pelo motor `rewriter.py` que, acompanhado das lógicas do `oracle.py`, faz inserção em "leque" (expansão) nas árvores. Em resumo, ele transforma CP e IP em uma estrutura complexa de ForceP, TopP, FocusP, etc.
@@ -51,7 +88,8 @@ dedicado. Não execute `--vacuum` sobre os artefatos congelados nesta etapa.
 ```bash
 # Verificar a fonte canônica, o snapshot de código e os artefatos disponíveis
 python python_backend/controle_artefatos.py verify \
-  --manifest docs/manifests/estado_experimental_2026-08-31.json
+  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json \
+  --require-experimental
 
 # Relatório de status e distribuição por autores/séculos
 python python_backend/gerenciador_db.py --status

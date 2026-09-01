@@ -15,6 +15,7 @@ from controle_artefatos import (  # noqa: E402
     SCHEMA_VERSION,
     build_manifest,
     inspect_sqlite_file,
+    physical_psd_fingerprint,
     verify_manifest,
     write_manifest,
 )
@@ -60,6 +61,21 @@ class TestControleArtefatos(unittest.TestCase):
             self.assertTrue(
                 any(finding["artifact"] == "canonical_sources" for finding in manifest["findings"])
             )
+
+    def test_physical_fingerprint_uses_literal_blank_line_and_preserves_dos_trailer(self):
+        payload = (
+            b"( (IP-MAT (N rei)) (ID A,1))\r\n \r\n(N ainda-na-mesma-arvore)"
+            b"\r\n\r\n( (CP-QUE (C que)) (ID A,2))\x1a"
+        )
+
+        fingerprint = physical_psd_fingerprint(payload, "corpus_data/a_001_psd.txt")
+
+        self.assertEqual(fingerprint["segmentation_version"], "literal-blank-line-bytes@1")
+        self.assertEqual(fingerprint["physical_block_count"], 2)
+        self.assertEqual(fingerprint["historical_candidate_count"], 2)
+        self.assertEqual(fingerprint["terminal_dos_trailer_bytes"], 1)
+        self.assertEqual(len(fingerprint["physical_block_identity_sha256"]), 64)
+        self.assertEqual(len(fingerprint["historical_candidate_identity_sha256"]), 64)
 
     def test_verification_detects_source_mutation(self):
         with tempfile.TemporaryDirectory() as temp_dir:

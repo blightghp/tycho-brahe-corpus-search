@@ -26,6 +26,12 @@ SCHEMA_VERSION = 2
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ID_RECORD_RE = re.compile(r"\(ID\s+[^)]+\)")
 TERMINAL_RE = re.compile(r"\([^()\s]+\s+([^()\s]+)\)")
+# A segmentação do Marco 2 é deliberadamente binária: apenas uma linha
+# literalmente vazia separa registros. Linhas compostas por espaços pertencem
+# a árvores reais e não podem ser tratadas como fronteira.
+PHYSICAL_SEGMENTATION_VERSION = "literal-blank-line-bytes@1"
+PHYSICAL_SEPARATOR_RE = re.compile(rb"(?:\r?\n\r?\n)+")
+PHYSICAL_TRIM_BYTES = b" \t\r\n"
 
 EXPERIMENTAL_DATABASES = (
     "corpus_data/corpus.db",
@@ -53,12 +59,97 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_bytes(payload: bytes) -> str:
+    """Calcula o checksum de um fragmento bruto, sem decodificá-lo."""
+    return hashlib.sha256(payload).hexdigest()
+
+
+def split_terminal_dos_trailer(payload: bytes) -> tuple[bytes, bytes]:
+    """Separa o ``0x1A`` terminal, que não integra a última árvore PSD."""
+    if payload.endswith(b"\x1a"):
+        return payload[:-1], payload[-1:]
+    return payload, b""
+
+
+def is_historical_candidate_physical_block(raw_block: bytes) -> bool:
+    """Aplica o marcador IP/CP histórico à unidade física, sem parseá-la."""
+    normalized = raw_block.lstrip(PHYSICAL_TRIM_BYTES)
+    return bool(
+        normalized.startswith(b"(")
+        and (b"(IP-" in normalized or b"(CP-" in normalized)
+    )
+
+
+def physical_record_fingerprint(
+    source_relative_path: str,
+    records: Iterable[tuple[int, int | None, str]],
+) -> dict[str, str]:
+    """Resume identidades físicas ordenadas por origem.
+
+    Cada registro contém ``ordinal_fisico``, ``ordinal_candidato`` (ou
+    ``None``) e o SHA-256 do BLOB bruto. Os dois digests distinguem o inventário
+    completo da visão histórica IP/CP, que pode divergir do scanner de
+    S-expressões em arquivos malformados ou grupos mistos.
+    """
+    physical_lines: list[str] = []
+    candidate_lines: list[str] = []
+    for physical_ordinal, candidate_ordinal, raw_sha256 in records:
+        physical_lines.append(
+            f"{source_relative_path}\0{physical_ordinal}\0{raw_sha256}\n"
+        )
+        if candidate_ordinal is not None:
+            candidate_lines.append(
+                f"{source_relative_path}\0{physical_ordinal}\0{candidate_ordinal}\0{raw_sha256}\n"
+            )
+    return {
+        "physical_block_identity_sha256": _digest_lines(physical_lines),
+        "historical_candidate_identity_sha256": _digest_lines(candidate_lines),
+    }
+
+
+def physical_psd_fingerprint(payload: bytes, source_relative_path: str) -> dict[str, Any]:
+    """Inventaria blocos físicos com o mesmo contrato do importador Marco 2."""
+    parser_payload, trailer_dos = split_terminal_dos_trailer(payload)
+    records: list[tuple[int, int | None, str]] = []
+    cursor = 0
+    candidate_ordinal = 0
+
+    def append_segment(segment: bytes) -> None:
+        nonlocal candidate_ordinal
+        if not segment.strip(PHYSICAL_TRIM_BYTES):
+            return
+        physical_ordinal = len(records) + 1
+        candidate = is_historical_candidate_physical_block(segment)
+        if candidate:
+            candidate_ordinal += 1
+        records.append(
+            (
+                physical_ordinal,
+                candidate_ordinal if candidate else None,
+                sha256_bytes(segment),
+            )
+        )
+
+    for match in PHYSICAL_SEPARATOR_RE.finditer(parser_payload):
+        append_segment(parser_payload[cursor : match.start()])
+        cursor = match.end()
+    append_segment(parser_payload[cursor:])
+
+    return {
+        "segmentation_version": PHYSICAL_SEGMENTATION_VERSION,
+        "physical_block_count": len(records),
+        "historical_candidate_count": candidate_ordinal,
+        "terminal_dos_trailer_bytes": len(trailer_dos),
+        **physical_record_fingerprint(source_relative_path, records),
+    }
+
+
 def _paren_balance(text: str) -> int:
     """Retorna o saldo bruto de parênteses como sinal diagnóstico barato."""
     return text.count("(") - text.count(")")
 
 
-def _top_level_blocks(text: str) -> list[str]:
+def extract_top_level_blocks(text: str) -> list[str]:
     """Extrai S-expressões de topo sem depender de NLTK.
 
     O corpus contém blocos ``CODE`` e árvores sintáticas. Esta rotina é usada
@@ -86,6 +177,20 @@ def _top_level_blocks(text: str) -> list[str]:
     return blocks
 
 
+def extract_candidate_blocks(text: str) -> list[str]:
+    """Retorna o subconjunto histórico de blocos com marcador IP/CP.
+
+    O filtro é mantido para compatibilidade com o retrato legado. A
+    reconstrução rastreável usa uma segmentação física mais abrangente e não
+    descarta fragmentos por este critério.
+    """
+    return [
+        block
+        for block in extract_top_level_blocks(text)
+        if "(IP-" in block or "(CP-" in block
+    ]
+
+
 def _digest_lines(lines: Iterable[str]) -> str:
     digest = hashlib.sha256()
     for line in lines:
@@ -93,10 +198,10 @@ def _digest_lines(lines: Iterable[str]) -> str:
     return digest.hexdigest()
 
 
-def _candidate_tree_fingerprint(content: str) -> dict[str, Any]:
+def candidate_tree_fingerprint(content: str) -> dict[str, Any]:
     """Resume a identidade canônica ``arquivo + ordinal + hash do bloco``."""
-    top_level = _top_level_blocks(content)
-    candidates = [block for block in top_level if "(IP-" in block or "(CP-" in block]
+    top_level = extract_top_level_blocks(content)
+    candidates = extract_candidate_blocks(content)
     external_ids: list[str] = []
     lines: list[str] = []
 
@@ -120,12 +225,19 @@ def _candidate_tree_fingerprint(content: str) -> dict[str, Any]:
     }
 
 
+# Aliases privados preservados para qualquer automação local que já os use.
+_top_level_blocks = extract_top_level_blocks
+_candidate_tree_fingerprint = candidate_tree_fingerprint
+
+
 def inspect_psd_file(path: Path, root: Path) -> dict[str, Any]:
     """Resume um PSD sem depender do parser ou das bibliotecas NLP."""
-    content = path.read_text(encoding="utf-8", errors="replace")
-    fingerprint = _candidate_tree_fingerprint(content)
+    raw_content = path.read_bytes()
+    content = raw_content.decode("utf-8", errors="replace")
+    relative_path = _relative_path(path, root)
+    fingerprint = candidate_tree_fingerprint(content)
     return {
-        "path": _relative_path(path, root),
+        "path": relative_path,
         "category": "canonical_psd_source",
         "status": "CANONICAL_INPUT",
         "required": True,
@@ -135,6 +247,7 @@ def inspect_psd_file(path: Path, root: Path) -> dict[str, Any]:
         "id_records": len(ID_RECORD_RE.findall(content)),
         "parentheses_balance": _paren_balance(content),
         "parse_fingerprint": fingerprint,
+        "physical_fingerprint": physical_psd_fingerprint(raw_content, relative_path),
     }
 
 
@@ -502,6 +615,12 @@ def build_manifest(root: Path, include_release: bool = False) -> dict[str, Any]:
         "candidate_tree_count": sum(
             record["parse_fingerprint"]["candidate_tree_count"] for record in sources
         ),
+        "physical_block_count": sum(
+            record["physical_fingerprint"]["physical_block_count"] for record in sources
+        ),
+        "physical_historical_candidate_count": sum(
+            record["physical_fingerprint"]["historical_candidate_count"] for record in sources
+        ),
         "candidate_without_external_id_count": sum(
             record["parse_fingerprint"]["candidate_without_external_id_count"]
             for record in sources
@@ -512,6 +631,14 @@ def build_manifest(root: Path, include_release: bool = False) -> dict[str, Any]:
         "unbalanced_file_count": sum(record["parentheses_balance"] != 0 for record in sources),
         "set_sha256": _digest_lines(
             f"{record['path']}\0{record['sha256']}\n" for record in sources
+        ),
+        "physical_block_set_sha256": _digest_lines(
+            f"{record['path']}\0{record['physical_fingerprint']['physical_block_identity_sha256']}\n"
+            for record in sources
+        ),
+        "physical_historical_candidate_set_sha256": _digest_lines(
+            f"{record['path']}\0{record['physical_fingerprint']['historical_candidate_identity_sha256']}\n"
+            for record in sources
         ),
     }
     artifacts = collect_experimental_artifacts(root, include_release)
@@ -546,6 +673,17 @@ def build_manifest(root: Path, include_release: bool = False) -> dict[str, Any]:
             "identity_scheme": {
                 "name": "relative_path_ordinal_block_sha256",
                 "fields": ["source_relative_path", "candidate_ordinal", "block_sha256"],
+                "external_id": "metadata_only_not_unique",
+            },
+            "physical_import_identity_scheme": {
+                "name": "relative_path_physical_ordinal_candidate_ordinal_raw_sha256",
+                "fields": [
+                    "source_relative_path",
+                    "physical_ordinal",
+                    "candidate_ordinal",
+                    "raw_block_sha256",
+                ],
+                "segmentation_version": PHYSICAL_SEGMENTATION_VERSION,
                 "external_id": "metadata_only_not_unique",
             },
             "summary": source_summary,
