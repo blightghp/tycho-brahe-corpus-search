@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "ruleset_version": "gramatica-expandida-evidencial@1",
+  "review_status_default": "PENDENTE",
+  "rules": [
+    {
+      "id": "N0_VAZIO",
+      "kind": "EXCLUSAO",
+      "confidence": 1.0,
+      "description": "Exclui categorias vazias e o marcador 0 de candidaturas a núcleo."
+    },
+    {
+      "id": "N0_PONT",
+      "kind": "EXCLUSAO",
+      "confidence": 1.0,
+      "description": "Exclui pontuação de candidaturas a núcleo."
+    },
+    {
+      "id": "L_N",
+      "kind": "NUCLEO_LEXICAL",
+      "confidence": 1.0,
+      "description": "Reconhece N e NPR como núcleos lexicais nominais pela etiqueta PSD de origem."
+    },
+    {
+      "id": "L_PRO",
+      "kind": "NUCLEO_LEXICAL",
+      "confidence": 1.0,
+      "description": "Reconhece PRO e WPRO como núcleos lexicais pronominais pela etiqueta PSD de origem."
+    },
+    {
+      "id": "L_ADJ",
+      "kind": "NUCLEO_LEXICAL",
+      "confidence": 1.0,
+      "description": "Reconhece ADJ como núcleo lexical adjetival pela etiqueta PSD de origem."
+    },
+    {
+      "id": "L_ADV",
+      "kind": "NUCLEO_LEXICAL",
+      "confidence": 1.0,
+      "description": "Reconhece ADV como núcleo lexical adverbial pela etiqueta PSD de origem."
+    },
+    {
+      "id": "L_VB",
+      "kind": "NUCLEO_LEXICAL",
+      "confidence": 1.0,
+      "description": "Reconhece etiquetas verbais lexicais V* pela etiqueta PSD de origem."
+    },
+    {
+      "id": "F_C",
+      "kind": "NUCLEO_FUNCIONAL",
+      "confidence": 1.0,
+      "description": "Reconhece C sob CP como núcleo funcional fonte, sem converter CP em ForceP."
+    },
+    {
+      "id": "F_D",
+      "kind": "NUCLEO_FUNCIONAL",
+      "confidence": 1.0,
+      "description": "Reconhece D sob NP como determinante funcional fonte, sem postular DP."
+    },
+    {
+      "id": "F_P",
+      "kind": "NUCLEO_FRONTEIRA",
+      "confidence": 1.0,
+      "description": "Reconhece P sob PP como cabeça fonte de fronteira, sem projetar camada cartográfica."
+    },
+    {
+      "id": "F_OP",
+      "kind": "NUCLEO_FUNCIONAL",
+      "confidence": 1.0,
+      "description": "Reconhece operadores NEG, CL, SE e CONJ sem inferir projeção invisível."
+    },
+    {
+      "id": "V_AUX",
+      "kind": "EVIDENCIA_AUXILIAR",
+      "confidence": 1.0,
+      "description": "Registra HV*, TR*, SR* e ET* como evidência de auxiliar ou cópula, sem afirmar T, AspP ou VoiceP."
+    },
+    {
+      "id": "P_FONTE",
+      "kind": "PROJECAO_FONTE",
+      "confidence": 1.0,
+      "description": "Materializa apenas sintagmas que já existem no PSD de origem."
+    },
+    {
+      "id": "H_LOCAL",
+      "kind": "RELACAO",
+      "confidence": 0.8,
+      "description": "Registra candidaturas de cabeça local apenas entre pai e filho imediatos da árvore fonte."
+    },
+    {
+      "id": "E_ADV",
+      "kind": "EVIDENCIA_CARTOGRAFICA",
+      "confidence": 0.9,
+      "description": "Registra evidência lexical Cinque quando todo o rendimento de um ADVP coincide com o léxico congelado; não cria projeção nem nó novo.",
+      "lexicon": {
+        "ainda": "AspP_continuative",
+        "amanhã": "T_past_future",
+        "antes": "T_anterior",
+        "completamente": "AspP_completive",
+        "evidentemente": "MoodP_evidential",
+        "felizmente": "MoodP_evaluative",
+        "francamente": "MoodP_speech_act",
+        "geralmente": "AspP_habitual",
+        "habitualmente": "AspP_habitual",
+        "infelizmente": "MoodP_evaluative",
+        "já": "T_anterior",
+        "ontem": "T_past_future",
+        "possivelmente": "ModP_epistemic",
+        "provavelmente": "ModP_epistemic",
+        "quase": "AspP_proximative",
+        "sempre": "AspP_continuative",
+        "talvez": "ModP_epistemic"
+      }
+    }
+  ]
+}

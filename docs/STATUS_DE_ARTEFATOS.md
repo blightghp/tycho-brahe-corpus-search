@@ -1,12 +1,13 @@
 # Estado dos artefatos e política de publicação
 
-## Estado verificável — Marco 2 concluído
+## Estado verificável — Marcos 2 e 3 concluídos
 
 O projeto permanece em **reconstrução controlada**. O Marco 2 concluiu a
 importação PSD rastreável: há um parser isolado, um banco reconstruível e um
-ledger explícito para cada candidato histórico físico. Isso ainda **não**
-certifica a cartografia expandida, a busca desktop ou uma distribuição
-científica/publicável.
+ledger explícito para cada candidato histórico físico. O Marco 3 acrescentou
+uma camada derivada de âncoras e evidências gramaticais versionadas, sem
+reescrever os fatos PSD. Isso ainda **não** certifica uma transdução
+cartográfica integral, a busca desktop ou uma distribuição científica/publicável.
 
 Os bancos cartográficos e os pacotes `v1.0.0` continuam congelados para
 auditoria. Há dois retratos de proveniência:
@@ -29,6 +30,7 @@ para reconstruí-lo e verificá-lo.
 | Derivado experimental | `corpus_data/corpus_cartografia.db`, `corpus_data/corpus_fase3.db` | Não publicar, não tratar como corpus completo e não reutilizar como entrada de build. |
 | Legado sem qualificação | `corpus_data/corpus.db` | Não consumir até que receba inventário e validação explícitos. |
 | Banco Marco 2 | Destino externo de `importador_rastreavel.py` | Reconstruível e validável; não substituir nem alimentar os bancos congelados. |
+| Banco Marco 3 | Destino externo de `analise_gramatical_recon.py` | Camada derivada, ancorada ao Marco 2 por SHA-256; registra evidências e candidaturas, não uma árvore cartográfica afirmada. |
 | Distribuição retirada | `release/` e pacotes `v1.0.0` | Guardados para auditoria; não suportados e não publicáveis. |
 | Snapshot de runtime | sidecars Python atuais | Registrados apenas para comparação; não certificam o funcionamento do pacote. |
 
@@ -112,19 +114,17 @@ python python_backend/test_controle_artefatos.py
    cobertura, folhas e integridade, e só então promover o resultado.
 5. Não ocultar as dez rejeições: qualquer recuperação deve ser versionada,
    revisável e produzir novo manifesto.
-6. Não apresentar o banco Marco 2 como cartografia expandida integral antes da
-   camada de análise gramatical e da busca verificável.
+6. Não apresentar o banco Marco 3 como transdução cartográfica integral ou
+   busca funcional: ele materializa evidências e candidaturas auditáveis.
 
 ## Próximos marcos da reconstrução
 
-1. **Gramática expandida:** transdutor versionado ligado aos nós `recon_*` que
-   separe núcleo lexical, projeções funcionais, evidência e confiança,
-   preservando as folhas.
-2. **Busca verificável:** índice e contrato único de resultados por sentença,
+1. **Busca verificável:** índice e contrato único de resultados por sentença,
    análise e evidência, exercitados pela API Python, comando Tauri e React.
-3. **Curadoria de rejeições:** resolução explícita dos dez casos, sem alterar
+2. **Curadoria linguística e de rejeições:** revisão humana das evidências
+   Marco 3 e resolução explícita dos dez casos, sem alterar
    a fonte canônica fora de processo autorizado.
-4. **Publicação:** migração limpa, testes ponta a ponta, pacote novo e
+3. **Publicação:** migração limpa, testes ponta a ponta, pacote novo e
    manifesto produzido no próprio build.
 
 ## Critérios para uma futura publicação estável

@@ -134,20 +134,21 @@ Para o corpus atual, `--fail-on-rejections` é um teste de política e deve
 impedir a promoção, pois há dez decisões `REJEITADO` deliberadamente expostas.
 Ele será apropriado após a resolução versionada de todas elas.
 
-## Próximo marco: análise gramatical expandida
+## Marco 3: análise gramatical expandida, em camada derivada
 
-O transdutor não deve sobrescrever `recon_*`. A próxima camada deve criar uma
-versão de análise separada, ligada por `sentenca_id` e `no_id` de origem, com:
+O Marco 3 foi iniciado com
+[`ANALISE_GRAMATICAL_EXPANDIDA.md`](ANALISE_GRAMATICAL_EXPANDIDA.md): um banco
+separado `m3_*`, ligado por SHA-256, manifesto e âncoras internas a
+`sentenca_id`/`no_id` de origem. Ele registra regras, evidências, confiança
+heurística, estado de revisão e candidaturas locais de núcleo, preservando a
+árvore e a sequência de folhas do Marco 2.
 
-1. versão e hash do conjunto de regras;
-2. classificação de cada núcleo lexical e projeção funcional;
-3. relações de cabeça, complemento, especificador e projeção, preservando a
-   árvore fonte como evidência;
-4. regra aplicada, evidência, confiança e estado de revisão humana por decisão;
-5. prova automática de que as folhas originais e expandidas são idênticas;
-6. contrato de busca que devolva identidade de origem, análise, evidência e
-   versão das regras por resultado.
+O ponto de corte é intencional: projeções que já existem no PSD são descritas
+como fonte; um rótulo cartográfico só entra como evidência lexical versionada,
+nunca como nó invisível injetado ou fato afirmado. Assim, o próximo marco pode
+construir o índice/contrato de busca sobre decisões rastreáveis sem transformar
+os dados históricos.
 
-Somente depois dessa camada, do índice de busca e da integração Tauri/React
-testada ponta a ponta será possível declarar a busca funcional ou publicar uma
-distribuição estável.
+Somente depois desse índice, da integração Tauri/React testada ponta a ponta e
+da revisão linguística das evidências será possível declarar a busca de usuário
+como funcional ou publicar uma distribuição estável.

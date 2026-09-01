@@ -41,6 +41,35 @@ curadoria versionada desses casos. Consulte
 [`../docs/IMPORTACAO_RASTREAVEL.md`](../docs/IMPORTACAO_RASTREAVEL.md) para o
 esquema, as contagens e os limites do Marco 2.
 
+## Análise gramatical evidencial — Marco 3
+
+`analise_gramatical_recon.py` recebe um banco Marco 2 validado em modo somente
+leitura e produz outro SQLite com o prefixo `m3_*`. Ele ancora o arquivo fonte
+e seu manifesto por SHA-256, espelha cada nó de origem e registra decisões de
+núcleo, projeção-fonte, relação local e evidência lexical cartográfica com
+regra, confiança `HEURISTICA` e revisão `PENDENTE`.
+
+Não importa NLTK ou spaCy, não modifica `recon_*` e não transforma árvores.
+`CP`/`IP`/`NP`/`PP` são descritos como estrutura-fonte; o léxico congelado de
+ADVP apenas registra evidência para uma projeção do catálogo, sem injetar o nó
+teórico. O conjunto de regras é
+`regras_gramatica_expandida_v1.json`.
+
+```powershell
+$m2 = 'C:\builds\tycho\corpus_marco2.sqlite'
+$m3 = 'C:\builds\tycho\corpus_marco3_evidencial.sqlite'
+python python_backend/analise_gramatical_recon.py build `
+  --source-db $m2 `
+  --source-manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json `
+  --output $m3
+python python_backend/analise_gramatical_recon.py verify `
+  --db $m3 --source-db $m2 `
+  --source-manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json
+```
+
+O esquema, os invariantes e as limitações científicas estão em
+[`../docs/ANALISE_GRAMATICAL_EXPANDIDA.md`](../docs/ANALISE_GRAMATICAL_EXPANDIDA.md).
+
 ## Estrutura histórica dos bancos SQLite
 
 O diretório de trabalho pode conter os seguintes bancos derivados. Sua presença
