@@ -22,14 +22,15 @@
 > VERONESI, Luiz Henrique Lima. *A Plataforma Tycho Brahe: um sistema para corpora sintaticamente anotados*. 2026. 211 f. Tese (Doutorado em Linguística) — Instituto de Estudos da Linguagem, Universidade Estadual de Campinas, Campinas, 2026. Disponível em: [https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf](https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf)
 
 > [!WARNING]
-> **Estado do projeto: reconstrução controlada — Marcos 2 e 3 concluídos.** A
-> importação PSD é rastreável e reproduzível, e a camada Marco 3 registra
-> âncoras e evidências gramaticais sem reescrever o corpus. Os bancos
+> **Estado do projeto: reconstrução controlada — Marcos 2 e 3 concluídos; busca
+> Marco 4 disponível por CLI.** A importação PSD é rastreável e reproduzível,
+> a camada Marco 3 registra âncoras e evidências gramaticais sem reescrever o
+> corpus, e a busca Marco 4 devolve proveniência obrigatória. Os bancos
 > `corpus_cartografia.db`, `corpus_fase3.db` e os pacotes `v1.0.0` continuam
 > artefatos experimentais arquivados. A transdução cartográfica integral, a
 > busca desktop e uma distribuição estável ainda não estão certificadas. Consulte o
 > [estado dos artefatos](docs/STATUS_DE_ARTEFATOS.md) e a
-> [análise gramatical expandida](docs/ANALISE_GRAMATICAL_EXPANDIDA.md).
+> [busca rastreável](docs/BUSCA_RASTREAVEL.md).
 
 ---
 
@@ -86,6 +87,7 @@ Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`
 - 📘 [**Manual do Usuário**](./docs/MANUAL_DO_USUARIO.md): Guia completo de navegação, consultas, atalhos e auditoria.
 - 🧭 [**Estado dos Artefatos**](./docs/STATUS_DE_ARTEFATOS.md): Fonte de verdade sobre dados, bancos, pacotes e política de publicação.
 - 🧱 [**Importação Rastreável**](./docs/IMPORTACAO_RASTREAVEL.md): Contrato do banco Marco 2, evidências, rejeições e reprodução segura.
+- 🔎 [**Busca Rastreável**](./docs/BUSCA_RASTREAVEL.md): Consultas Marco 4 por entidade, rótulo, projeção, token e regra, com proveniência obrigatória.
 - 🔬 [**Guia de Cartografia Sintática**](./docs/GUIA_CARTOGRAFIA_SINTATICA.md): Fundamentação teórica dos 5 grandes domínios e 44 projeções funcionais universais.
 - 🏛️ [**Arquitetura do Sistema**](./docs/ARQUITETURA_DO_SISTEMA.md): Diagrama detalhado do pipeline Rust + Python + TypeScript/D3.
 - 🛡️ [**Relatório de Auditoria AppSec**](./docs/revisao_appsec.md): Medidas defensivas, mitigação de SQLi, prevenção de Self-DoS e sandboxing CSP.

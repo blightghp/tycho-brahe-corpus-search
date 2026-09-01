@@ -1,6 +1,36 @@
 import { invoke } from '@tauri-apps/api/core';
 import { Command } from '@tauri-apps/plugin-shell';
 
+export {
+  buildM4SearchCommand,
+  DEFAULT_M4_SEARCH_LIMIT,
+  M4_SEARCH_CONTRACT_VERSION,
+  M4_SEARCH_NOT_CONNECTED,
+  M4_ENTITY_TYPES,
+  MAX_M4_FILTER_LENGTH,
+  MAX_M4_SEARCH_LIMIT,
+  m4ReviewNotice,
+  M4SearchCriteriaError,
+} from './m4SearchContract';
+export type {
+  M4AnalysisIdentity,
+  M4Anchor,
+  M4Decision,
+  M4Entity,
+  M4EntityType,
+  M4Evidence,
+  M4EvidenceType,
+  M4Origin,
+  M4SearchCommand,
+  M4SearchCriteria,
+  M4SearchFailure,
+  M4SearchQuery,
+  M4SearchResponse,
+  M4SearchResult,
+  M4SearchSuccess,
+  M4SearchValidation,
+} from './m4SearchContract';
+
 export interface SystemHealth {
   engine_status: string;
   os_info: string;

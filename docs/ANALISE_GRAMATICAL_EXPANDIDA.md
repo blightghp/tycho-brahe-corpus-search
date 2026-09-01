@@ -126,11 +126,11 @@ Os dez candidatos rejeitados pelo Marco 2 permanecem visíveis em
 `m3_escopo_blocos` como `FORA_ESCOPO_REJEITADA`; eles não são apagados nem
 passam a integrar resultados analíticos.
 
-## Limites e próximo marco
+## Limites e busca derivada
 
-Este marco habilita uma busca que possa devolver, para cada correspondência, a
-identidade fonte, a regra, a evidência, a confiança heurística e o estado de
-revisão. Ele ainda não é a busca de usuário final nem uma transdução completa
-dos cinco domínios. O próximo marco deve criar o índice/contrato de busca
-somente sobre esta camada validada, com consultas parametrizadas e retorno de
-proveniência obrigatório.
+O Marco 4 já consulta esta camada por meio de
+[BUSCA_RASTREAVEL.md](BUSCA_RASTREAVEL.md): cada correspondência devolve
+identidade fonte, regra, evidência, confiança heurística e estado de revisão,
+com filtros parametrizados. Ele ainda não é a busca desktop de usuário final
+nem uma transdução completa dos cinco domínios; a ponte Tauri/React só poderá
+ser conectada a um artefato M3 promovido e verificado.

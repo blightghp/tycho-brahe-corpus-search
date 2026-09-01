@@ -70,6 +70,32 @@ python python_backend/analise_gramatical_recon.py verify `
 O esquema, os invariantes e as limitações científicas estão em
 [`../docs/ANALISE_GRAMATICAL_EXPANDIDA.md`](../docs/ANALISE_GRAMATICAL_EXPANDIDA.md).
 
+## Busca rastreável — Marco 4
+
+`busca_rastreavel.py` consulta exclusivamente um SQLite Marco 3 promovido em
+modo somente leitura. Os filtros são exatos e parametrizados; cada resultado
+JSON traz a identidade M3, o bloco/sentença/nó de origem, a entidade, a
+decisão, a regra e as evidências com hash. A consulta normal verifica a
+pré-condição estrutural do M3; `--verify-source` pede a prova integral
+M3--M2 antes da busca.
+
+```powershell
+$m3 = 'C:\builds\tycho\corpus_marco3_evidencial.sqlite'
+python python_backend/busca_rastreavel.py search `
+  --db $m3 `
+  --entity-type EVIDENCIA_CARTOGRAFICA `
+  --projection MoodP_evaluative `
+  --rule E_ADV
+```
+
+O limite é 1--500 e não há interpolação de filtros em SQL. A busca desktop
+ainda não está conectada a este contrato. Consulte
+[`../docs/BUSCA_RASTREAVEL.md`](../docs/BUSCA_RASTREAVEL.md) e execute:
+
+```powershell
+python python_backend/test_busca_rastreavel.py
+```
+
 ## Estrutura histórica dos bancos SQLite
 
 O diretório de trabalho pode conter os seguintes bancos derivados. Sua presença

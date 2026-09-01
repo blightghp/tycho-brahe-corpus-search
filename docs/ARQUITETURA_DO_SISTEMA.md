@@ -7,8 +7,9 @@ O **Tycho Brahe Search** foi arquitetado como uma aplicação tripartida de alta
 > existente; não certifica que todos os fluxos estejam operacionais. No Marco
 > 2, as fontes PSD são canônicas e a importação de origem é rastreável. No
 > Marco 3, há uma camada derivada de evidências gramaticais versionadas; os
-> bancos/pacotes legados continuam congelados como derivados experimentais.
-> A transdução cartográfica completa, a busca desktop e a distribuição ainda
+> bancos/pacotes legados continuam congelados como derivados experimentais. O
+> Marco 4 já fornece uma busca rastreável por CLI sobre um M3 promovido, mas a
+> transdução cartográfica completa, a ponte desktop e a distribuição ainda
 > dependem dos próximos marcos. Consulte
 > [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md) para o estado verificável.
 
@@ -29,6 +30,11 @@ graph TD
         Rules[regras_gramatica_expandida_v1.json]
         Analyzer[analise_gramatical_recon.py]
         M3[(SQLite m3_* versionado)]
+    end
+
+    subgraph SearchLayer [Camada 0.75: Busca Rastreável Marco 4]
+        M4Search[busca_rastreavel.py CLI]
+        M4Contract[Contrato JSON de proveniência]
     end
 
     subgraph Frontend [Camada 1: Frontend Desktop React 19 + TypeScript]
@@ -57,6 +63,8 @@ graph TD
     Recon --> Analyzer
     Rules --> Analyzer
     Analyzer --> M3
+    M3 --> M4Search
+    M4Search --> M4Contract
     UI --> API
     HitL --> API
     API -- Invocação Tauri IPC --> Handler
@@ -66,7 +74,7 @@ graph TD
     Oracle --> Rewriter
     Rewriter --> Tokenizer
     Tokenizer --> DB
-    M3 -. entrada auditada da busca futura .-> Sidecar
+    M4Contract -. futura ponte dedicada .-> Handler
     Sidecar -- Resposta JSON UTF-8 --> Handler
     Handler -- Retorno Assíncrono --> API
     API --> UI
@@ -105,6 +113,22 @@ Cinque/Rizzi só aparecem como evidência lexical verificável, sem mutação de
 
 ---
 
+## 0.75. Busca rastreável — Marco 4
+
+`busca_rastreavel.py` abre apenas um banco `m3_*` promovido em modo somente
+leitura. Ele exige a identidade estrutural do Marco 3, usa filtros exatos
+vinculados por parâmetros SQLite e retorna JSON com análise, origem, âncora,
+entidade, decisão e evidências. Uma verificação integral M3--M2 pode ser
+solicitada antes da consulta, sem fazer parte do caminho interativo normal.
+
+O contrato TypeScript em `tycho-desktop/src/services/m4SearchContract.ts` é
+preparatório: ele restringe filtros e monta apenas um vetor de argumentos,
+mas não recebe caminhos de banco da interface nem declara disponibilidade de
+um sidecar. O detalhamento da CLI está em
+[BUSCA_RASTREAVEL.md](BUSCA_RASTREAVEL.md).
+
+---
+
 ## 2. Descrição das Camadas
 
 ### Camada 1: Frontend (React / TypeScript / Tailwind / D3)
@@ -120,7 +144,8 @@ Cinque/Rizzi só aparecem como evidência lexical verificável, sem mutação de
 - **Localização**: `python_backend/`
 - **Responsabilidade**:
   - `analise_gramatical_recon.py`: Compilador Marco 3 de evidências e âncoras versionadas sobre `recon_*`, sem NLTK/spaCy e sem transformação do PSD.
+  - `busca_rastreavel.py`: Consulta Marco 4 somente leitura sobre `m3_*` promovido, com filtros parametrizados e retorno de proveniência obrigatório.
   - `oracle.py`: Classificador de traços cartográficos e diagnósticos estruturais.
   - `rewriter.py`: Transdutor recursivo que expande nós sintéticos (CP, IP, VP) na hierarquia dos 5 domínios.
   - `tokenizador_cartografico.py`: Extração de lema, classe morfológica (POS) e mapeamento de papéis gerativos universais.
-  - `pesquisa_sintatica.py`: Roteador CLI de alta velocidade que consulta as bases SQLite indexadas com o *Nested Set Model* (lft/rgt).
+  - `pesquisa_sintatica.py`: Roteador legado que consulta bases experimentais; não é a rota da busca Marco 4.
