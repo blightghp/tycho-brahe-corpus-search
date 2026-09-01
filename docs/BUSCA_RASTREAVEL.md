@@ -9,9 +9,10 @@ cartográficas.
 
 Nesta etapa, a busca está disponível pela API Python e pela CLI
 [`../python_backend/busca_rastreavel.py`](../python_backend/busca_rastreavel.py).
-A ponte Tauri/React ainda não está conectada a um artefato Marco 3 instalado;
-portanto, a interface desktop não deve ser apresentada como busca ponta a
-ponta certificada.
+A ponte Tauri/React agora possui um sidecar dedicado e exige um artefato Marco
+3 provisionado em local controlado. A distribuição ainda não é certificada e
+o M3 não é embutido no instalador; veja
+[INTEGRACAO_DESKTOP_M4.md](INTEGRACAO_DESKTOP_M4.md) antes de usar a tela.
 
 ## Contrato científico e de segurança
 
@@ -94,6 +95,15 @@ A saída é JSON e contém sempre:
 
 Assim, uma ocorrência nunca é retornada como um rótulo solto: ela conserva a
 cadeia necessária para auditoria linguística e reprodução.
+
+## Uso pelo desktop
+
+O painel **Busca Evidencial (M4)** usa o mesmo contrato, mas não recebe um
+caminho de banco da interface. Antes de iniciá-lo, gere o sidecar e provisione
+um M3 validado, como descrito em
+[INTEGRACAO_DESKTOP_M4.md](INTEGRACAO_DESKTOP_M4.md). Quando o artefato estiver
+ausente, a UI deve informar `M4_ARTIFACT_UNAVAILABLE`, e não recorrer a bancos
+Fase 3/cartografia.
 
 ## Testes
 

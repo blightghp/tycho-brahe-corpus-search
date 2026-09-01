@@ -1,11 +1,11 @@
 import { invoke } from '@tauri-apps/api/core';
 import { Command } from '@tauri-apps/plugin-shell';
+import type { M4SearchCriteria, M4SearchResponse } from './m4SearchContract';
 
 export {
   buildM4SearchCommand,
   DEFAULT_M4_SEARCH_LIMIT,
   M4_SEARCH_CONTRACT_VERSION,
-  M4_SEARCH_NOT_CONNECTED,
   M4_ENTITY_TYPES,
   MAX_M4_FILTER_LENGTH,
   MAX_M4_SEARCH_LIMIT,
@@ -48,6 +48,24 @@ export interface QueryResultWrapper {
   data_json: string;
   error?: string;
 }
+
+/**
+ * Consulta o comando Tauri dedicado ao Marco 4.
+ *
+ * Não há fallback para `Command.sidecar`: a ponte Rust precisa resolver o
+ * artefato M3 controlado e validar o contrato antes de qualquer execução.
+ */
+export const searchM4 = async (criteria: M4SearchCriteria): Promise<M4SearchResponse> => {
+  try {
+    return await invoke<M4SearchResponse>('run_m4_search', { criteria });
+  } catch {
+    return {
+      ok: false,
+      code: 'M4_IPC_UNAVAILABLE',
+      error: 'A ponte segura da busca Marco 4 não está disponível neste aplicativo.',
+    };
+  }
+};
 
 export interface SearchResult {
   id: string;

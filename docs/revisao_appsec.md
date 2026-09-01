@@ -15,13 +15,19 @@ Todos os scripts Python responsáveis por interagir com os bancos SQLite (`build
 - **Refinamento Aplicado**: Implementada a função segura `escape_like()` em `pesquisa_sintatica.py` para escapar internamente wildcards do SQL (`%`, `_`), mitigando *Wildcard Injection DoS*.
 
 ## 2. Prevenção de RCE e Command Injection (Tauri / Rust)
-A orquestração do executável Python empacotado a partir da interface React é realizada de forma estrita usando o sistema Tauri Sidecar.
+
+A orquestração dos executáveis Python a partir da interface React usa o sistema
+Tauri Sidecar.
+
 - **Constatação**: Os argumentos são formatados localmente (`Vec<String>`) e atrelados ao método `.args()`, que não invoca chamadas em _shell_ (desviando de ataques envolvendo `&&` ou `|`).
-- **Refinamento Aplicado**: Em `commands.rs`, adicionamos rotinas de validação de *length* (limite de caracteres na `acao` e `args` e máximo de argumentos por request). Isso anula tentativas locais de sobrecarga de memória (Self-DoS / OOM Attacks local).
+- **Rota Marco 4**: `run_m4_search` recebe um tipo Rust com `deny_unknown_fields`, aceita apenas os filtros documentados, exige ao menos um deles, limita texto/resultado e rejeita valores que começariam uma nova opção do `argparse`. A UI não pode enviar `db`, `args`, `command` ou `--verify-source`.
+- **Refinamento Aplicado**: A ponte `m4_bridge.rs` canonicaliza somente o M3 já provisionado sob o diretório de dados do aplicativo, verifica sua contenção e monta um vetor de argumentos fixo. A resposta do sidecar é limitada e validada contra o contrato JSON antes de retornar ao frontend.
+- **Legado**: `run_backend_query` conserva os limites de tamanho de `acao` e `args` e o máximo de argumentos por requisição. Isso reduz tentativas locais de sobrecarga de memória, mas a rota legada não é a busca Marco 4.
 
 ## 3. Sandboxing de Escopo e Allowed Binaries (Tauri `default.json`)
-- **Constatação**: O arquivo de configuração principal em `capabilities/default.json` bloqueia execução arbitrária e permite acesso unicamente a `shell:allow-execute` no binário específico `bin/tycho_backend`.
-- **Status**: Altamente restrito. `sidecar: true` confirmado.
+
+- **Constatação**: O arquivo de configuração principal em `capabilities/default.json` bloqueia execução arbitrária e permite `shell:allow-execute` apenas para `bin/tycho_backend` e `bin/tycho_m4_search`, ambos como `sidecar: true`.
+- **Status**: Escopo explícito para dois binários conhecidos; não há permissão de terminal genérica.
 
 ## 4. Política de Segurança de Conteúdo Frontend (CSP)
 Para mitigar a vulnerabilidade a ataques *Cross-Site Scripting* (XSS) locais pelo navegador/WebView interno do aplicativo.
@@ -35,7 +41,7 @@ Para mitigar a vulnerabilidade a ataques *Cross-Site Scripting* (XSS) locais pel
 ## 5. Resiliência de Manipulação de Path e Encoding
 Ataques baseados em Directory Traversal (`../..`) ou Unicode.
 - **Python**: A reconfiguração da entrada/saída `sys.stdout.reconfigure(encoding="utf-8")` na cabeça do `pesquisa_sintatica.py` estabiliza e higieniza sub-processos do sidecar em máquinas Windows com locale desconfigurado (`cp1252`).
-- Os arquivos e identificadores apontados pelo IPC CLI não concedem vazamento de dados arbitrários (app rodando local com escopo de pastas isoladas via `PathBuf`).
+- A rota M4 não recebe arquivos ou identificadores de banco pelo IPC. O caminho fixo é canonicalizado e precisa permanecer abaixo do diretório de dados do aplicativo; não há fallback para CWD, `%TEMP%`, variáveis de ambiente ou bancos legados.
 
 ## Conclusão
 

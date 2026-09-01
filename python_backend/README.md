@@ -89,8 +89,11 @@ python python_backend/busca_rastreavel.py search `
 ```
 
 O limite é 1--500 e não há interpolação de filtros em SQL. A busca desktop
-ainda não está conectada a este contrato. Consulte
-[`../docs/BUSCA_RASTREAVEL.md`](../docs/BUSCA_RASTREAVEL.md) e execute:
+Marco 5 usa este contrato por uma ponte Tauri/Rust dedicada, sem receber um
+caminho de banco da interface. Para gerar o sidecar e provisionar um M3
+validado antes de usar o painel, consulte
+[`../docs/INTEGRACAO_DESKTOP_M4.md`](../docs/INTEGRACAO_DESKTOP_M4.md) e
+[`../docs/BUSCA_RASTREAVEL.md`](../docs/BUSCA_RASTREAVEL.md). Execute:
 
 ```powershell
 python python_backend/test_busca_rastreavel.py
@@ -158,9 +161,20 @@ python python_backend/gerenciador_db.py --vacuum
 
 ---
 
-## Como Recompilar o Sidecar
-Sempre que o código em Python for alterado (por exemplo, adicionar uma nova regra cartográfica), compile a ponte novamente para que a Interface saiba:
+## Como Recompilar os Sidecars
+
+O sidecar histórico continua sendo reconstruído pelo fluxo legado:
+
 ```bash
 ./build_backend.ps1
 ```
-Isso usará o PyInstaller para condensar todas as bibliotecas de processamento no binário invisível consumido pelo frontend.
+
+Para a busca M4, use o fluxo dedicado abaixo; ele não empacota o banco M3:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1
+```
+
+Depois provisione um M3 validado conforme
+[`../docs/INTEGRACAO_DESKTOP_M4.md`](../docs/INTEGRACAO_DESKTOP_M4.md). A
+recompilação do sidecar não substitui bases, fontes PSD ou pacotes legados.

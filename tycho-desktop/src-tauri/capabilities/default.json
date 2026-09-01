@@ -8,7 +8,10 @@
     "opener:default",
     {
       "identifier": "shell:allow-execute",
-      "allow": [{ "name": "bin/tycho_backend", "sidecar": true }]
+      "allow": [
+        { "name": "bin/tycho_backend", "sidecar": true },
+        { "name": "bin/tycho_m4_search", "sidecar": true }
+      ]
     }
   ]
 }

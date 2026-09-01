@@ -1,12 +1,19 @@
+use crate::m4_bridge::{
+    build_m4_sidecar_args, parse_m4_sidecar_response, resolve_m4_artifact, M4BridgeError,
+    M4SearchCriteria, M4SearchResponse, M4_SIDECAR_NAME,
+};
+use crate::models::{QueryResultWrapper, SystemHealth};
 use std::path::PathBuf;
 use std::time::Instant;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_shell::ShellExt;
-use crate::models::{QueryResultWrapper, SystemHealth};
 
 #[tauri::command]
 pub async fn check_system_health(app: AppHandle) -> Result<SystemHealth, String> {
-    let app_data_dir = app.path().app_data_dir().unwrap_or_else(|_| PathBuf::from("."));
+    let app_data_dir = app
+        .path()
+        .app_data_dir()
+        .unwrap_or_else(|_| PathBuf::from("."));
     let db_path = app_data_dir.join("corpus_fase3.db");
     let cartografia_db_path = app_data_dir.join("corpus_cartografia.db");
 
@@ -16,7 +23,8 @@ pub async fn check_system_health(app: AppHandle) -> Result<SystemHealth, String>
     let corpus_data_cart = PathBuf::from("../../corpus_data/corpus_cartografia.db");
 
     let db_exists = db_path.exists() || local_db.exists() || corpus_data_db.exists();
-    let cart_exists = cartografia_db_path.exists() || local_cart.exists() || corpus_data_cart.exists();
+    let cart_exists =
+        cartografia_db_path.exists() || local_cart.exists() || corpus_data_cart.exists();
 
     let resolved_db = if db_path.exists() {
         db_path.to_string_lossy().to_string()
@@ -109,4 +117,73 @@ pub async fn run_backend_query(
             error: Some(stderr),
         })
     }
+}
+
+/// Executa a busca evidencial Marco 4 por uma ponte separada do sidecar legado.
+///
+/// O payload IPC é deserializado para `M4SearchCriteria`, que nega campos
+/// extras. Em particular, a interface não pode passar caminhos de banco,
+/// argumentos livres ou o sinalizador caro `--verify-source`. O único M3
+/// aceito é o arquivo previamente provisionado sob o diretório de dados da
+/// aplicação e validado pela pré-condição do próprio sidecar.
+#[tauri::command]
+pub async fn run_m4_search(app: AppHandle, criteria: M4SearchCriteria) -> M4SearchResponse {
+    let normalized = match criteria.normalize() {
+        Ok(value) => value,
+        Err(error) => return error.failure(),
+    };
+
+    let app_data_dir = match app.path().app_data_dir() {
+        Ok(path) => path,
+        Err(_) => {
+            return M4BridgeError::new(
+                "M4_ARTIFACT_UNAVAILABLE",
+                "Não foi possível localizar o diretório controlado de dados do aplicativo.",
+            )
+            .failure();
+        }
+    };
+    let artifact_path = match resolve_m4_artifact(&app_data_dir) {
+        Ok(path) => path,
+        Err(error) => return error.failure(),
+    };
+    let args = match build_m4_sidecar_args(&normalized, &artifact_path) {
+        Ok(value) => value,
+        Err(error) => return error.failure(),
+    };
+
+    let sidecar_command = match app.shell().sidecar(M4_SIDECAR_NAME) {
+        Ok(command) => command,
+        Err(_) => {
+            return M4BridgeError::new(
+                "M4_SIDECAR_UNAVAILABLE",
+                "O sidecar dedicado da busca Marco 4 não está instalado neste aplicativo.",
+            )
+            .failure();
+        }
+    };
+    let output = match sidecar_command.args(args).output().await {
+        Ok(value) => value,
+        Err(_) => {
+            return M4BridgeError::new(
+                "M4_SIDECAR_UNAVAILABLE",
+                "Não foi possível executar o sidecar dedicado da busca Marco 4.",
+            )
+            .failure();
+        }
+    };
+
+    if !output.stdout.is_empty() {
+        match parse_m4_sidecar_response(&output.stdout) {
+            Ok(response) => return response,
+            Err(error) if output.status.success() => return error.failure(),
+            Err(_) => {}
+        }
+    }
+
+    M4BridgeError::new(
+        "M4_SIDECAR_PROTOCOL",
+        "O sidecar Marco 4 não retornou uma resposta de busca compatível.",
+    )
+    .failure()
 }

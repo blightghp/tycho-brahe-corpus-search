@@ -14,13 +14,15 @@ import {
   Sparkles,
   RefreshCw,
   Info,
-  GraduationCap
+  GraduationCap,
+  ShieldCheck
 } from "lucide-react";
 import { SearchBar } from "./components/SearchBar";
 import { HumanInTheLoop } from "./components/HumanInTheLoop";
 import { TreeView } from "./components/TreeView";
 import { TermBreakdown } from "./components/TermBreakdown";
 import { CreditsModal } from "./components/CreditsModal";
+import { M4SearchPanel } from "./components/M4SearchPanel";
 import { 
   searchCorpus, 
   getSystemHealth, 
@@ -31,7 +33,7 @@ import {
 } from "./services/api";
 
 function App() {
-  const [activeTab, setActiveTab] = useState<"search" | "review" | "settings">("search");
+  const [activeTab, setActiveTab] = useState<"m4" | "search" | "review" | "settings">("m4");
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [loadingHealth, setLoadingHealth] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -108,6 +110,20 @@ function App() {
           
           {/* Navigation */}
           <nav className="p-3 space-y-1">
+            <button
+              onClick={() => setActiveTab("m4")}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                activeTab === "m4"
+                  ? "bg-indigo-50 text-indigo-700 font-semibold shadow-xs"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="w-4 h-4" />
+                <span>Busca Evidencial (M4)</span>
+              </div>
+            </button>
+
             <button 
               onClick={() => setActiveTab("search")}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
@@ -118,7 +134,7 @@ function App() {
             >
               <div className="flex items-center gap-3">
                 <Search className="w-4 h-4" />
-                <span>Pesquisa em Árvores</span>
+                <span>Consulta Histórica</span>
               </div>
               {searchResults.length > 0 && (
                 <span className="text-xs bg-indigo-200/60 text-indigo-800 px-2 py-0.5 rounded-full font-bold">
@@ -203,12 +219,14 @@ function App() {
         <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-2xs">
           <div>
             <h2 className="text-lg font-bold text-slate-800">
-              {activeTab === "search" && "Pesquisa Estrutural & Visualização Cartográfica"}
+              {activeTab === "m4" && "Busca Evidencial Rastreável"}
+              {activeTab === "search" && "Consulta Histórica & Visualização Legada"}
               {activeTab === "review" && "Painel Human-in-the-Loop (Auditoria de Expansão)"}
               {activeTab === "settings" && "Diagnóstico & Configurações do Motor"}
             </h2>
             <p className="text-xs text-slate-500">
-              {activeTab === "search" && "Consulte projeções funcionais estendidas nos 5 domínios da sintaxe gerativa."}
+              {activeTab === "m4" && "Consulta parametrizada sobre evidências Marco 3 promovidas, com origem e regras verificáveis."}
+              {activeTab === "search" && "Fluxo histórico preservado para auditoria; não corresponde à rota de busca Marco 4."}
               {activeTab === "review" && "Revise anomalias e valide regras de reescrita cartográfica de forma supervisionada."}
               {activeTab === "settings" && "Verifique a integridade do SQLite, conexões IPC e versão dos binários."}
             </p>
@@ -235,6 +253,8 @@ function App() {
         
         {/* Body Container */}
         <div className="flex-1 p-6 overflow-auto">
+          {activeTab === "m4" && <M4SearchPanel />}
+
           {activeTab === "search" && (
             <div className="space-y-6 max-w-7xl mx-auto">
               {/* Search Card */}

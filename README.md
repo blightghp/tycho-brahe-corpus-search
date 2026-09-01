@@ -23,12 +23,13 @@
 
 > [!WARNING]
 > **Estado do projeto: reconstrução controlada — Marcos 2 e 3 concluídos; busca
-> Marco 4 disponível por CLI.** A importação PSD é rastreável e reproduzível,
-> a camada Marco 3 registra âncoras e evidências gramaticais sem reescrever o
-> corpus, e a busca Marco 4 devolve proveniência obrigatória. Os bancos
+> Marco 4 e ponte desktop Marco 5 implementadas.** A importação PSD é
+> rastreável e reproduzível, a camada Marco 3 registra âncoras e evidências
+> gramaticais sem reescrever o corpus, e a busca devolve proveniência
+> obrigatória. A tela desktop requer um M3 validado e provisionado; os bancos
 > `corpus_cartografia.db`, `corpus_fase3.db` e os pacotes `v1.0.0` continuam
 > artefatos experimentais arquivados. A transdução cartográfica integral, a
-> busca desktop e uma distribuição estável ainda não estão certificadas. Consulte o
+> distribuição estável ainda não estão certificadas. Consulte o
 > [estado dos artefatos](docs/STATUS_DE_ARTEFATOS.md) e a
 > [busca rastreável](docs/BUSCA_RASTREAVEL.md).
 
@@ -88,6 +89,7 @@ Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`
 - 🧭 [**Estado dos Artefatos**](./docs/STATUS_DE_ARTEFATOS.md): Fonte de verdade sobre dados, bancos, pacotes e política de publicação.
 - 🧱 [**Importação Rastreável**](./docs/IMPORTACAO_RASTREAVEL.md): Contrato do banco Marco 2, evidências, rejeições e reprodução segura.
 - 🔎 [**Busca Rastreável**](./docs/BUSCA_RASTREAVEL.md): Consultas Marco 4 por entidade, rótulo, projeção, token e regra, com proveniência obrigatória.
+- 🖥️ [**Integração Desktop M4**](./docs/INTEGRACAO_DESKTOP_M4.md): Sidecar dedicado, provisionamento verificado do M3 e contrato Tauri/React restrito.
 - 🔬 [**Guia de Cartografia Sintática**](./docs/GUIA_CARTOGRAFIA_SINTATICA.md): Fundamentação teórica dos 5 grandes domínios e 44 projeções funcionais universais.
 - 🏛️ [**Arquitetura do Sistema**](./docs/ARQUITETURA_DO_SISTEMA.md): Diagrama detalhado do pipeline Rust + Python + TypeScript/D3.
 - 🛡️ [**Relatório de Auditoria AppSec**](./docs/revisao_appsec.md): Medidas defensivas, mitigação de SQLi, prevenção de Self-DoS e sandboxing CSP.

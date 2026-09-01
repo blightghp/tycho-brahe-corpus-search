@@ -1,7 +1,8 @@
-pub mod models;
 pub mod commands;
+pub mod m4_bridge;
+pub mod models;
 
-use commands::{check_system_health, run_backend_query};
+use commands::{check_system_health, run_backend_query, run_m4_search};
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -16,7 +17,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             check_system_health,
-            run_backend_query
+            run_backend_query,
+            run_m4_search
         ])
         .run(tauri::generate_context!())
         .expect("Erro fatal ao executar a aplicação Tycho Brahe Desktop");

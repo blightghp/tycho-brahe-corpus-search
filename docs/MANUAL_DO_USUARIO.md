@@ -2,8 +2,10 @@
 
 > [!WARNING]
 > Este documento descreve a experiência-alvo e a interface histórica. Os
-> pacotes `v1.0.0`, os bancos cartográficos e a busca atual estão em
-> reconstrução controlada; não constituem produto estável nem corpus validado.
+> pacotes `v1.0.0` e os bancos cartográficos legados estão em reconstrução
+> controlada; não constituem produto estável nem corpus validado. A rota
+> **Busca Evidencial (M4)** está integrada ao desktop, mas exige um M3
+> validado e provisionado e não confirma hipóteses sem revisão humana.
 > Consulte [STATUS_DE_ARTEFATOS.md](STATUS_DE_ARTEFATOS.md) antes de executar
 > ou citar resultados.
 
@@ -34,11 +36,26 @@ funcional, redistribuídos ou utilizados para resultados de pesquisa.
 2. Siga as instruções do assistente de instalação.
 3. Não use esses instaladores como distribuição aprovada nesta etapa.
 
+### Desenvolvimento: busca evidencial Marco 4
+
+Para usar a rota atual de busca, gere o sidecar dedicado, provisione o M3
+validado e inicie o desktop em desenvolvimento. O procedimento completo,
+incluindo os limites de segurança e os estados de falha explícitos, está em
+[INTEGRACAO_DESKTOP_M4.md](INTEGRACAO_DESKTOP_M4.md). O banco Marco 3 não é
+incluído nos instaladores históricos.
+
 ---
 
 ## 2. Visão Geral da Interface
 
-A aplicação é dividida em quatro áreas principais:
+A entrada atual é a aba **Busca Evidencial (M4)**. Ela aceita ao menos um
+filtro de entidade, rótulo, projeção, token ou regra e mostra a cadeia de
+proveniência de cada ocorrência: arquivo e bloco PSD, âncora de nó, decisão e
+evidências. Uma decisão `PENDENTE` deve ser lida como classificação heurística
+revisável, nunca como uma árvore cartográfica automaticamente confirmada.
+
+O esquema abaixo preserva as áreas históricas para auditoria; a consulta
+histórica não é a rota M4:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -68,7 +85,16 @@ A aplicação é dividida em quatro áreas principais:
 - **Constituintes Tradicionais do Corpus Tycho Brahe**: Busque por `NP-SBJ` (Sujeito), `NP-ACC` (Objeto Direto), `PP` (Sintagma Preposicional), `ADVP` (Sintagma Adverbial), `IP-MAT` (Oração Matriz), `CP-REL` (Oração Relativa).
 - **Busca Lexical e Lemática**: prevista para filtrar por palavras específicas (ex: *rei*, *senhor*, *deu*) ou seus lemas subjacentes; ainda não deve ser considerada validada na interface atual.
 
-### 3.2. Chips de Filtro Rápido
+### 3.2. Busca evidencial rastreável (Marco 4)
+
+Use a aba **Busca Evidencial (M4)** para a rota implementada nesta revisão.
+Os filtros são exatos, conjuntivos e limitados a 1--500 resultados. O painel
+não aceita caminhos de banco, comandos livres ou a validação integral custosa:
+o M3 só chega ao local da aplicação após o provisionamento verificado. Consulte
+[BUSCA_RASTREAVEL.md](BUSCA_RASTREAVEL.md) para os campos e
+[INTEGRACAO_DESKTOP_M4.md](INTEGRACAO_DESKTOP_M4.md) para a preparação.
+
+### 3.3. Chips de Filtro Rápido
 Clique nos chips coloridos abaixo da barra de pesquisa para aplicar filtros imediatos dos 5 Grandes Domínios Cartográficos:
 - 🟣 **D1: SAP** — Speech Act Phrase
 - 🟣 **D1: VocP** — Posição de Vocativo

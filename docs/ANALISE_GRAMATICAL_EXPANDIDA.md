@@ -131,6 +131,7 @@ passam a integrar resultados analíticos.
 O Marco 4 já consulta esta camada por meio de
 [BUSCA_RASTREAVEL.md](BUSCA_RASTREAVEL.md): cada correspondência devolve
 identidade fonte, regra, evidência, confiança heurística e estado de revisão,
-com filtros parametrizados. Ele ainda não é a busca desktop de usuário final
-nem uma transdução completa dos cinco domínios; a ponte Tauri/React só poderá
-ser conectada a um artefato M3 promovido e verificado.
+com filtros parametrizados. A ponte Tauri/React do Marco 5 expõe esse contrato
+em um painel próprio, mas só aceita um artefato M3 promovido e previamente
+provisionado no local controlado. Isso não constitui uma transdução completa
+dos cinco domínios nem confirma hipóteses científicas sem revisão humana.

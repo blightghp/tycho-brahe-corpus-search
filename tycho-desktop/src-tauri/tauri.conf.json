@@ -25,7 +25,8 @@
     "active": true,
     "targets": "all",
     "externalBin": [
-      "bin/tycho_backend"
+      "bin/tycho_backend",
+      "bin/tycho_m4_search"
     ],
     "resources": [
       "../../corpus_data/corpus_fase3.db",

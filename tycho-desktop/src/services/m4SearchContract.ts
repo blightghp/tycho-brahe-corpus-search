@@ -1,10 +1,10 @@
 /**
- * Contrato preparatório para a busca evidencial do Marco 4.
+ * Contrato compartilhado da busca evidencial do Marco 4.
  *
- * Este módulo não invoca um processo nem declara disponibilidade da busca.
- * A ponte Tauri deverá resolver o SQLite M3 previamente validado e executar
- * o sidecar dedicado com os argumentos retornados por `buildM4SearchCommand`.
- * Nunca passe um caminho de banco vindo da interface para essa função.
+ * A interface usa este módulo para validar o payload antes do IPC. A ponte
+ * Tauri/Rust aplica novamente as mesmas restrições, resolve o SQLite M3
+ * previamente provisionado e executa o sidecar dedicado. Nunca passe um
+ * caminho de banco vindo da interface para essa função.
  */
 
 export const M4_SEARCH_CONTRACT_VERSION = "m4-evidential-v1" as const;
@@ -37,18 +37,6 @@ export interface M4SearchCommand {
   command: "search";
   args: string[];
 }
-
-/**
- * Estado explícito enquanto não existe sidecar M4 nem artefato M3 instalado.
- * A interface não deve apresentar resultados M4 antes de trocar este estado
- * por uma verificação feita no processo Rust.
- */
-export const M4_SEARCH_NOT_CONNECTED = {
-  available: false,
-  code: "M4_NOT_CONNECTED",
-  message:
-    "A busca evidencial do Marco 4 ainda não está conectada ao aplicativo. Ela exige um artefato Marco 3 promovido e uma ponte Tauri dedicada.",
-} as const;
 
 export class M4SearchCriteriaError extends Error {
   constructor(message: string) {
@@ -83,6 +71,9 @@ function normaliseFilter(name: FilterName, value: string | undefined): string | 
   }
   if (normalised.includes("\u0000")) {
     throw new M4SearchCriteriaError(`O filtro ${name} contém um caractere inválido.`);
+  }
+  if (normalised.startsWith("-")) {
+    throw new M4SearchCriteriaError(`O filtro ${name} não pode começar com hífen.`);
   }
   if (
     name === "entityType" &&
@@ -139,7 +130,7 @@ export type M4EvidenceType =
   | "ORDEM_IRMAO"
   | "LEXICO_CONGELADO";
 
-/** O JSON que a ponte futura deve decodificar do CLI M4. */
+/** O JSON que a ponte Tauri/Rust decodifica do sidecar M4. */
 export interface M4AnalysisIdentity {
   analysis_id: number;
   schema_version: string;
@@ -240,6 +231,7 @@ export interface M4SearchSuccess {
 
 export interface M4SearchFailure {
   ok: false;
+  code?: string;
   error: string;
 }
 
