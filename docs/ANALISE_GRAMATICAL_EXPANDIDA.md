@@ -135,3 +135,8 @@ com filtros parametrizados. A ponte Tauri/React do Marco 5 expõe esse contrato
 em um painel próprio, mas só aceita um artefato M3 promovido e previamente
 provisionado no local controlado. Isso não constitui uma transdução completa
 dos cinco domínios nem confirma hipóteses científicas sem revisão humana.
+
+Para medir o alcance da camada antes da curadoria, o Marco 6 oferece
+[AUDITORIA_COBERTURA_M3.md](AUDITORIA_COBERTURA_M3.md). O relatório agrega
+todos os tipos, regras e evidências e expõe a fila `PENDENTE` sem escrever no
+artefato ou alterar seu estado de revisão.

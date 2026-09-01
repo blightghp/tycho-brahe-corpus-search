@@ -99,6 +99,24 @@ validado antes de usar o painel, consulte
 python python_backend/test_busca_rastreavel.py
 ```
 
+## Auditoria de cobertura e pendências — Marco 6
+
+`auditar_cobertura_m3.py` percorre um M3 promovido em modo somente leitura e
+emite agregações por escopo, decisão, entidade, regra, projeção e evidência,
+além de uma amostra determinística do backlog cartográfico `PENDENTE`. Não
+edita a camada derivada nem registra revisão humana.
+
+```powershell
+python python_backend/auditar_cobertura_m3.py report `
+  --db $m3 `
+  --sample-limit 20
+
+python python_backend/test_auditar_cobertura_m3.py
+```
+
+Para validar M3↔M2 antes da agregação e entender os limites de curadoria, veja
+[`../docs/AUDITORIA_COBERTURA_M3.md`](../docs/AUDITORIA_COBERTURA_M3.md).
+
 ## Estrutura histórica dos bancos SQLite
 
 O diretório de trabalho pode conter os seguintes bancos derivados. Sua presença

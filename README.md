@@ -90,6 +90,7 @@ Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`
 - 🧱 [**Importação Rastreável**](./docs/IMPORTACAO_RASTREAVEL.md): Contrato do banco Marco 2, evidências, rejeições e reprodução segura.
 - 🔎 [**Busca Rastreável**](./docs/BUSCA_RASTREAVEL.md): Consultas Marco 4 por entidade, rótulo, projeção, token e regra, com proveniência obrigatória.
 - 🖥️ [**Integração Desktop M4**](./docs/INTEGRACAO_DESKTOP_M4.md): Sidecar dedicado, provisionamento verificado do M3 e contrato Tauri/React restrito.
+- 📊 [**Auditoria de Cobertura M3**](./docs/AUDITORIA_COBERTURA_M3.md): Relatório Marco 6 somente leitura de cobertura, regras, evidências e backlog de curadoria.
 - 🔬 [**Guia de Cartografia Sintática**](./docs/GUIA_CARTOGRAFIA_SINTATICA.md): Fundamentação teórica dos 5 grandes domínios e 44 projeções funcionais universais.
 - 🏛️ [**Arquitetura do Sistema**](./docs/ARQUITETURA_DO_SISTEMA.md): Diagrama detalhado do pipeline Rust + Python + TypeScript/D3.
 - 🛡️ [**Relatório de Auditoria AppSec**](./docs/revisao_appsec.md): Medidas defensivas, mitigação de SQLi, prevenção de Self-DoS e sandboxing CSP.

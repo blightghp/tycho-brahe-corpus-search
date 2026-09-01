@@ -40,6 +40,11 @@ graph TD
         M3Controlled[(M3 validado em armazenamento controlado)]
     end
 
+    subgraph AuditLayer [Camada 0.9: Auditoria de Cobertura Marco 6]
+        M6Audit[auditar_cobertura_m3.py]
+        CurationReport[Relatório JSON de cobertura e pendências]
+    end
+
     subgraph Frontend [Camada 1: Frontend Desktop React 19 + TypeScript]
         UI[Interface de Pesquisa & Visualizador D3]
         M4Panel[M4SearchPanel: Busca Evidencial]
@@ -70,6 +75,8 @@ graph TD
     Rules --> Analyzer
     Analyzer --> M3
     M3 --> M4Provisioner
+    M3 --> M6Audit
+    M6Audit --> CurationReport
     Recon --> M4Provisioner
     M4Provisioner --> M3Controlled
     M3Controlled --> M4Sidecar
@@ -163,6 +170,18 @@ provisionar a base e verificar a rota.
 
 ---
 
+## 0.9. Auditoria de cobertura — Marco 6
+
+`auditar_cobertura_m3.py` é uma rota de lote somente leitura, separada da
+consulta interativa. Ela exige o M3 promovido, agrega cada tipo de decisão,
+entidade, regra, projeção e evidência e devolve o volume de decisões
+`PENDENTE` com amostras de evidência cartográfica ordenadas pela origem. Ela
+não aplica revisões e não estabelece prioridade ou confirmação científica.
+Uma validação integral M3--M2 pode ser solicitada explicitamente. Consulte
+[AUDITORIA_COBERTURA_M3.md](AUDITORIA_COBERTURA_M3.md).
+
+---
+
 ## 2. Descrição das Camadas
 
 ### Camada 1: Frontend (React / TypeScript / Tailwind / D3)
@@ -181,6 +200,7 @@ provisionar a base e verificar a rota.
   - `busca_rastreavel.py`: Consulta Marco 4 somente leitura sobre `m3_*` promovido, com filtros parametrizados e retorno de proveniência obrigatório.
   - `m4_sidecar.py` e `build_m4_sidecar.ps1`: entrada e build explícito do sidecar dedicado, que não embute o M3.
   - `provisionar_m4_artifact.py`: valida M3--M2 e instala o banco externo no caminho controlado da aplicação.
+  - `auditar_cobertura_m3.py`: relatório Marco 6 somente leitura de cobertura e pendências; não registra decisões humanas.
   - `oracle.py`: Classificador de traços cartográficos e diagnósticos estruturais.
   - `rewriter.py`: Transdutor recursivo que expande nós sintéticos (CP, IP, VP) na hierarquia dos 5 domínios.
   - `tokenizador_cartografico.py`: Extração de lema, classe morfológica (POS) e mapeamento de papéis gerativos universais.

@@ -1,6 +1,6 @@
 # Estado dos artefatos e política de publicação
 
-## Estado verificável — Marcos 2 e 3 concluídos; busca Marco 4 e ponte M5
+## Estado verificável — Marcos 2 e 3 concluídos; busca M4/M5 e auditoria M6
 
 O projeto permanece em **reconstrução controlada**. O Marco 2 concluiu a
 importação PSD rastreável: há um parser isolado, um banco reconstruível e um
@@ -9,8 +9,10 @@ uma camada derivada de âncoras e evidências gramaticais versionadas, sem
 reescrever os fatos PSD. O Marco 4 acrescentou uma consulta somente leitura
 sobre essa camada, com proveniência obrigatória e validação integral opcional
 M3--M2. O Marco 5 adicionou a ponte Tauri/React, um sidecar separado e o
-provisionamento controlado do M3. Isso ainda **não** certifica uma transdução
-cartográfica integral ou uma distribuição científica/publicável.
+provisionamento controlado do M3. O Marco 6 acrescentou uma auditoria somente
+leitura de cobertura e pendências para orientar curadoria humana. Isso ainda
+**não** certifica uma transdução cartográfica integral ou uma distribuição
+científica/publicável.
 
 Os bancos cartográficos e os pacotes `v1.0.0` continuam congelados para
 auditoria. Há dois retratos de proveniência:
@@ -36,6 +38,7 @@ para reconstruí-lo e verificá-lo.
 | Banco Marco 3 | Destino externo de `analise_gramatical_recon.py` | Camada derivada, ancorada ao Marco 2 por SHA-256; registra evidências e candidaturas, não uma árvore cartográfica afirmada. |
 | Busca Marco 4 | `python_backend/busca_rastreavel.py` | CLI somente leitura sobre M3 promovido; usa filtros parametrizados e retorna origem, decisão e evidências. É consumida pela ponte desktop Marco 5. |
 | Ponte desktop Marco 5 | `m4_bridge.rs`, `M4SearchPanel.tsx`, `provisionar_m4_artifact.py` | Busca desktop somente após sidecar e M3 validado serem provisionados em localização controlada; não empacota nem substitui bancos legados. |
+| Auditoria Marco 6 | `python_backend/auditar_cobertura_m3.py` | Relatório somente leitura por cobertura, regra, tipo e status; expõe backlog `PENDENTE` e amostras rastreáveis sem registrar revisão humana. |
 | Distribuição retirada | `release/` e pacotes `v1.0.0` | Guardados para auditoria; não suportados e não publicáveis. |
 | Snapshot de runtime | sidecars Python atuais | Registrados apenas para comparação; não certificam o funcionamento do pacote. |
 
@@ -126,9 +129,9 @@ python python_backend/test_controle_artefatos.py
 
 ## Próximos marcos da reconstrução
 
-1. **Curadoria linguística e de rejeições:** revisão humana das evidências
-   Marco 3 e resolução explícita dos dez casos, sem alterar
-   a fonte canônica fora de processo autorizado.
+1. **Curadoria linguística e de rejeições:** usar o relatório Marco 6 e a
+   busca Marco 4/5 para revisão humana das evidências e resolução explícita dos
+   dez casos, sem alterar a fonte canônica fora de processo autorizado.
 2. **Publicação:** migração limpa, testes ponta a ponta, pacote novo e
    manifesto produzido no próprio build.
 
