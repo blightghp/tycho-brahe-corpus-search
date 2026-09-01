@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, BookOpen, GraduationCap, Globe } from 'lucide-react';
+import { X, ExternalLink, BookOpen, GraduationCap, Globe, Users, FileText } from 'lucide-react';
 
 interface CreditsModalProps {
   isOpen: boolean;
@@ -19,8 +19,8 @@ export const CreditsModal: React.FC<CreditsModalProps> = ({ isOpen, onClose }) =
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-base text-slate-900">Créditos e Referências Teóricas</h3>
-              <p className="text-xs text-slate-500">Corpus Histórico Tycho Brahe & Programa Cartográfico</p>
+              <h3 className="font-bold text-base text-slate-900">Créditos, Referências e Direitos</h3>
+              <p className="text-xs text-slate-500">Plataforma Tycho Brahe &amp; Programa Cartográfico</p>
             </div>
           </div>
           <button
@@ -33,26 +33,99 @@ export const CreditsModal: React.FC<CreditsModalProps> = ({ isOpen, onClose }) =
 
         {/* Content */}
         <div className="p-6 space-y-6 text-xs text-slate-600 leading-relaxed">
-          {/* O Projeto Tycho Brahe */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-            <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
+
+          {/* Copyright & Plataforma Tycho Brahe */}
+          <div className="p-4 rounded-xl bg-indigo-50 border border-indigo-200 space-y-2">
+            <div className="flex items-center gap-2 text-indigo-800 font-bold text-sm">
               <Globe className="w-4 h-4 text-indigo-600" />
-              <span>O Projeto Corpus Tycho Brahe</span>
+              <span>Plataforma Tycho Brahe</span>
             </div>
-            <p>
-              O <strong>Tycho Brahe Parsed Corpus of Historical Portuguese</strong> é um corpus eletrônico anotado de textos em português histórico (séculos XIV a XIX), desenvolvido no Instituto de Estudos da Linguagem (IEL) da Universidade Estadual de Campinas (UNICAMP).
+            <p className="font-semibold text-indigo-700">
+              Todos os direitos reservados à Plataforma Tycho Brahe © 2026
             </p>
-            <div className="pt-2">
+            <p>
+              A <strong>Plataforma Tycho Brahe</strong> foi criada e desenvolvida principalmente por <strong>Luiz Henrique Lima Veronesi</strong> como fruto de sua pesquisa de doutorado em Linguística na UNICAMP, sob orientação da <strong>Professora Dra. Charlotte Galves</strong>, do Instituto de Estudos da Linguagem (IEL/UNICAMP).
+            </p>
+            <p>
+              A plataforma consiste em um conjunto de ferramentas digitais para gestão, anotação, análises sintáticas e morfológicas de corpora linguísticos.
+            </p>
+            <div className="pt-2 space-y-1">
               <a
-                href="http://www.tycho.iel.unicamp.br/"
+                href="https://www.tycho.iel.unicamp.br/"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
               >
-                <span>Acessar portal oficial: http://www.tycho.iel.unicamp.br/</span>
+                <span>Portal Tycho Brahe: tycho.iel.unicamp.br</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+          </div>
+
+          {/* Referência da Tese */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
+              <FileText className="w-4 h-4 text-indigo-600" />
+              <span>Referência Principal</span>
+            </div>
+            <p className="italic">
+              VERONESI, Luiz Henrique Lima. <em>A Plataforma Tycho Brahe: um sistema para corpora sintaticamente anotados</em>. 2026. 211 f. Tese (Doutorado em Linguística) — Instituto de Estudos da Linguagem, Universidade Estadual de Campinas, Campinas, 2026.
+            </p>
+            <div className="pt-1">
+              <a
+                href="https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
+              >
+                <span>Acessar tese completa (PDF)</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* DACILAT */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center gap-2 text-slate-800 font-bold text-sm">
+              <Users className="w-4 h-4 text-indigo-600" />
+              <span>DACILAT — Participantes e Colaboradores</span>
+            </div>
+            <p>
+              O <strong>DACILAT</strong> (Corpora Anotados Digitais de Línguas Indígenas Brasileiras com Traduções Automáticas) é um projeto científico de documentação digital para a preservação e análise de línguas nativas do Brasil. A Plataforma Tycho Brahe é um projeto associado ao DACILAT, e os corpora construídos pelo grupo ajudam a alimentar a Plataforma.
+            </p>
+            <div className="grid grid-cols-2 gap-1 pt-2">
+              <span className="font-semibold">Maria Filomena Sandalo</span><span className="text-slate-500">Coordenadora</span>
+              <span className="font-semibold">Charlotte Galves</span><span className="text-slate-500">Pesquisadora Principal</span>
+              <span className="font-semibold">Pablo Feliciano de Faria</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Luiz Henrique Lima Veronesi</span><span className="text-slate-500">Criador e Desenvolvedor Principal da Plataforma; Colaborador DACILAT</span>
+              <span className="font-semibold">Leonel de Alencar Araripe</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Michael Becker</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Vanda Pires</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">André Luiz Rosa Teixeira</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Juliana Lopes Gurgel</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Ticiana Andrade de Sena</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Osmar Francisco</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Hilário Silva</span><span className="text-slate-500">Colaborador</span>
+              <span className="font-semibold">Sandra Silva</span><span className="text-slate-500">Colaborador</span>
+            </div>
+            <div className="pt-2">
+              <a
+                href="https://www.tycho.iel.unicamp.br/dacilat"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
+              >
+                <span>Portal DACILAT</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Motor de busca complementar */}
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-100 space-y-1">
+            <p className="text-[11px] text-slate-500">
+              O <strong>Tycho Brahe Search</strong> (este motor de busca) foi elaborado por Gabriel Pinheiro como extensão e ferramenta complementar à Plataforma Tycho Brahe, com base em sua proposta de arquitetura cartográfica para a implementação de núcleos cartográficos.
+            </p>
           </div>
 
           {/* Fundamentação Teórica dos 5 Domínios */}

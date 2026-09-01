@@ -11,7 +11,9 @@
 sintática, visualização cartográfica e análise estrutural baseada no *Tycho
 Brahe Parsed Corpus of Historical Portuguese*.
 
-Desenvolvido por **Gabriel Pinheiro** (Pesquisador em Linguística no IEL / Unicamp).
+Todos os direitos reservados à Plataforma Tycho Brahe © 2026 — Criada e desenvolvida principalmente por **Luiz Henrique Lima Veronesi** como fruto de sua tese de doutorado em Linguística no IEL/UNICAMP, sob orientação da **Profª Drª Charlotte Galves**, professora do IEL/UNICAMP. O motor de busca complementar **Tycho Brahe Search** foi elaborado por Gabriel Pinheiro como extensão complementar, a partir de sua proposta de arquitetura para a implementação de núcleos cartográficos.
+
+A referência completa da tese, os créditos do DACILAT — projeto associado cujos corpora ajudam a alimentar a Plataforma — e a lista de participantes estão em [REFERENCIAS_E_CREDITOS.md](REFERENCIAS_E_CREDITOS.md).
 
 ---
 

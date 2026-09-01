@@ -21,7 +21,7 @@ O frontend do Tycho Brahe Desktop foi concebido com rigor visual e metodológico
   - ⚪ **Constituintes Canônicos**: Cinza / Ardósia (`#64748b`)
 - **`TermBreakdown.tsx`**: Grade analítica termo a termo que exibe cada palavra da sentença com seu lema spaCy, classe gramatical (POS), domínio gerativo, projeção correspondente e papel funcional.
 - **`HumanInTheLoop.tsx`**: Painel de curadoria e auditoria supervisionada para resolução de quarentenas e sentenças anômalas.
-- **`CreditsModal.tsx`**: Modal com atribuições formais, links oficiais ao portal da UNICAMP (http://www.tycho.iel.unicamp.br/) e referências bibliográficas fundamentais (Rizzi 1997, Cinque 1999, Belletti 2004, Ramchand 2008, Speas & Tenny 2003).
+- **`CreditsModal.tsx`**: Modal com direitos reservados à Plataforma Tycho Brahe © 2026, atribuição de criação e desenvolvimento principal a Luiz Henrique Lima Veronesi, orientação da Professora Dra. Charlotte Galves (IEL/UNICAMP), referência à tese, participantes do DACILAT e links oficiais HTTPS.
 
 ## Desenvolvimento Local
 Para executar em modo de desenvolvimento com hot-reload:

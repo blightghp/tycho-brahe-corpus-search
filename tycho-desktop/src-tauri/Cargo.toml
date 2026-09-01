@@ -1,8 +1,10 @@
 [package]
 name = "tycho-desktop"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Tycho Brahe Search — extensão complementar da Plataforma Tycho Brahe (VERONESI, 2026)"
+# Todos os direitos reservados à Plataforma Tycho Brahe © 2026.
+# Plataforma criada e desenvolvida principalmente por Luiz Henrique Lima Veronesi (IEL/UNICAMP).
+authors = ["Luiz Henrique Lima Veronesi (Plataforma Tycho Brahe, IEL/UNICAMP)"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -30,4 +32,3 @@ codegen-units = 1
 lto = true
 opt-level = "s"
 strip = true
-

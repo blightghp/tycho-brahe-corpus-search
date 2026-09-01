@@ -1,24 +1,35 @@
 # Tycho Brahe Search: Plataforma de Pesquisa Sintática Gerativa e Cartográfica
 
 [![Estado](https://img.shields.io/badge/estado-reconstru%C3%A7%C3%A3o%20controlada-amber.svg)](docs/STATUS_DE_ARTEFATOS.md)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Direitos reservados](https://img.shields.io/badge/direitos-reservados-4f46e5.svg)](NOTICE.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20x64-indigo.svg)](docs/STATUS_DE_ARTEFATOS.md)
 [![Rust](https://img.shields.io/badge/core-Rust%20%2F%20Tauri%20v2-orange.svg)](https://tauri.app/)
 [![Python NLP](https://img.shields.io/badge/nlp-Python%20%2F%20spaCy%20%2F%20NLTK-yellow.svg)](https://spacy.io/)
 [![Frontend](https://img.shields.io/badge/ui-React%2019%20%2F%20Tailwind%20%2F%20D3-cyan.svg)](https://react.dev/)
 
-> **Desenvolvido por Gabriel Pinheiro**  
-> *Pesquisador em Linguística no Instituto de Estudos da Linguagem (IEL) / Universidade Estadual de Campinas (UNICAMP)*  
-> Projeto associado ao [Tycho Brahe Parsed Corpus of Historical Portuguese](http://www.tycho.iel.unicamp.br/)
+> **Plataforma Tycho Brahe** — Todos os direitos reservados à Plataforma Tycho Brahe © 2026
+>
+> Criada e desenvolvida principalmente por **Luiz Henrique Lima Veronesi** como fruto de sua tese de doutorado em Linguística no IEL/UNICAMP.
+>
+> Professora e orientadora: **Profª Drª Charlotte Galves** — Instituto de Estudos da Linguagem (IEL) / Universidade Estadual de Campinas (UNICAMP).
+>
+> Projeto associado ao [DACILAT](https://www.tycho.iel.unicamp.br/dacilat), cujos corpora e colaboradores ajudam a alimentar a Plataforma Tycho Brahe.
+>
+> O **Tycho Brahe Search** (este motor de busca complementar) foi elaborado por **Gabriel Pinheiro**,
+> a partir de sua proposta de implementação dos núcleos cartográficos com uma arquitetura projetada como ferramenta complementar à plataforma.
+>
+> **Referência principal:**
+> VERONESI, Luiz Henrique Lima. *A Plataforma Tycho Brahe: um sistema para corpora sintaticamente anotados*. 2026. 211 f. Tese (Doutorado em Linguística) — Instituto de Estudos da Linguagem, Universidade Estadual de Campinas, Campinas, 2026. Disponível em: [https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf](https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf)
 
 > [!WARNING]
-> **Estado do projeto: reconstrução controlada — Marco 2 concluído.** A
-> importação PSD agora é rastreável e reproduzível, mas os bancos
+> **Estado do projeto: reconstrução controlada — Marcos 2 e 3 concluídos.** A
+> importação PSD é rastreável e reproduzível, e a camada Marco 3 registra
+> âncoras e evidências gramaticais sem reescrever o corpus. Os bancos
 > `corpus_cartografia.db`, `corpus_fase3.db` e os pacotes `v1.0.0` continuam
-> artefatos experimentais arquivados. A cartografia expandida, a busca desktop
-> e uma distribuição estável ainda não estão certificadas. Consulte o
+> artefatos experimentais arquivados. A transdução cartográfica integral, a
+> busca desktop e uma distribuição estável ainda não estão certificadas. Consulte o
 > [estado dos artefatos](docs/STATUS_DE_ARTEFATOS.md) e a
-> [importação rastreável](docs/IMPORTACAO_RASTREAVEL.md).
+> [análise gramatical expandida](docs/ANALISE_GRAMATICAL_EXPANDIDA.md).
 
 ---
 
@@ -114,16 +125,30 @@ tycho-brahe-corpus-search/
 
 ## 🔬 Como Citar
 
-Se você utilizar este software em suas pesquisas e publicações acadêmicas, por favor cite:
+Se você utilizar a **Plataforma Tycho Brahe** em suas pesquisas e publicações acadêmicas, por favor cite a referência principal:
 
 ```bibtex
-@software{pinheiro2026tychobrahe,
-  author = {Gabriel Pinheiro},
+@phdthesis{veronesi2026tychobrahe,
+  author = {Luiz Henrique Lima Veronesi},
+  title = {A Plataforma Tycho Brahe: um sistema para corpora sintaticamente anotados},
+  year = {2026},
+  school = {Universidade Estadual de Campinas},
+  type = {Tese (Doutorado em Linguística)},
+  address = {Campinas},
+  pages = {211},
+  url = {https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf}
+}
+```
+
+Para citar especificamente o **motor de busca cartográfico** (esta ferramenta complementar):
+
+```bibtex
+@software{tychobrahesearch2026,
   title = {Tycho Brahe Search: Motor Desktop de Pesquisa Sintática Gerativa e Cartográfica},
   year = {2026},
   publisher = {GitHub},
   howpublished = {\url{https://github.com/blightghp/tycho-brahe-corpus-search}},
-  institution = {Instituto de Estudos da Linguagem, Universidade Estadual de Campinas (UNICAMP)}
+  note = {Ferramenta complementar à Plataforma Tycho Brahe (VERONESI, 2026). Arquitetura de núcleos cartográficos elaborada por Gabriel Pinheiro.}
 }
 ```
 
@@ -131,6 +156,36 @@ Se você utilizar este software em suas pesquisas e publicações acadêmicas, p
 
 ## 🎓 Agradecimentos e Créditos Institucionais
 
+**Todos os direitos reservados à Plataforma Tycho Brahe © 2026**
+
+- **Plataforma Tycho Brahe**: Criada e desenvolvida principalmente por **Luiz Henrique Lima Veronesi** como fruto de sua pesquisa de doutorado em Linguística na UNICAMP, sob orientação da **Profª Drª Charlotte Galves**, professora do IEL/UNICAMP.
+  Portal Oficial: [https://www.tycho.iel.unicamp.br/](https://www.tycho.iel.unicamp.br/)
+
+- **DACILAT** — Corpora Anotados Digitais de Línguas Indígenas Brasileiras com Traduções Automáticas:
+  Projeto científico de documentação digital para a preservação e análise de línguas nativas do Brasil, associado à Plataforma Tycho Brahe; os corpora construídos pelo grupo ajudam a alimentar a Plataforma.
+  Portal: [https://www.tycho.iel.unicamp.br/dacilat](https://www.tycho.iel.unicamp.br/dacilat)
+
 - **Corpus Tycho Brahe**: *Tycho Brahe Parsed Corpus of Historical Portuguese*  
-  Universidade Estadual de Campinas (UNICAMP) / Instituto de Estudos da Linguagem (IEL) / FAPESP  
-  Portal Oficial: [http://www.tycho.iel.unicamp.br/](http://www.tycho.iel.unicamp.br/)
+  Universidade Estadual de Campinas (UNICAMP) / Instituto de Estudos da Linguagem (IEL) / FAPESP
+
+### Participantes do DACILAT
+
+| Nome | Papel |
+|---|---|
+| Maria Filomena Sandalo | Coordenadora |
+| Charlotte Galves | Pesquisadora Principal |
+| Pablo Feliciano de Faria | Colaborador |
+| Luiz Henrique Lima Veronesi | Criador e Desenvolvedor Principal da Plataforma; Colaborador DACILAT |
+| Leonel de Alencar Araripe | Colaborador |
+| Michael Becker | Colaborador |
+| Vanda Pires | Colaborador |
+| André Luiz Rosa Teixeira | Colaborador |
+| Juliana Lopes Gurgel | Colaborador |
+| Ticiana Andrade de Sena | Colaborador |
+| Osmar Francisco | Colaborador |
+| Hilário Silva | Colaborador |
+| Sandra Silva | Colaborador |
+
+### Ferramenta complementar de busca
+
+O **Tycho Brahe Search** (este motor de busca desktop) foi elaborado por **Gabriel Pinheiro** como ferramenta complementar à Plataforma Tycho Brahe, a partir de sua proposta de implementação dos núcleos cartográficos com uma arquitetura própria.

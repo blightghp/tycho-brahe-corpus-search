@@ -173,7 +173,7 @@ function App() {
           {/* Institutional Credit & Link */}
           <div className="text-[11px] text-slate-500 leading-relaxed pt-1 space-y-1.5">
             <p>
-              Baseado no <span className="font-semibold text-slate-700">Corpus Tycho Brahe</span> (IEL-Unicamp).
+              <span className="font-semibold text-slate-700">Plataforma Tycho Brahe © 2026</span>, criada e desenvolvida principalmente por Luiz Henrique Lima Veronesi (IEL/UNICAMP).
             </p>
             <div className="flex items-center justify-between pt-1">
               <button
@@ -184,11 +184,11 @@ function App() {
                 <span>Ver referências</span>
               </button>
               <a 
-                href="http://www.tycho.iel.unicamp.br/" 
+                href="https://www.tycho.iel.unicamp.br/"
                 target="_blank" 
                 rel="noreferrer"
                 className="text-slate-400 hover:text-slate-700 inline-flex items-center gap-1 transition-colors"
-                title="Acessar portal original"
+                title="Acessar portal da Plataforma Tycho Brahe"
               >
                 <ExternalLink className="w-3 h-3" />
               </a>
