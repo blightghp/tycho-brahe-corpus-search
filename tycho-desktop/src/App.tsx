@@ -4,7 +4,6 @@ import {
   Search, 
   History, 
   Settings, 
-  Database, 
   ExternalLink, 
   CheckCircle2, 
   AlertCircle, 
@@ -90,21 +89,21 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 text-slate-900 font-sans">
+    <div className="tycho-shell flex h-screen text-slate-900 font-sans">
       {/* Modal de Créditos Acadêmicos */}
       <CreditsModal isOpen={showCreditsModal} onClose={() => setShowCreditsModal(false)} />
 
       {/* Sidebar */}
-      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col justify-between shadow-sm">
+      <aside className="tycho-sidebar w-72 bg-white border-r border-indigo-100 flex flex-col justify-between">
         <div>
           {/* Logo / Header */}
-          <div className="p-5 border-b border-slate-100 flex items-center gap-3">
-            <div className="p-2 bg-indigo-600 rounded-lg text-white shadow-md shadow-indigo-100">
-              <Database className="w-5 h-5" />
+          <div className="p-5 border-b border-indigo-100 flex items-center gap-3">
+            <div className="w-11 h-11 rounded-full bg-indigo-50 border border-indigo-100 p-0.5 shadow-sm">
+              <img src="/tycho-brahe-mark-square.png" alt="Marca Tycho Brahe" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-bold text-base text-slate-900 leading-tight">Tycho Brahe</h1>
-              <p className="text-xs text-slate-500 font-medium">Pesquisa Sintática Gerativa</p>
+              <h1 className="font-display font-bold text-lg text-slate-900 leading-tight">Tycho Brahe</h1>
+              <p className="tycho-eyebrow mt-1">Pesquisa sintática</p>
             </div>
           </div>
           
@@ -114,8 +113,8 @@ function App() {
               onClick={() => setActiveTab("m4")}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                 activeTab === "m4"
-                  ? "bg-indigo-50 text-indigo-700 font-semibold shadow-xs"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? "tycho-nav-active font-semibold shadow-xs"
+                  : "tycho-nav-item"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -128,8 +127,8 @@ function App() {
               onClick={() => setActiveTab("search")}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                 activeTab === "search" 
-                  ? "bg-indigo-50 text-indigo-700 font-semibold shadow-xs" 
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? "tycho-nav-active font-semibold shadow-xs"
+                  : "tycho-nav-item"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -147,8 +146,8 @@ function App() {
               onClick={() => setActiveTab("review")}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                 activeTab === "review" 
-                  ? "bg-indigo-50 text-indigo-700 font-semibold shadow-xs" 
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? "tycho-nav-active font-semibold shadow-xs"
+                  : "tycho-nav-item"
               }`}
             >
               <History className="w-4 h-4" />
@@ -159,8 +158,8 @@ function App() {
               onClick={() => setActiveTab("settings")}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                 activeTab === "settings" 
-                  ? "bg-indigo-50 text-indigo-700 font-semibold shadow-xs" 
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? "tycho-nav-active font-semibold shadow-xs"
+                  : "tycho-nav-item"
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -170,9 +169,9 @@ function App() {
         </div>
 
         {/* Footer & Créditos */}
-        <div className="p-4 border-t border-slate-100 space-y-3 bg-slate-50/50">
+        <div className="p-4 border-t border-indigo-100 space-y-3 bg-indigo-50/35">
           {/* Status Badge */}
-          <div className="p-3 bg-white border border-slate-200 rounded-lg shadow-2xs text-xs space-y-1.5">
+          <div className="tycho-card p-3 bg-white border text-xs space-y-1.5">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-700">Motor Rust Core</span>
               <span className={`inline-flex items-center gap-1 font-medium ${health?.engine_status === 'ONLINE' ? 'text-emerald-600' : 'text-amber-600'}`}>
@@ -216,9 +215,10 @@ function App() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top Header */}
-        <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-2xs">
+        <header className="bg-white/95 border-b border-indigo-100 px-7 py-4 flex items-center justify-between shadow-2xs">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">
+            <p className="tycho-eyebrow mb-1">Plataforma de pesquisa · IEL/UNICAMP</p>
+            <h2 className="font-display text-xl font-bold text-slate-800">
               {activeTab === "m4" && "Busca Evidencial Rastreável"}
               {activeTab === "search" && "Consulta Histórica & Visualização Legada"}
               {activeTab === "review" && "Painel Human-in-the-Loop (Auditoria de Expansão)"}
@@ -252,13 +252,13 @@ function App() {
         </header>
         
         {/* Body Container */}
-        <div className="flex-1 p-6 overflow-auto">
+        <div className="flex-1 p-7 overflow-auto">
           {activeTab === "m4" && <M4SearchPanel />}
 
           {activeTab === "search" && (
             <div className="space-y-6 max-w-7xl mx-auto">
               {/* Search Card */}
-              <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-6">
+              <div className="tycho-card bg-white border p-6">
                 <SearchBar onSearch={handleSearch} />
               </div>
 
@@ -384,9 +384,9 @@ function App() {
           )}
 
           {activeTab === "settings" && (
-            <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xs border border-slate-200 p-6 space-y-6">
+            <div className="tycho-card max-w-4xl mx-auto bg-white border p-6 space-y-6">
               <div>
-                <h3 className="text-base font-bold text-slate-900">Diagnóstico da Arquitetura</h3>
+                <h3 className="font-display text-xl font-bold text-slate-900">Diagnóstico da Arquitetura</h3>
                 <p className="text-xs text-slate-500 mt-1">
                   Estado local do motor, do artefato M3 controlado e das referências históricas opcionais.
                 </p>
@@ -407,7 +407,7 @@ function App() {
                   </div>
                   <div className="flex items-center justify-between text-xs text-slate-600">
                     <span>Versão da Aplicação</span>
-                    <span>v{health?.app_version || "0.1.0"}</span>
+                    <span>v{health?.app_version || "0.2.0"}</span>
                   </div>
                 </div>
 

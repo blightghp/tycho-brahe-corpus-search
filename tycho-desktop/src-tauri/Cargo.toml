@@ -1,7 +1,8 @@
 [package]
 name = "tycho-desktop"
-version = "0.1.0"
-description = "Tycho Brahe Search — extensão complementar da Plataforma Tycho Brahe (VERONESI, 2026)"
+version = "0.2.0"
+description = "Cliente desktop complementar para busca sintática rastreável sobre artefato M3 externo."
+homepage = "https://www.tycho.iel.unicamp.br/"
 # Todos os direitos reservados à Plataforma Tycho Brahe © 2026.
 # Plataforma criada e desenvolvida principalmente por Luiz Henrique Lima Veronesi (IEL/UNICAMP).
 authors = ["Luiz Henrique Lima Veronesi (Plataforma Tycho Brahe, IEL/UNICAMP)"]

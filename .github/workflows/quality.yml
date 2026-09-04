@@ -61,6 +61,6 @@ jobs:
           cargo fmt -- --check
           cargo test --lib m4_bridge
 
-      - name: Build the release desktop binary without installers
+      - name: Build the NSIS installer with the required terms of use
         working-directory: tycho-desktop
-        run: npm run tauri -- build --no-bundle
+        run: npm run tauri -- build --bundles nsis

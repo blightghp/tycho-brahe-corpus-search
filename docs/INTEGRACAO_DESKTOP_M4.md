@@ -74,22 +74,28 @@ cd tycho-desktop
 npm run tauri dev
 ```
 
-Para validar o binário que seguirá para produção, gere primeiro o sidecar e só
-então execute o build Tauri em modo release:
+Para validar e empacotar o cliente que seguirá para produção, gere primeiro
+o sidecar, valide o M3 externamente e só então execute o build Tauri em modo
+release:
 
 ```powershell
 cd tycho-desktop
-npm run tauri -- build --no-bundle
+npm run tauri -- build --bundles nsis
 ```
 
-Sem `--debug`, o Tauri produz
-`src-tauri\target\release\tycho-desktop.exe`. O `--no-bundle` é
-intencional: essa validação não cria nem publica instaladores enquanto a
-validação externa do artefato M3 não estiver concluída. O `tauri.conf.json`
-declara o binário M4, mas nunca lista o M3 como `resource` do bundle. Os bancos
-legados `corpus_fase3.db` e `corpus_cartografia.db` também não são recursos do
-bundle: são referências opcionais de auditoria e não podem desbloquear ou
-substituir a rota M4.
+Sem `--debug`, o Tauri produz o binário em
+`src-tauri\target\release\tycho-desktop.exe` e o instalador NSIS em
+`src-tauri\target\release\bundle\nsis`. O `tauri.conf.json` vincula o
+instalador a `installer/TERMOS_DE_USO_E_DIREITOS.txt`; o fluxo de instalação
+exibe os termos e exige aceite antes de prosseguir. O texto aponta para os
+[termos oficiais do corpus](https://www.tycho.iel.unicamp.br/corpus/termos.html)
+como fonte vinculante.
+
+O `tauri.conf.json` declara o binário M4, mas nunca lista o M3 como `resource`
+do bundle. Os bancos legados `corpus_fase3.db` e `corpus_cartografia.db` também
+não são recursos do bundle: são referências opcionais de auditoria e não
+podem desbloquear ou substituir a rota M4. Assim, o instalador é apenas do
+cliente e não concede direito de acesso ou redistribuição dos dados.
 
 ## Estados esperados
 

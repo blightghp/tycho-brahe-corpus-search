@@ -64,10 +64,14 @@ sobre a Plataforma Tycho Brahe.
 ## Atribuição Institucional do Corpus
 
 Este software utiliza como base analítica as árvores sintáticas anotadas do **Tycho Brahe Parsed Corpus of Historical Portuguese**:
-- **Instituição**: Universidade Estadual de Campinas (UNICAMP) / Instituto de Estudos da Linguagem (IEL) / FAPESP.
-- **Coordenação Histórica**: Charlotte Galves, Helena Britto, et al.
-- **Portal Oficial do Projeto**: [http://www.tycho.iel.unicamp.br/](http://www.tycho.iel.unicamp.br/)
+- **Instituição**: Universidade Estadual de Campinas (UNICAMP) / Instituto de Estudos da Linguagem (IEL), universidade pública estadual.
+- **Termos vinculantes do corpus**: [Termos de uso do Corpus Histórico do Português Tycho Brahe](https://www.tycho.iel.unicamp.br/corpus/termos.html). A página oficial registra a pesquisa iniciada em 1998, a anotação sintática desenvolvida por Helena Britto e Charlotte Galves no IEL/UNICAMP e as condições obrigatórias de uso, atribuição e redistribuição.
+- **Portal Oficial do Projeto**: [https://www.tycho.iel.unicamp.br/](https://www.tycho.iel.unicamp.br/)
 - **Documentação de Anotação**: [Guia de Anotação Sintática do Corpus Tycho Brahe](http://www.tycho.iel.unicamp.br/~corpus/manual/annotation.html)
+
+O instalador do Tycho Brahe Search não contém nem licencia o corpus, os bancos
+M2/M3 ou credenciais. A pessoa usuária deve cumprir integralmente os termos
+oficiais antes de acessar qualquer dado fornecido separadamente.
 
 ---
 
