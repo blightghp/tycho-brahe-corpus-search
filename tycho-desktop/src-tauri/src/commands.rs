@@ -1,12 +1,24 @@
 use crate::m4_bridge::{
-    build_m4_sidecar_args, parse_m4_sidecar_response, resolve_m4_artifact, M4BridgeError,
-    M4SearchCriteria, M4SearchResponse, M4_SIDECAR_NAME,
+    build_m4_sidecar_args, m4_artifact_path, parse_m4_sidecar_response, resolve_m4_artifact,
+    M4BridgeError, M4SearchCriteria, M4SearchResponse, M4_SIDECAR_NAME,
 };
 use crate::models::{QueryResultWrapper, SystemHealth};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::Instant;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_shell::ShellExt;
+
+/// Localiza referências históricas apenas para diagnóstico e para as telas
+/// legadas. A rota M4 nunca usa esses arquivos como fallback.
+fn locate_legacy_database(app_data_dir: &Path, filename: &str) -> Option<PathBuf> {
+    [
+        app_data_dir.join(filename),
+        PathBuf::from(filename),
+        PathBuf::from("../../corpus_data").join(filename),
+    ]
+    .into_iter()
+    .find(|candidate| candidate.is_file())
+}
 
 #[tauri::command]
 pub async fn check_system_health(app: AppHandle) -> Result<SystemHealth, String> {
@@ -14,47 +26,20 @@ pub async fn check_system_health(app: AppHandle) -> Result<SystemHealth, String>
         .path()
         .app_data_dir()
         .unwrap_or_else(|_| PathBuf::from("."));
-    let db_path = app_data_dir.join("corpus_fase3.db");
-    let cartografia_db_path = app_data_dir.join("corpus_cartografia.db");
-
-    let local_db = PathBuf::from("corpus_fase3.db");
-    let local_cart = PathBuf::from("corpus_cartografia.db");
-    let corpus_data_db = PathBuf::from("../../corpus_data/corpus_fase3.db");
-    let corpus_data_cart = PathBuf::from("../../corpus_data/corpus_cartografia.db");
-
-    let db_exists = db_path.exists() || local_db.exists() || corpus_data_db.exists();
-    let cart_exists =
-        cartografia_db_path.exists() || local_cart.exists() || corpus_data_cart.exists();
-
-    let resolved_db = if db_path.exists() {
-        db_path.to_string_lossy().to_string()
-    } else if corpus_data_db.exists() {
-        corpus_data_db.to_string_lossy().to_string()
-    } else if local_db.exists() {
-        local_db.to_string_lossy().to_string()
-    } else {
-        "Não localizado".to_string()
-    };
-
-    let resolved_cart = if cartografia_db_path.exists() {
-        cartografia_db_path.to_string_lossy().to_string()
-    } else if corpus_data_cart.exists() {
-        corpus_data_cart.to_string_lossy().to_string()
-    } else if local_cart.exists() {
-        local_cart.to_string_lossy().to_string()
-    } else {
-        "Não localizado".to_string()
-    };
+    let expected_m4_artifact = m4_artifact_path(&app_data_dir);
 
     Ok(SystemHealth {
         engine_status: "ONLINE".to_string(),
         os_info: std::env::consts::OS.to_string(),
         app_version: env!("CARGO_PKG_VERSION").to_string(),
-        db_exists,
-        db_path: resolved_db,
-        cartografia_db_exists: cart_exists,
-        cartografia_db_path: resolved_cart,
-        sidecar_binary_exists: true,
+        m4_artifact_available: resolve_m4_artifact(&app_data_dir).is_ok(),
+        m4_artifact_path: expected_m4_artifact.to_string_lossy().to_string(),
+        legacy_fase3_available: locate_legacy_database(&app_data_dir, "corpus_fase3.db").is_some(),
+        legacy_cartography_available: locate_legacy_database(
+            &app_data_dir,
+            "corpus_cartografia.db",
+        )
+        .is_some(),
     })
 }
 

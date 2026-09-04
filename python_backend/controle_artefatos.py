@@ -471,12 +471,16 @@ def collect_pipeline_snapshot(root: Path) -> list[dict[str, Any]]:
     backend = root / "python_backend"
     desktop = root / "tycho-desktop"
 
+    attributes = root / ".gitattributes"
+    if attributes.is_file():
+        paths.append(attributes)
+
     paths.extend(backend.glob("*.py"))
     paths.extend(backend.glob("*.ps1"))
     paths.extend(backend.glob("*.spec"))
     paths.extend(
         path
-        for path in (backend / "requirements.txt",)
+        for path in (backend / "requirements.txt", backend / "requirements-build.txt")
         if path.is_file()
     )
     paths.extend(desktop.glob("package*.json"))
@@ -720,41 +724,71 @@ def load_manifest(path: Path) -> dict[str, Any]:
 
 
 def verify_manifest(
-    manifest: dict[str, Any], root: Path, require_experimental: bool = False
+    manifest: dict[str, Any],
+    root: Path,
+    require_experimental: bool = False,
+    require_pipeline_snapshot: bool = False,
 ) -> dict[str, Any]:
-    """Verifica tamanho e checksum, sem alterar arquivos ou bancos."""
+    """Verifica um manifesto sem alterar arquivos ou bancos.
+
+    As fontes PSD são sempre obrigatórias. O snapshot de pipeline é uma
+    fotografia histórica da revisão que produziu o manifesto: por padrão, uma
+    divergência é informativa, pois o código pode evoluir sem mudar a fonte
+    canônica. Passe ``require_pipeline_snapshot=True`` para uma auditoria
+    arqueológica estrita daquele snapshot.
+    """
     errors: list[str] = []
     warnings: list[str] = []
     verified = 0
-    records = list(manifest.get("canonical_sources", {}).get("files", []))
-    records.extend(manifest.get("pipeline_snapshot", {}).get("files", []))
-    records.extend(manifest.get("experimental_artifacts", []))
 
-    for record in records:
-        relative = record["path"]
-        path = root / relative
-        required = bool(record.get("required")) or require_experimental
-        if not path.is_file():
-            message = f"ausente: {relative}"
-            (errors if required else warnings).append(message)
-            continue
+    record_groups = (
+        (
+            manifest.get("canonical_sources", {}).get("files", []),
+            True,
+            "",
+        ),
+        (
+            manifest.get("pipeline_snapshot", {}).get("files", []),
+            require_pipeline_snapshot,
+            "snapshot de pipeline: ",
+        ),
+        (
+            manifest.get("experimental_artifacts", []),
+            require_experimental,
+            "",
+        ),
+    )
 
-        actual_size = path.stat().st_size
-        actual_hash = sha256_file(path)
-        if actual_size != record["bytes"]:
-            errors.append(
-                f"tamanho divergente: {relative} (esperado {record['bytes']}, obtido {actual_size})"
-            )
-        if actual_hash != record["sha256"]:
-            errors.append(f"SHA-256 divergente: {relative}")
-        if actual_size == record["bytes"] and actual_hash == record["sha256"]:
-            verified += 1
+    for records, required, prefix in record_groups:
+        for record in records:
+            relative = record["path"]
+            path = root / relative
+            if not path.is_file():
+                message = f"{prefix}ausente: {relative}"
+                (errors if required else warnings).append(message)
+                continue
+
+            actual_size = path.stat().st_size
+            actual_hash = sha256_file(path)
+            record_errors: list[str] = []
+            if actual_size != record["bytes"]:
+                record_errors.append(
+                    f"{prefix}tamanho divergente: {relative} "
+                    f"(esperado {record['bytes']}, obtido {actual_size})"
+                )
+            if actual_hash != record["sha256"]:
+                record_errors.append(f"{prefix}SHA-256 divergente: {relative}")
+            if record_errors:
+                (errors if required else warnings).extend(record_errors)
+            else:
+                verified += 1
 
     return {
         "ok": not errors,
         "integrity_status": "PASS" if not errors else "FAIL",
         "publication_approved": False,
         "publication_status": "EXPERIMENTAL_NOT_FOR_RESEARCH_OR_DISTRIBUTION",
+        "pipeline_snapshot_strict": require_pipeline_snapshot,
         "verified_file_count": verified,
         "error_count": len(errors),
         "warning_count": len(warnings),
@@ -792,6 +826,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="trata bancos e pacotes experimentais ausentes como erro",
     )
+    verify_parser.add_argument(
+        "--require-pipeline-snapshot",
+        action="store_true",
+        help="trata divergências do snapshot histórico de pipeline como erro",
+    )
 
     args = parser.parse_args(argv)
     root = PROJECT_ROOT
@@ -822,7 +861,12 @@ def main(argv: list[str] | None = None) -> int:
         _print_json({"ok": False, "errors": [str(error)]})
         return 2
 
-    result = verify_manifest(manifest, root, require_experimental=args.require_experimental)
+    result = verify_manifest(
+        manifest,
+        root,
+        require_experimental=args.require_experimental,
+        require_pipeline_snapshot=args.require_pipeline_snapshot,
+    )
     _print_json(result)
     return 0 if result["ok"] else 1
 

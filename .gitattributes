@@ -1,0 +1,27 @@
+# O código e a documentação usam LF em qualquer plataforma.
+* text=auto eol=lf
+
+# O corpus PSD é identificado por bytes, incluindo blocos físicos e trailers.
+# O manifesto Marco 2 registra um perfil físico misto: CRLF é a regra para os
+# PSDs e os dez arquivos abaixo têm LF canônico. Não normalize esse perfil.
+corpus_data/*_psd.txt text eol=crlf
+corpus_data/b_001_psd.txt text eol=lf
+corpus_data/b_003_psd.txt text eol=lf
+corpus_data/c_002_psd.txt text eol=lf
+corpus_data/c_003_psd.txt text eol=lf
+corpus_data/m_003_psd.txt text eol=lf
+corpus_data/m_008_psd.txt text eol=lf
+corpus_data/s_004_psd.txt text eol=lf
+corpus_data/v_001_psd.txt text eol=lf
+corpus_data/va_002_psd.txt text eol=lf
+corpus_data/va_009_psd.txt text eol=lf
+
+# Artefatos observacionais não podem receber conversão de fim de linha.
+*.db binary
+*.db-wal binary
+*.db-shm binary
+*.exe binary
+*.ico binary
+*.icns binary
+*.png binary
+*.zip binary

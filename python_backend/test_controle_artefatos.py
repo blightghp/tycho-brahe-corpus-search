@@ -155,6 +155,53 @@ class TestControleArtefatos(unittest.TestCase):
             self.assertFalse(strict_result["ok"])
             self.assertEqual(strict_result["error_count"], 1)
 
+    def test_pipeline_snapshot_is_advisory_by_default_and_strict_on_request(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = self._make_project(Path(temp_dir))
+            backend = root / "python_backend"
+            backend.mkdir()
+            pipeline_file = backend / "pipeline.py"
+            pipeline_file.write_text("VERSION = 1\n", encoding="utf-8")
+            manifest = build_manifest(root)
+            pipeline_file.write_text("VERSION = 2\n", encoding="utf-8")
+
+            advisory_result = verify_manifest(manifest, root)
+            strict_result = verify_manifest(
+                manifest,
+                root,
+                require_pipeline_snapshot=True,
+            )
+
+            self.assertTrue(advisory_result["ok"])
+            self.assertFalse(advisory_result["pipeline_snapshot_strict"])
+            self.assertTrue(
+                any("snapshot de pipeline: SHA-256 divergente" in warning for warning in advisory_result["warnings"])
+            )
+            self.assertFalse(strict_result["ok"])
+            self.assertTrue(strict_result["pipeline_snapshot_strict"])
+            self.assertTrue(
+                any("snapshot de pipeline: SHA-256 divergente" in error for error in strict_result["errors"])
+            )
+
+    def test_snapshot_tracks_eol_policy_and_build_requirements(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = self._make_project(Path(temp_dir))
+            (root / ".gitattributes").write_text("* text=auto eol=lf\n", encoding="utf-8")
+            backend = root / "python_backend"
+            backend.mkdir()
+            (backend / "requirements.txt").write_text("nltk\n", encoding="utf-8")
+            (backend / "requirements-build.txt").write_text(
+                "-r requirements.txt\npyinstaller\n",
+                encoding="utf-8",
+            )
+
+            manifest = build_manifest(root)
+            paths = {record["path"] for record in manifest["pipeline_snapshot"]["files"]}
+
+            self.assertIn(".gitattributes", paths)
+            self.assertIn("python_backend/requirements.txt", paths)
+            self.assertIn("python_backend/requirements-build.txt", paths)
+
     def test_legacy_database_is_never_marked_as_build_input(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = self._make_project(Path(temp_dir))

@@ -35,11 +35,10 @@ export interface SystemHealth {
   engine_status: string;
   os_info: string;
   app_version: string;
-  db_exists: boolean;
-  db_path: string;
-  cartografia_db_exists: boolean;
-  cartografia_db_path: string;
-  sidecar_binary_exists: boolean;
+  m4_artifact_available: boolean;
+  m4_artifact_path: string;
+  legacy_fase3_available: boolean;
+  legacy_cartography_available: boolean;
 }
 
 export interface QueryResultWrapper {
@@ -110,11 +109,10 @@ export const getSystemHealth = async (): Promise<SystemHealth> => {
       engine_status: 'OFFLINE',
       os_info: 'unknown',
       app_version: '0.1.0',
-      db_exists: false,
-      db_path: '',
-      cartografia_db_exists: false,
-      cartografia_db_path: '',
-      sidecar_binary_exists: false,
+      m4_artifact_available: false,
+      m4_artifact_path: '',
+      legacy_fase3_available: false,
+      legacy_cartography_available: false,
     };
   }
 };

@@ -43,7 +43,10 @@ O SQLite M3 não é empacotado: ele tem múltiplos gigabytes e só pode ser
 instalado após validação. A partir da raiz do repositório:
 
 ```powershell
-# Requer PyInstaller no Python de build; gera um .exe ignorado pelo Git.
+# Instala as dependências de build, incluindo PyInstaller.
+python -m pip install -r python_backend/requirements-build.txt
+
+# Gera um .exe ignorado pelo Git.
 powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1
 
 # Revalida M3↔M2 integralmente e instala o arquivo no local controlado.
@@ -68,7 +71,9 @@ npm run tauri dev
 
 Para uma distribuição, gere primeiro o sidecar e só então execute o build
 Tauri. O `tauri.conf.json` declara o binário M4, mas nunca lista o M3 como
-`resource` do bundle.
+`resource` do bundle. Os bancos legados `corpus_fase3.db` e
+`corpus_cartografia.db` também não são recursos do bundle: são referências
+opcionais de auditoria e não podem desbloquear ou substituir a rota M4.
 
 ## Estados esperados
 
@@ -92,6 +97,7 @@ cd tycho-desktop
 npm run build
 
 cd src-tauri
+cargo check
 cargo test --lib m4_bridge
 cargo fmt -- --check
 ```

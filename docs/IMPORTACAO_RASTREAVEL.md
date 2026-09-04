@@ -114,9 +114,13 @@ Na raiz do repositório, primeiro valide o retrato atual:
 
 ```powershell
 python python_backend/controle_artefatos.py verify `
-  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json `
-  --require-experimental
+  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json
 ```
+
+Essa verificação exige as fontes PSD canônicas. O snapshot de código gravado
+no manifesto é histórico e só deve ser exigido em uma auditoria do checkout
+correspondente com `--require-pipeline-snapshot`; bancos e pacotes legados não
+são pré-requisitos para reconstruir o Marco 2.
 
 Depois escolha um destino novo, fora de `corpus_data/`:
 

@@ -24,6 +24,20 @@ pub const M4_MAX_SIDECAR_OUTPUT_BYTES: usize = 16 * 1024 * 1024;
 pub const M4_ARTIFACT_RELATIVE_PATH: [&str; 3] =
     ["artifacts", "marco3", "corpus_marco3_evidencial.sqlite"];
 
+/// Retorna o único local em que a aplicação aceita um artefato Marco 3.
+///
+/// Esta função não consulta o sistema de arquivos; a validação de existência,
+/// canonicalização e contenção permanece centralizada em
+/// [`resolve_m4_artifact`]. Ela também permite que o diagnóstico da interface
+/// apresente o destino esperado sem introduzir uma segunda regra de caminho.
+pub fn m4_artifact_path(app_data_dir: &Path) -> PathBuf {
+    M4_ARTIFACT_RELATIVE_PATH
+        .iter()
+        .fold(app_data_dir.to_path_buf(), |path, segment| {
+            path.join(segment)
+        })
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum M4EntityType {
     #[serde(rename = "EXCLUSAO")]
@@ -195,11 +209,7 @@ fn normalize_filter(name: &str, value: Option<&str>) -> Result<Option<String>, M
 /// um artefato promovido instalado pelo provisionador controlado, e não deve
 /// ser mascarada por outro banco experimental.
 pub fn resolve_m4_artifact(app_data_dir: &Path) -> Result<PathBuf, M4BridgeError> {
-    let artifact_path = M4_ARTIFACT_RELATIVE_PATH
-        .iter()
-        .fold(app_data_dir.to_path_buf(), |path, segment| {
-            path.join(segment)
-        });
+    let artifact_path = m4_artifact_path(app_data_dir);
 
     if !artifact_path.is_file() {
         return Err(M4BridgeError::new(
@@ -668,14 +678,23 @@ mod tests {
         let missing = resolve_m4_artifact(&test_directory.0).expect_err("missing artifact");
         assert_eq!(missing.code, "M4_ARTIFACT_UNAVAILABLE");
 
-        let artifact = M4_ARTIFACT_RELATIVE_PATH
-            .iter()
-            .fold(test_directory.0.clone(), |path, segment| path.join(segment));
+        let artifact = m4_artifact_path(&test_directory.0);
         fs::create_dir_all(artifact.parent().expect("artifact parent")).expect("create parent");
         fs::write(&artifact, b"fixture").expect("create artifact");
         assert_eq!(
             resolve_m4_artifact(&test_directory.0).expect("resolve artifact"),
             fs::canonicalize(&artifact).expect("canonical artifact")
+        );
+    }
+
+    #[test]
+    fn artifact_path_is_derived_from_the_controlled_relative_path() {
+        let root = Path::new("C:/controlled-app-data");
+        assert_eq!(
+            m4_artifact_path(root),
+            root.join("artifacts")
+                .join("marco3")
+                .join("corpus_marco3_evidencial.sqlite")
         );
     }
 

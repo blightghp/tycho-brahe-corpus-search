@@ -162,10 +162,9 @@ Para inspecionar ou verificar fisicamente os bancos legados, use o utilitário
 dedicado. Não execute `--vacuum` sobre os artefatos congelados nesta etapa.
 
 ```bash
-# Verificar a fonte canônica, o snapshot de código e os artefatos disponíveis
+# Verificar as fontes canônicas do Marco 2
 python python_backend/controle_artefatos.py verify \
-  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json \
-  --require-experimental
+  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json
 
 # Relatório de status e distribuição por autores/séculos
 python python_backend/gerenciador_db.py --status

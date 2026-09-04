@@ -1,0 +1,3 @@
+# Ferramentas para reconstruir os sidecars Python usados pelo desktop.
+-r requirements.txt
+pyinstaller

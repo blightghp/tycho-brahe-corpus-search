@@ -5,6 +5,7 @@
 *.xlsx
 *.csv
 __pycache__/
+.venv/
 .idea/
 .vscode/
 python_backend/build/
