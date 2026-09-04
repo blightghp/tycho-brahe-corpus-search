@@ -97,6 +97,7 @@ artefato requerido por uma base experimental ou por um caminho arbitrário.
 ```powershell
 python python_backend/test_busca_rastreavel.py
 python python_backend/test_provisionar_m4_artifact.py
+python python_backend/test_m4_sidecar.py
 
 cd tycho-desktop
 npm run build
