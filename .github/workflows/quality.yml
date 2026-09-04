@@ -47,6 +47,7 @@ jobs:
         working-directory: tycho-desktop
         run: |
           npm ci
+          npm audit --audit-level=moderate
           npm run build
 
       - name: Build the dedicated Marco 4 sidecar
