@@ -20,7 +20,8 @@ auditoria. Há dois retratos de proveniência:
 - [`manifests/estado_experimental_2026-08-31.json`](manifests/estado_experimental_2026-08-31.json)
   preserva o congelamento histórico inicial;
 - [`manifests/marco2_importacao_rastreavel_2026-08-31.json`](manifests/marco2_importacao_rastreavel_2026-08-31.json)
-  é o contrato atual de fonte física e pipeline.
+  é o contrato de identidade física das fontes do Marco 2 e preserva o
+  snapshot do pipeline daquela revisão.
 
 O banco Marco 2 é produzido em um destino externo explícito e não é instalado
 em `corpus_data/`. Consulte [IMPORTACAO_RASTREAVEL.md](IMPORTACAO_RASTREAVEL.md)
@@ -46,6 +47,11 @@ Os bancos e `release/` são ignorados pelo Git. Por isso, o manifesto registra
 seus hashes como artefatos opcionais: a ausência deles em um clone não altera
 o estado das fontes PSD, mas uma cópia presente e divergente é reportada.
 
+O arquivo [`.gitattributes`](../.gitattributes) fixa LF para código e
+documentação, mas preserva o perfil físico CRLF/LF registrado para cada PSD.
+Isso evita que a conversão automática de fim de linha do Git altere os bytes
+usados pela identidade física do corpus em Windows.
+
 ## Identidade da fonte
 
 `sent_id_externo` não é uma chave confiável: há blocos sem ID e há IDs
@@ -70,12 +76,15 @@ Execute a partir da raiz do repositório:
 
 ```powershell
 python python_backend/controle_artefatos.py verify `
-  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json `
-  --require-experimental
+  --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json
 ```
 
-`"ok": true` nesse comando atesta a integridade das fontes, do pipeline Marco
-2 e dos artefatos observados. O resultado ainda declara
+`"ok": true` nesse comando atesta a integridade das fontes canônicas. O
+snapshot de pipeline é uma fotografia histórica e aparece como advertência se
+o código atual tiver evoluído; ele só se torna obrigatório com
+`--require-pipeline-snapshot`, para auditar o checkout correspondente. Bancos
+e pacotes experimentais também só se tornam obrigatórios com
+`--require-experimental`. O resultado ainda declara
 `publication_approved: false`: integridade não torna os derivados uma
 distribuição aprovada nem declara a busca funcional.
 
