@@ -61,6 +61,6 @@ jobs:
           cargo fmt -- --check
           cargo test --lib m4_bridge
 
-      - name: Build the desktop application without installers
+      - name: Build the release desktop binary without installers
         working-directory: tycho-desktop
-        run: npm run tauri -- build --debug --no-bundle
+        run: npm run tauri -- build --no-bundle

@@ -74,11 +74,22 @@ cd tycho-desktop
 npm run tauri dev
 ```
 
-Para uma distribuição, gere primeiro o sidecar e só então execute o build
-Tauri. O `tauri.conf.json` declara o binário M4, mas nunca lista o M3 como
-`resource` do bundle. Os bancos legados `corpus_fase3.db` e
-`corpus_cartografia.db` também não são recursos do bundle: são referências
-opcionais de auditoria e não podem desbloquear ou substituir a rota M4.
+Para validar o binário que seguirá para produção, gere primeiro o sidecar e só
+então execute o build Tauri em modo release:
+
+```powershell
+cd tycho-desktop
+npm run tauri -- build --no-bundle
+```
+
+Sem `--debug`, o Tauri produz
+`src-tauri\target\release\tycho-desktop.exe`. O `--no-bundle` é
+intencional: essa validação não cria nem publica instaladores enquanto a
+validação externa do artefato M3 não estiver concluída. O `tauri.conf.json`
+declara o binário M4, mas nunca lista o M3 como `resource` do bundle. Os bancos
+legados `corpus_fase3.db` e `corpus_cartografia.db` também não são recursos do
+bundle: são referências opcionais de auditoria e não podem desbloquear ou
+substituir a rota M4.
 
 ## Estados esperados
 
