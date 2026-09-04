@@ -182,7 +182,9 @@ python python_backend/gerenciador_db.py --vacuum
 
 Instale as dependências de build no mesmo interpretador que será passado aos
 scripts. Isso evita depender de uma instalação pessoal ou de uma versão fixa
-do Python:
+do Python. O arquivo inclui o modelo português `pt_core_news_sm` 3.8.0, com
+hash verificado e compatível com spaCy 3.8; não é necessário baixá-lo por um
+comando separado:
 
 ```powershell
 python -m venv .venv

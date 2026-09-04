@@ -45,7 +45,7 @@ O SQLite M3 não é empacotado: ele tem múltiplos gigabytes e só pode ser
 instalado após validação. A partir da raiz do repositório:
 
 ```powershell
-# Instala as dependências de build, incluindo PyInstaller.
+# Instala PyInstaller e o modelo português necessário aos testes legados.
 python -m venv .venv
 $python = Join-Path (Get-Location) '.venv\Scripts\python.exe'
 & $python -m pip install -r python_backend/requirements-build.txt
