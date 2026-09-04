@@ -5,11 +5,14 @@ pub struct SystemHealth {
     pub engine_status: String,
     pub os_info: String,
     pub app_version: String,
-    pub db_exists: bool,
-    pub db_path: String,
-    pub cartografia_db_exists: bool,
-    pub cartografia_db_path: String,
-    pub sidecar_binary_exists: bool,
+    /// O arquivo M3 existe no caminho controlado pela ponte Marco 5. A busca
+    /// ainda valida o contrato promovido antes de devolver resultados.
+    pub m4_artifact_available: bool,
+    pub m4_artifact_path: String,
+    /// Referências históricas opcionais; nunca são copiadas ou usadas pela
+    /// rota evidencial Marco 4.
+    pub legacy_fase3_available: bool,
+    pub legacy_cartography_available: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

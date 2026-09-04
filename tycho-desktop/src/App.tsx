@@ -181,8 +181,8 @@ function App() {
               </span>
             </div>
             <div className="flex items-center justify-between text-slate-500 text-[11px]">
-              <span>Banco Corpus</span>
-              <span>{health?.db_exists ? "Conectado" : "Pendente"}</span>
+              <span>Artefato M3</span>
+              <span>{health?.m4_artifact_available ? "Localizado" : "Pendente"}</span>
             </div>
           </div>
 
@@ -388,7 +388,7 @@ function App() {
               <div>
                 <h3 className="text-base font-bold text-slate-900">Diagnóstico da Arquitetura</h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Validação de ponta a ponta: React UI &rarr; Tauri Rust Motor &rarr; Python Backend Sidecar &rarr; SQLite.
+                  Estado local do motor, do artefato M3 controlado e das referências históricas opcionais.
                 </p>
               </div>
 
@@ -412,25 +412,41 @@ function App() {
                 </div>
 
                 <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Armazenamento & Corpus</span>
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Busca Evidencial (M4)</span>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-slate-800">Banco SQLite (Fase 3)</span>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${health?.db_exists ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
-                      {health?.db_exists ? "Detectado" : "Ausente"}
+                    <span className="text-sm font-medium text-slate-800">Artefato M3 controlado</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${health?.m4_artifact_available ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                      {health?.m4_artifact_available ? "Localizado" : "Pendente"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    O arquivo não acompanha o bundle; provisione um M3 validado para habilitar a busca rastreável.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Referências Históricas</span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-800">Fase 3 legada</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${health?.legacy_fase3_available ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-700"}`}>
+                      {health?.legacy_fase3_available ? "Disponível" : "Não instalada"}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-slate-800">Banco Cartografia</span>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${health?.cartografia_db_exists ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
-                      {health?.cartografia_db_exists ? "Detectado" : "Ausente"}
+                    <span className="text-sm font-medium text-slate-800">Cartografia legada</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${health?.legacy_cartography_available ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-700"}`}>
+                      {health?.legacy_cartography_available ? "Disponível" : "Não instalada"}
                     </span>
                   </div>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Opcional para auditoria histórica; a rota M4 não usa esses bancos como fallback.
+                  </p>
                 </div>
               </div>
 
               <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 text-xs font-mono text-slate-600 break-all space-y-1">
-                <p className="font-semibold text-slate-700">Caminho do Banco Detectado:</p>
-                <p className="text-slate-500">{health?.db_path || "Nenhum caminho resolvido"}</p>
+                <p className="font-semibold text-slate-700">Local controlado esperado para o artefato M3:</p>
+                <p className="text-slate-500">{health?.m4_artifact_path || "Aguardando o diagnóstico do aplicativo"}</p>
               </div>
             </div>
           )}
