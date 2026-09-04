@@ -36,6 +36,8 @@ Marco 4.
 - Não há fallback do frontend para `Command.sidecar`; toda execução M4 passa
   pela ponte Rust. Saídas fora do contrato JSON, excessivas ou inconsistentes
   são rejeitadas.
+- O sidecar emite JSON em UTF-8, inclusive quando o Windows usa uma página de
+  código local diferente; a ponte decodifica os bytes diretamente como JSON.
 
 ## Preparar o sidecar e o artefato
 
@@ -43,11 +45,14 @@ O SQLite M3 não é empacotado: ele tem múltiplos gigabytes e só pode ser
 instalado após validação. A partir da raiz do repositório:
 
 ```powershell
-# Instala as dependências de build, incluindo PyInstaller.
-python -m pip install -r python_backend/requirements-build.txt
+# Instala PyInstaller e o modelo português necessário aos testes legados.
+python -m venv .venv
+$python = Join-Path (Get-Location) '.venv\Scripts\python.exe'
+& $python -m pip install -r python_backend/requirements-build.txt
 
 # Gera um .exe ignorado pelo Git.
-powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1 `
+  -PythonExecutable $python
 
 # Revalida M3↔M2 integralmente e instala o arquivo no local controlado.
 # No mesmo volume, usa hard link; se isso não for possível, faz cópia em staging
@@ -69,11 +74,28 @@ cd tycho-desktop
 npm run tauri dev
 ```
 
-Para uma distribuição, gere primeiro o sidecar e só então execute o build
-Tauri. O `tauri.conf.json` declara o binário M4, mas nunca lista o M3 como
-`resource` do bundle. Os bancos legados `corpus_fase3.db` e
-`corpus_cartografia.db` também não são recursos do bundle: são referências
-opcionais de auditoria e não podem desbloquear ou substituir a rota M4.
+Para validar e empacotar o cliente que seguirá para produção, gere primeiro
+o sidecar, valide o M3 externamente e só então execute o build Tauri em modo
+release:
+
+```powershell
+cd tycho-desktop
+npm run tauri -- build --bundles nsis
+```
+
+Sem `--debug`, o Tauri produz o binário em
+`src-tauri\target\release\tycho-desktop.exe` e o instalador NSIS em
+`src-tauri\target\release\bundle\nsis`. O `tauri.conf.json` vincula o
+instalador a `installer/TERMOS_DE_USO_E_DIREITOS.txt`; o fluxo de instalação
+exibe os termos e exige aceite antes de prosseguir. O texto aponta para os
+[termos oficiais do corpus](https://www.tycho.iel.unicamp.br/corpus/termos.html)
+como fonte vinculante.
+
+O `tauri.conf.json` declara o binário M4, mas nunca lista o M3 como `resource`
+do bundle. Os bancos legados `corpus_fase3.db` e `corpus_cartografia.db` também
+não são recursos do bundle: são referências opcionais de auditoria e não
+podem desbloquear ou substituir a rota M4. Assim, o instalador é apenas do
+cliente e não concede direito de acesso ou redistribuição dos dados.
 
 ## Estados esperados
 
@@ -92,6 +114,7 @@ artefato requerido por uma base experimental ou por um caminho arbitrário.
 ```powershell
 python python_backend/test_busca_rastreavel.py
 python python_backend/test_provisionar_m4_artifact.py
+python python_backend/test_m4_sidecar.py
 
 cd tycho-desktop
 npm run build

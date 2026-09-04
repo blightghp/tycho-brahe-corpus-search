@@ -1,0 +1,66 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Windows quality gate
+    runs-on: windows-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: tycho-desktop/package-lock.json
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r python_backend/requirements-build.txt
+
+      - name: Verify canonical sources and Python suite
+        run: |
+          python python_backend/controle_artefatos.py verify --manifest docs/manifests/marco2_importacao_rastreavel_2026-08-31.json
+          python -m unittest discover -s python_backend -p "test_*.py"
+
+      - name: Install and build the frontend
+        working-directory: tycho-desktop
+        run: |
+          npm ci
+          npm audit --audit-level=moderate
+          npm run build
+
+      - name: Build the dedicated Marco 4 sidecar
+        run: |
+          $pythonExecutable = (Get-Command python).Source
+          powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1 -PythonExecutable $pythonExecutable
+
+      - name: Test the Rust bridge
+        working-directory: tycho-desktop/src-tauri
+        run: |
+          cargo fmt -- --check
+          cargo test --lib m4_bridge
+
+      - name: Build the NSIS installer with the required terms of use
+        working-directory: tycho-desktop
+        run: npm run tauri -- build --bundles nsis

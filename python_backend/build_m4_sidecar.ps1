@@ -9,6 +9,14 @@
     exigir provisionamento/verificação próprios.
 #>
 
+[CmdletBinding()]
+param(
+    [ValidateNotNullOrEmpty()]
+    [string]$PythonExecutable = 'python',
+
+    [switch]$SkipTauriCopy
+)
+
 $ErrorActionPreference = 'Stop'
 
 $backendRoot = Split-Path -Parent $PSCommandPath
@@ -24,14 +32,14 @@ if (-not (Test-Path -LiteralPath $entryPoint -PathType Leaf)) {
     throw "Entrada M4 não encontrada: $entryPoint"
 }
 
-& python -m PyInstaller --version
+& $PythonExecutable -m PyInstaller --version
 if ($LASTEXITCODE -ne 0) {
-    throw 'PyInstaller não está disponível no Python atual. Instale-o no ambiente de build antes de gerar o sidecar M4.'
+    throw "PyInstaller não está disponível em '$PythonExecutable'. Instale python_backend/requirements-build.txt no ambiente de build antes de gerar o sidecar M4."
 }
 
 New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 
-& python -m PyInstaller --noconfirm --clean --onefile `
+& $PythonExecutable -m PyInstaller --noconfirm --clean --onefile `
     --name $targetName `
     --distpath $distDirectory `
     --workpath $buildDirectory `
@@ -45,6 +53,11 @@ if ($LASTEXITCODE -ne 0) {
 $generatedExecutable = Join-Path $distDirectory "$targetName.exe"
 if (-not (Test-Path -LiteralPath $generatedExecutable -PathType Leaf)) {
     throw "Executável M4 não encontrado após o build: $generatedExecutable"
+}
+
+if ($SkipTauriCopy) {
+    Write-Host "Sidecar Marco 4 gerado sem copiar para o bundle: $generatedExecutable"
+    return
 }
 
 Copy-Item -LiteralPath $generatedExecutable -Destination $targetExecutable -Force

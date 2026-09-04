@@ -18,3 +18,12 @@ release/
 *.zip
 *.msi
 *.exe
+
+# Ativos de marca que fazem parte do aplicativo desktop. Os demais PNGs de
+# trabalho continuam ignorados por padrão.
+!tycho-desktop/public/tycho-brahe-mark.png
+!tycho-desktop/public/tycho-brahe-mark-square.png
+!tycho-desktop/src-tauri/icons/32x32.png
+!tycho-desktop/src-tauri/icons/128x128.png
+!tycho-desktop/src-tauri/icons/128x128@2x.png
+tycho-desktop/src-tauri/icons/android/

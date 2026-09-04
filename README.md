@@ -20,6 +20,8 @@
 >
 > **Referência principal:**
 > VERONESI, Luiz Henrique Lima. *A Plataforma Tycho Brahe: um sistema para corpora sintaticamente anotados*. 2026. 211 f. Tese (Doutorado em Linguística) — Instituto de Estudos da Linguagem, Universidade Estadual de Campinas, Campinas, 2026. Disponível em: [https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf](https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf)
+>
+> **Termos do corpus:** [termos oficiais do Corpus Histórico do Português Tycho Brahe](https://www.tycho.iel.unicamp.br/corpus/termos.html). Eles são a fonte vinculante para qualquer uso de dados; o cliente desktop não inclui nem licencia o corpus, M2, M3 ou credenciais.
 
 > [!WARNING]
 > **Estado do projeto: reconstrução controlada — Marcos 2 e 3 concluídos; busca
@@ -67,17 +69,15 @@ situação verificável está documentada em
 - ⚡ **Motor de Busca Hierárquica**: consultas por labels, categorias, funções e relações estruturais, em reconstrução com contrato de resultados por sentença.
 - 🛡️ **Módulo Human-in-the-Loop (Auditoria de Quarentena)**: Isolamento automático e interface de revisão comparativa de sentenças com inversões ou anomalias da hierarquia universal de Cinque.
 - 🚀 **Arquitetura Tripartida Segura**: Core nativo em Rust (Tauri v2) com sandboxing estrito e Content Security Policy (CSP), sidecar analítico Python (PyInstaller) e frontend reativo em React 19 + TypeScript.
-- 📦 **Distribuição verificável**: será publicada após reconstrução do corpus, testes ponta a ponta e manifesto de proveniência.
+- 📦 **Prévia técnica verificável**: o cliente `v0.2.0` é distribuído sem corpus, M2 ou M3, com aceite dos termos e evidência de validação M3/M4/M5; não constitui distribuição científica estável.
 
 ---
 
 ## 📥 Estado de distribuição
 
-Não há versão estável disponível para download nesta revisão. Os instaladores,
-ZIP e diretório `release/` existentes foram retirados de circulação e mantidos
-somente para auditoria. A próxima distribuição será publicada após reconstrução
-integral do banco, validação das invariantes linguísticas e teste em ambiente
-limpo.
+Há uma [prévia técnica Windows `v0.2.0`](https://github.com/blightghp/tycho-brahe-corpus-search/releases/tag/v0.2.0) do cliente desktop. Ela substitui os instaladores antigos apenas como canal técnico do aplicativo: o pacote NSIS exige aceite dos termos, não contém PSD, M2, M3, credenciais ou qualquer cópia do corpus, e não concede acesso aos dados.
+
+O uso de dados do Corpus Histórico do Português Tycho Brahe continua sujeito aos [termos oficiais do portal](https://www.tycho.iel.unicamp.br/corpus/termos.html), inclusive restrições de finalidade acadêmica/pedagógica, uso comercial, redistribuição, senhas e citação. A prévia não certifica uma transdução cartográfica integral nem uma distribuição científica estável. Os pacotes `v1.0.0`, ZIP e diretório `release/` permanecem arquivados somente para auditoria e não devem ser utilizados.
 
 ---
 
@@ -90,6 +90,7 @@ Para consultar os manuais e diretrizes aprofundadas, acesse os guias na pasta [`
 - 🧱 [**Importação Rastreável**](./docs/IMPORTACAO_RASTREAVEL.md): Contrato do banco Marco 2, evidências, rejeições e reprodução segura.
 - 🔎 [**Busca Rastreável**](./docs/BUSCA_RASTREAVEL.md): Consultas Marco 4 por entidade, rótulo, projeção, token e regra, com proveniência obrigatória.
 - 🖥️ [**Integração Desktop M4**](./docs/INTEGRACAO_DESKTOP_M4.md): Sidecar dedicado, provisionamento verificado do M3 e contrato Tauri/React restrito.
+- ✅ [**Validação M3/M4/M5 — 2026-09-04**](./docs/VALIDACAO_M3_M4_M5_2026-09-04.md): Evidências de reconstrução, busca, ponte desktop, instalador e gates da prévia técnica.
 - 📊 [**Auditoria de Cobertura M3**](./docs/AUDITORIA_COBERTURA_M3.md): Relatório Marco 6 somente leitura de cobertura, regras, evidências e backlog de curadoria.
 - 🔬 [**Guia de Cartografia Sintática**](./docs/GUIA_CARTOGRAFIA_SINTATICA.md): Fundamentação teórica dos 5 grandes domínios e 44 projeções funcionais universais.
 - 🏛️ [**Arquitetura do Sistema**](./docs/ARQUITETURA_DO_SISTEMA.md): Diagrama detalhado do pipeline Rust + Python + TypeScript/D3.

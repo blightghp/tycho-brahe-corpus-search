@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Tycho Brahe Search",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "br.unicamp.iel.tycho-brahe",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -23,11 +23,27 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["nsis"],
+    "publisher": "Tycho Brahe Search",
+    "homepage": "https://www.tycho.iel.unicamp.br/",
+    "copyright": "Tycho Brahe Search v0.2.0. Os direitos do Corpus Historico do Portugues Tycho Brahe seguem os termos oficiais do IEL/UNICAMP.",
+    "shortDescription": "Cliente complementar para busca sintática rastreável.",
+    "longDescription": "Prévia técnica do cliente Tycho Brahe Search. Não inclui nem licencia o Corpus Histórico do Português Tycho Brahe ou o artefato M3.",
+    "licenseFile": "installer/TERMOS_DE_USO_E_DIREITOS.txt",
     "externalBin": [
       "bin/tycho_backend",
       "bin/tycho_m4_search"
     ],
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico",
+        "installMode": "currentUser",
+        "languages": ["PortugueseBR"],
+        "displayLanguageSelector": false,
+        "startMenuFolder": "Tycho Brahe Search"
+      }
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

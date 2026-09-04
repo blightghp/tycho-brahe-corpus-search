@@ -180,16 +180,35 @@ python python_backend/gerenciador_db.py --vacuum
 
 ## Como Recompilar os Sidecars
 
-O sidecar histórico continua sendo reconstruído pelo fluxo legado:
+Instale as dependências de build no mesmo interpretador que será passado aos
+scripts. Isso evita depender de uma instalação pessoal ou de uma versão fixa
+do Python. O arquivo inclui o modelo português `pt_core_news_sm` 3.8.0, com
+hash verificado e compatível com spaCy 3.8; não é necessário baixá-lo por um
+comando separado:
 
-```bash
-./build_backend.ps1
+```powershell
+python -m venv .venv
+$python = Join-Path (Get-Location) '.venv\Scripts\python.exe'
+& $python -m pip install -r python_backend/requirements-build.txt
 ```
+
+O sidecar histórico atende apenas à Consulta Histórica e continua esperando os
+bancos legados externos durante a execução. Para instalá-lo no bundle Tauri:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_backend.ps1 `
+  -PythonExecutable $python
+```
+
+Em uma verificação de empacotamento, `-SkipTauriCopy` em qualquer um dos dois
+scripts gera o executável em seu diretório `dist*` sem substituir o binário do
+bundle.
 
 Para a busca M4, use o fluxo dedicado abaixo; ele não empacota o banco M3:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1 `
+  -PythonExecutable $python
 ```
 
 Depois provisione um M3 validado conforme

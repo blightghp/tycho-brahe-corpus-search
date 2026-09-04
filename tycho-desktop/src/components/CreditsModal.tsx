@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, BookOpen, GraduationCap, Globe, Users, FileText } from 'lucide-react';
+import { X, ExternalLink, BookOpen, GraduationCap, Globe, Users, FileText, ShieldCheck } from 'lucide-react';
 
 interface CreditsModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export const CreditsModal: React.FC<CreditsModalProps> = ({ isOpen, onClose }) =
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-base text-slate-900">Créditos, Referências e Direitos</h3>
+              <h3 className="font-display font-bold text-lg text-slate-900">Créditos, Referências e Direitos</h3>
               <p className="text-xs text-slate-500">Plataforma Tycho Brahe &amp; Programa Cartográfico</p>
             </div>
           </div>
@@ -57,6 +57,31 @@ export const CreditsModal: React.FC<CreditsModalProps> = ({ isOpen, onClose }) =
                 className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
               >
                 <span>Portal Tycho Brahe: tycho.iel.unicamp.br</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Termos oficiais do corpus */}
+          <div className="p-4 rounded-xl bg-indigo-50 border border-indigo-200 space-y-2">
+            <div className="flex items-center gap-2 text-indigo-800 font-bold text-sm">
+              <ShieldCheck className="w-4 h-4 text-indigo-600" />
+              <span>Termos oficiais do Corpus Histórico do Português Tycho Brahe</span>
+            </div>
+            <p>
+              O instalador desta prévia técnica não inclui o corpus, bancos M2/M3 ou credenciais, nem concede direito de acesso a eles. Todo uso de dados do corpus depende dos termos oficiais publicados pelo portal original.
+            </p>
+            <p>
+              Ao aceitar o instalador, a pessoa usuária reconhece que o corpus não está em domínio público, que o uso é acadêmico ou pedagógico e que as restrições de redistribuição, uso comercial, senhas e citação devem ser observadas conforme a fonte vinculante.
+            </p>
+            <div className="pt-2">
+              <a
+                href="https://www.tycho.iel.unicamp.br/corpus/termos.html"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
+              >
+                <span>Abrir termos oficiais do corpus</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>

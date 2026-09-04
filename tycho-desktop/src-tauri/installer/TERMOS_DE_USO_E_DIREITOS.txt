@@ -1,0 +1,82 @@
+TERMOS DE USO, DIREITOS E ACEITE DO INSTALADOR
+Tycho Brahe Search v0.2.0 — prévia técnica
+
+LEIA ANTES DE INSTALAR
+
+Ao escolher "Aceito" ou prosseguir com esta instalação, a pessoa usuária
+declara que leu, compreendeu e aceita estes termos. Se não concordar, escolha
+"Cancelar" e não instale o software.
+
+1. ESCOPO DESTA INSTALAÇÃO
+
+Este instalador distribui somente o cliente desktop Tycho Brahe Search como
+ferramenta complementar de busca sintática rastreável. Ele NÃO inclui, não
+transfere, não licencia, não disponibiliza e não concede acesso ao Corpus
+Histórico do Português Tycho Brahe, às fontes PSD, aos bancos Marco 2 (M2),
+aos bancos Marco 3 (M3), a credenciais ou a quaisquer outros dados protegidos.
+
+Qualquer artefato M3 usado pelo cliente deve ser obtido, validado e
+provisionado separadamente por meio autorizado. A presença do aplicativo não
+é autorização para copiar, baixar, redistribuir ou usar um corpus.
+
+2. TERMOS OFICIAIS DO CORPUS — FONTE VINCULANTE
+
+Os termos de uso oficiais do Corpus Histórico do Português Tycho Brahe estão
+publicados pelo portal original em:
+
+https://www.tycho.iel.unicamp.br/corpus/termos.html
+
+Essa página oficial é incorporada a este aceite por referência e prevalece
+sobre qualquer resumo deste instalador. A pessoa usuária deve consultá-la
+antes de acessar dados do corpus e sempre que houver atualização dos termos.
+
+Em síntese, e sem substituir o texto oficial: o corpus não está em domínio
+público; é destinado gratuitamente a pesquisadores para fins acadêmicos e
+pedagógicos; não pode ter uso comercial; não pode ser redistribuído salvo os
+trechos estritamente necessários à citação acadêmica regular; senhas não
+podem ser compartilhadas; e produtos de pesquisa devem dar crédito explícito
+ao corpus conforme os termos oficiais.
+
+3. ATRIBUIÇÃO, AUTORIA E VÍNCULO INSTITUCIONAL
+
+Os termos oficiais do corpus registram a pesquisa iniciada em 1998 e a
+anotação sintática desenvolvida por Helena Britto e Charlotte Galves no
+Instituto de Estudos da Linguagem da Universidade Estadual de Campinas
+(IEL/UNICAMP). A coordenação científica, as colaborações e os apoios
+institucionais do corpus devem ser reconhecidos exatamente como descritos na
+página oficial acima.
+
+A documentação deste projeto referencia Luiz Henrique Lima Veronesi como
+criador e desenvolvedor principal da Plataforma Tycho Brahe, vinculada ao
+IEL/UNICAMP, no contexto de sua tese de doutorado sob orientação de Charlotte
+Galves. O IEL integra a Universidade Estadual de Campinas (UNICAMP),
+universidade pública estadual. Referência acadêmica indicada pela plataforma:
+
+https://www.tycho.iel.unicamp.br/upload/Luiz_Veronesi_A_Plataforma_Tycho_Brahe_Tese_2026.pdf
+
+O Tycho Brahe Search é apresentado apenas como ferramenta complementar;
+conforme a documentação do repositório, sua implementação atual foi elaborada
+por Gabriel Pinheiro. Essa referência não atribui a ele quaisquer direitos
+sobre a Plataforma Tycho Brahe, o corpus, as obras de origem ou os dados
+protegidos.
+
+4. LIMITES DA PRÉVIA TÉCNICA
+
+Esta é uma prévia técnica do cliente. Ela não certifica uma transdução
+cartográfica integral, não substitui revisão científica humana e não constitui
+uma distribuição científica estável do corpus. O instalador é distribuído sem
+garantia, na extensão permitida pela lei aplicável.
+
+5. CRÉDITOS E CONFORMIDADE
+
+Ao usar o aplicativo com dados autorizados, a pessoa usuária se compromete a
+manter os créditos, as citações e as restrições estabelecidos pela fonte
+oficial. Direitos sobre o corpus, a Plataforma Tycho Brahe, as obras citadas e
+as dependências de terceiros permanecem com seus respectivos titulares.
+
+Portal oficial da Plataforma Tycho Brahe:
+https://www.tycho.iel.unicamp.br/
+
+Ao selecionar "Aceito", você confirma especialmente que o instalador não lhe
+concede direitos sobre o corpus e que o uso de qualquer dado do corpus depende
+integralmente dos termos oficiais vinculantes indicados nesta tela.

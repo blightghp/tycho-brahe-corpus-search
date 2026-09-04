@@ -14,6 +14,12 @@ leitura de cobertura e pendências para orientar curadoria humana. Isso ainda
 **não** certifica uma transdução cartográfica integral ou uma distribuição
 científica/publicável.
 
+Uma **prévia técnica do cliente desktop** pode ser publicada sem dados do
+corpus depois de validação controlada M3/M4/M5 e do build do instalador. Isso
+não altera a classificação científica dos derivados: o pacote não pode conter
+PSD, M2, M3, credenciais ou qualquer cópia do corpus, e o uso de dados segue os
+[termos oficiais](https://www.tycho.iel.unicamp.br/corpus/termos.html).
+
 Os bancos cartográficos e os pacotes `v1.0.0` continuam congelados para
 auditoria. Há dois retratos de proveniência:
 
@@ -40,7 +46,8 @@ para reconstruí-lo e verificá-lo.
 | Busca Marco 4 | `python_backend/busca_rastreavel.py` | CLI somente leitura sobre M3 promovido; usa filtros parametrizados e retorna origem, decisão e evidências. É consumida pela ponte desktop Marco 5. |
 | Ponte desktop Marco 5 | `m4_bridge.rs`, `M4SearchPanel.tsx`, `provisionar_m4_artifact.py` | Busca desktop somente após sidecar e M3 validado serem provisionados em localização controlada; não empacota nem substitui bancos legados. |
 | Auditoria Marco 6 | `python_backend/auditar_cobertura_m3.py` | Relatório somente leitura por cobertura, regra, tipo e status; expõe backlog `PENDENTE` e amostras rastreáveis sem registrar revisão humana. |
-| Distribuição retirada | `release/` e pacotes `v1.0.0` | Guardados para auditoria; não suportados e não publicáveis. |
+| Pacotes legados retirados | `release/` e pacotes `v1.0.0` | Guardados para auditoria; não suportados e não devem ser utilizados. |
+| Prévia técnica do cliente | Instalador NSIS `v0.2.0` | Pode distribuir somente o cliente depois dos gates M3/M4/M5; exige aceite, não inclui corpus/M2/M3 e não certifica distribuição científica estável. |
 | Snapshot de runtime | sidecars Python atuais | Registrados apenas para comparação; não certificam o funcionamento do pacote. |
 
 Os bancos e `release/` são ignorados pelo Git. Por isso, o manifesto registra
