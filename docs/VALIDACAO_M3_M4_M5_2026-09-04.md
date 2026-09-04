@@ -78,7 +78,7 @@ janela responsiva no ambiente de validação.
 O build `npm run tauri -- build --bundles nsis` gerou:
 
 ```text
-Tycho Brahe Search_0.2.0_x64-setup.exe
+Tycho.Brahe.Search_0.2.0_x64-setup.exe
 SHA-256: E4D8E58554B41E32F00A71861E2D82E2D2FEF6D34F53BD7148DCD96D344DA5F0
 ```
 
@@ -90,7 +90,9 @@ os créditos da Plataforma Tycho Brahe, de Luiz Henrique Lima Veronesi,
 Charlotte Galves, IEL/UNICAMP e a delimitação da ferramenta complementar de
 Gabriel Pinheiro.
 
-O hash acima é do arquivo final validado que será enviado à release.
+O hash acima é do arquivo final validado e publicado na release. O Tauri gera
+localmente o nome com espaços; o GitHub normaliza esses espaços para pontos no
+nome do anexo publicado.
 
 ## Gates executados
 
