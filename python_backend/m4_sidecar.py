@@ -7,6 +7,20 @@ explícito de build; este arquivo não cria artefatos nem escolhe bancos.
 
 from __future__ import annotations
 
+import sys
+
+
+def configure_utf8_streams() -> None:
+    """Mantém o contrato JSON do sidecar em UTF-8 também no Windows."""
+
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            reconfigure(encoding="utf-8", errors="replace")
+
+
+configure_utf8_streams()
+
 from busca_rastreavel import main
 
 

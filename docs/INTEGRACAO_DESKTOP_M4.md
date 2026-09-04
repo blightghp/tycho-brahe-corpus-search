@@ -36,6 +36,8 @@ Marco 4.
 - Não há fallback do frontend para `Command.sidecar`; toda execução M4 passa
   pela ponte Rust. Saídas fora do contrato JSON, excessivas ou inconsistentes
   são rejeitadas.
+- O sidecar emite JSON em UTF-8, inclusive quando o Windows usa uma página de
+  código local diferente; a ponte decodifica os bytes diretamente como JSON.
 
 ## Preparar o sidecar e o artefato
 
@@ -44,10 +46,13 @@ instalado após validação. A partir da raiz do repositório:
 
 ```powershell
 # Instala as dependências de build, incluindo PyInstaller.
-python -m pip install -r python_backend/requirements-build.txt
+python -m venv .venv
+$python = Join-Path (Get-Location) '.venv\Scripts\python.exe'
+& $python -m pip install -r python_backend/requirements-build.txt
 
 # Gera um .exe ignorado pelo Git.
-powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File python_backend/build_m4_sidecar.ps1 `
+  -PythonExecutable $python
 
 # Revalida M3↔M2 integralmente e instala o arquivo no local controlado.
 # No mesmo volume, usa hard link; se isso não for possível, faz cópia em staging
